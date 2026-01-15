@@ -1,5 +1,6 @@
 package tile;
 import main.GamePanel;
+import main.UtilityTool;
 
 import java.awt.Graphics2D;
 
@@ -30,53 +31,55 @@ public class TileManager {
 
     public void getTileImage(){
     
-        try{
+        setup(0, "grass", false);
+        //default tile is no collsion so you dont need to set it to false
+        
+        //Scaling images to fit tile size, saves drawing time during the game loop
+        /* 
+        BufferedImage scaledImage = new BufferedImage(gp.tileSize, gp.tileSize, tile[0].image.getType());//starts as a blank canvas and you pass width and height with an image type
+        Graphics2D g2d = scaledImage.createGraphics();//creates a graphics2D object to draw the image
+        g2d.drawImage(tile[0].image, 0, 0, gp.tileSize, gp.tileSize, null);
+        tile[0].image = scaledImage;*/
 
-            tile[0] = new Tile();
-            tile[0].image = tile[0].image = ImageIO.read(new File("res/tiles/grass.png"));
-            //default tile is no collsion so you dont need to set it to false
-            tile[1] = new Tile();
-            tile[1].image = ImageIO.read(new File("res/tiles/brick.png"));
-            tile[1].collision = true;//makes brick tile collidable
-            
-            tile[2] = new Tile();
-            tile[2].image = ImageIO.read(new File("res/tiles/water.png"));
-            tile[2].collision = true;//makes water tile collidable
-            
-            tile[3] = new Tile();
-            tile[3].image = ImageIO.read(new File("res/tiles/earth.png"));
-            
-            tile[4] = new Tile();
-            tile[4].image = ImageIO.read(new File("res/tiles/tree.png"));
-            tile[4].collision = true;//makes tree tile collidable  
-            
-            tile[5] = new Tile();
-            tile[5].image = ImageIO.read(new File("res/tiles/sand.png"));
+        
+        setup(1, "brick", true);
+         
+        setup(2, "water", true);
+         
+        setup(3, "earth", false);
+         
+        setup(4, "tree", true);
+         
+        setup(5, "sand", false);
 
-            tile[6] = new Tile();
-            tile[6].image = ImageIO.read(new File("res/tiles/log 1.png"));
-            tile[6].collision = true;
+         
+        setup(6, "log 1", true);
+        
+        setup(7, "log 2", true);
+        
+        setup(8, "log 3", true);
 
-            tile[7] = new Tile();
-            tile[7].image = ImageIO.read(new File("res/tiles/log 2.png"));
-            tile[7].collision = true;
-
-            tile[8] = new Tile();
-            tile[8].image = ImageIO.read(new File("res/tiles/log 3.png"));
-            tile[8].collision = true;
-
-            tile[9] = new Tile();
-            tile[9].image = ImageIO.read(new File("res/tiles/fence.png"));
-            tile[9].collision = true;
-
-
-
-
-        }catch(IOException e){
-            e.printStackTrace();
-        }
+        
+        setup(9, "fence", true);
 
     }
+public void setup(int index, String imagePath, boolean collision){
+UtilityTool uTool = new UtilityTool();
+
+
+try{
+    tile[index] = new Tile();
+    tile[index].image = ImageIO.read(new File("res/tiles/" + imagePath + ".png"));
+    tile[index].image = uTool.scaleImage(tile[index].image, gp.tileSize, gp.tileSize);
+    tile[index].collision = collision;
+
+}
+catch(IOException e){
+    e.printStackTrace();
+}
+
+}
+
     public void loadMap(String filePath){
         //we will load the map from a text file
         try{
@@ -132,7 +135,7 @@ public class TileManager {
                worldY > gp.player.worldY - gp.player.screenY - gp.tileSize &&
                worldY < gp.player.worldY + gp.player.screenY + gp.tileSize){
             
-                g2.drawImage(tile[tileNum].image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+                g2.drawImage(tile[tileNum].image, screenX, screenY, null);
 
             }
             worldCol++;

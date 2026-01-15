@@ -9,6 +9,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import main.KeyHandler;
+import main.UtilityTool;
 
 
 public class Player extends Entity {
@@ -65,21 +66,29 @@ public class Player extends Entity {
         
     }
     public void getPlayerImage(){
-        try{
-            //this is how we load images from our folders into our program, we put the file pathway in the
-            //last arguement of the getResourceAsStream method
-            up1 = ImageIO.read(getClass().getResourceAsStream("/res/running up.png"));
-            up2 = ImageIO.read(getClass().getResourceAsStream("/res/looking up.png"));
-            down1 = ImageIO.read(getClass().getResourceAsStream("/res/running down.png"));
-            down2 = ImageIO.read(getClass().getResourceAsStream("/res/looking down.png"));
-            left1 = ImageIO.read(getClass().getResourceAsStream("/res/running left.png"));
-            left2 = ImageIO.read(getClass().getResourceAsStream("/res/looking left.png"));
-            right1 = ImageIO.read(getClass().getResourceAsStream("/res/running right.png"));
-            right2 = ImageIO.read(getClass().getResourceAsStream("/res/looking right.png"));
+       
+        up1 = setup("running up");
+        up2 = setup("looking up");
+        down1 = setup("running down");
+        down2 = setup("looking down");
+        left1 = setup("running left");
+        left2 = setup("looking left");
+        right1 = setup("running right");
+        right2 = setup("looking right");
 
+    }
+    public BufferedImage setup(String imageName){
+        UtilityTool uTool = new UtilityTool();
+        BufferedImage image = null;
+
+        try{
+            image = ImageIO.read(getClass().getResourceAsStream("/res/" + imageName + ".png"));
+            image = uTool.scaleImage(image, gp.tileSize, gp.tileSize);
+            
         } catch(IOException e){
             e.printStackTrace();
         }
+        return image;
     }
     
     public void update(){
@@ -244,7 +253,7 @@ public class Player extends Entity {
             }
             break;//                                                    image observer,js type null
         }//                                                            ^^^^
-        g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);//draws the image at the x and y position with the tile size width and height
+        g2.drawImage(image, screenX, screenY, null);//draws the image at the x and y position with the tile size width and height
         //the image above is drawn at a certain x and y position with an image corresponding to direction
 
     }

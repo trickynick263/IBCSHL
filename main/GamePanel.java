@@ -161,6 +161,14 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
     }
 
     public void paintComponent(java.awt.Graphics g){
+        //DEBUG
+        
+            long drawStart = 0;
+        if(keyH.debugPressed == true){
+            drawStart = System.nanoTime();
+        }
+        
+        
         super.paintComponent(g);//calls the paintcomponent method of the superclass(jpanel)
         //so that we can have the default behavior of jpanel and then add our custom behavior on top of it
         Graphics2D g2 = (Graphics2D)g;//casting g to graphics2D type so we can use graphics2D methods
@@ -173,7 +181,7 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
                 obj[i].draw(g2, this);
             }
         }
-        //projectiles
+        //DEBUG
         
         
         
@@ -182,6 +190,15 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
         //java asks what the dimensions of the rectangle are so we set them in the parameters
 
         ui.draw(g2);
+
+        if(keyH.debugPressed == true){
+            long drawEnd = 0;
+            drawEnd = System.nanoTime();
+            long passed = drawEnd - drawStart;
+            g2.setColor(Color.white);
+            g2.drawString("Draw Time: " + passed, 10, 400);
+            System.out.println("Draw Time: " + passed);
+        }
 
         g2.dispose();//disposes if graphics context and releases system resources that it is using
         //good practice to call dispose when done with graphics context as it helps to prevent memory leaks
