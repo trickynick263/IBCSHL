@@ -1,5 +1,5 @@
 package main;
-import entity.Entity;
+
 import entity.Player;
 
 import res.objects.SuperObject;
@@ -8,7 +8,7 @@ import tile.TileManager;
 import javax.swing.JPanel;
 import java.awt.Dimension;//imports dimension for the screen we use to play the game
 import java.awt.Graphics2D;
-import java.util.ArrayList;
+
 import java.awt.Color;
 
 public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
@@ -33,7 +33,7 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
     // and basically just dissapear
 
     TileManager tileM = new TileManager(this);
-    KeyHandler keyH = new KeyHandler();//creates a new keyhandler object to handle keyboard inputs
+    KeyHandler keyH = new KeyHandler(this);//creates a new keyhandler object to handle keyboard inputs
     Thread gameThread;//The existence of time in the construction of 2D games basically starts with this
     //Thread is something you can start and stop but will keep you program running until something special happens
     //Like closing the program or pausing in certain cases
@@ -44,7 +44,11 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
     public AssetSetter aSetter = new AssetSetter(this);
     public UI ui = new UI(this);
     
-    public ArrayList<Entity> projectiles = new ArrayList<Entity>();
+    //GAME STATE
+    public int gameState;
+    public final int playState = 1;//basically we tell the program about what state the game is in
+    public final int pauseState = 2;//this can result in switching keybinds that are for other uses when
+                                        //in different menus
 
     
     
@@ -65,6 +69,8 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
         aSetter.setObject();
         
         playMusic(0);
+        
+        gameState = playState;//initializes what state the game is in
     }
 
     public void startGameThread(){
@@ -153,9 +159,15 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
         
     }
     public void update(){
+        
+        if(gameState == playState){
         //we will change player position in this method on key preses for KeyHandler
         player.update();//calls the update method from the player class
         
+        }
+        if(gameState == pauseState){
+            
+        }
         
 
     }
@@ -196,6 +208,8 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
             drawEnd = System.nanoTime();
             long passed = drawEnd - drawStart;
             g2.setColor(Color.white);
+            g2.drawString("Y: " + player.worldY, 10, 350);
+            g2.drawString("X: " + player.worldX, 10, 300);
             g2.drawString("Draw Time: " + passed, 10, 400);
             System.out.println("Draw Time: " + passed);
         }

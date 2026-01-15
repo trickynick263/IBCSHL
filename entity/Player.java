@@ -21,9 +21,9 @@ public class Player extends Entity {
     public final int screenY;
     //those are 
     //2 variables to fix the player in the center of the screen
-    public int hasKey = 0;//number of keys the player has
-    public boolean hasBoots = false;//number of boots the player has
-    public int shotCooldown = 60;
+    
+    
+    
     
     
 
@@ -170,44 +170,7 @@ public class Player extends Entity {
 
     public void pickUpObject(int index){
         if(index != 999){
-            String objectName = gp.obj[index].name;
-
-            switch(objectName){
-                case "Key"://add one for each specific object picked up
-                    gp.playSE(1);
-                    hasKey++;
-                    gp.obj[index] = null;//removes the key from the game world
-                    gp.ui.showMessage("You've picked up a key!");
-                    break;
-                case "Door":
-                    if(hasKey > 0){
-                        gp.playSE(3);
-                        gp.obj[index] = null;//removes door from game world
-                        hasKey--;
-                        gp.ui.showMessage("You've unlocked a door!");
-                    }
-                    else{
-                        gp.ui.showMessage("Come back with a key!");
-                    }
-                    
-                    break;
-                case "Boots":
-                    if(!hasBoots){
-                     hasBoots = true;
-                     gp.playSE(2);
-                        speed += 2;//increases speed by 2 when boots are picked up
-                        gp.obj[index] = null;//removes boots from game world
-                        gp.ui.showMessage("Speed Upgraded!");
-                        gp.ui.showMessage("You picked up boots!");
-                    }
-                    break;
-                case "Chest":
-                    gp.ui.gameFinished = true;
-                    
-                    gp.playSE(4);
-                    break;
-                    
-            }
+           
         }
     }
 
