@@ -4,7 +4,11 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 public class UtilityTool {
+
+    public UtilityTool(){
+    }
     
+
     //utility tool class to help with various tasks in the game
     public BufferedImage scaleImage(BufferedImage original, int width, int height){
         BufferedImage scaledImage = new BufferedImage(width, height, original.getType());//creates a blank canvas with the desired width and height

@@ -18,7 +18,6 @@ public class TileManager {
     GamePanel gp;
     public Tile[] tile;
     public int mapTileNum[][];//2d array to store the map information from the text file
-
     public TileManager(GamePanel gp){
         this.gp = gp;
         tile = new Tile[10];//array of tiles, we can have 10 different tiles like grass,water,brick
