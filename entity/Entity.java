@@ -1,9 +1,15 @@
 package entity;
+
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 import main.GamePanel;
+import main.UtilityTool;
 
 public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE GAME LIKE PLAYER, NPCS, MONSTERS, ETC
     //this means it basically will be a superclass and other classes
@@ -35,16 +41,28 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
         this.gp = gp;
     }
 
+    public void setAction(){
+
+    }
+
+    public void update(){
+
+    }
+/*The reason we create many new draw and update methods in a superclass is because the 
+methods and attributes get passed down to things like the npcs, player, and anything else that fits
+the requirements of an entity */
     public void draw(Graphics2D g2){
+        BufferedImage image = null;
         int screenX = worldX - gp.player.worldX + gp.player.screenX;
         int screenY = worldY - gp.player.worldY + gp.player.screenY;//copy from tilemanager draw method
+
         //draw object only if it is in the visible area of the screen
         if(worldX + gp.tileSize > gp.player.worldX - gp.player.screenX &&
            worldX - gp.tileSize < gp.player.worldX + gp.player.screenX &&
            worldY + gp.tileSize > gp.player.worldY - gp.player.screenY &&
            worldY - gp.tileSize < gp.player.worldY + gp.player.screenY){
-            BufferedImage image = null;
-            switch(direction){//these are the buffered images we loaded earlier
+
+        switch(direction){//these are the buffered images we loaded earlier
         case "up"://based on direction we pick a differnt image to draw
             if(spriteNum == 1){
                 image = up1;
@@ -76,13 +94,29 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
             if(spriteNum == 2){
                 image = right2;
             }
-            break;//                                                    image observer,js type null
-        }//                                                            ^^^^
-        g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);//draws the image at the x and y position with the tile size width and height
-        //the image above is drawn at a certain x and y position with an image corresponding to direction
+            break;
+        }  
+
+            g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
         }
-        
     }
+
+    
+    public BufferedImage setup(String imagePath){
+        UtilityTool uTool = new UtilityTool();
+        BufferedImage image = null;
+
+        try{
+            image = ImageIO.read(new File("res" + imagePath + ".png"));
+            image = uTool.scaleImage(image, gp.tileSize, gp.tileSize);
+            
+        } catch(IOException e){
+            e.printStackTrace();
+        }
+        return image;
+    }
+
+
 
 
 

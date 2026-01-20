@@ -1,5 +1,6 @@
 package main;
 
+import entity.Entity;
 import entity.Player;
 import objects.SuperObject;
 import tile.TileManager;
@@ -50,6 +51,7 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
     //10 different objects can be stored in the array, if we need more we can increase the size of the array
     public AssetSetter aSetter = new AssetSetter(this);
     public UI ui = new UI(this);
+    public Entity npc[] = new Entity[10];
     
    
 
@@ -66,11 +68,12 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
         this.setDoubleBuffered(true);//if set to true, drawing from this component will be done in an offscreen painting buffer
         this.addKeyListener(keyH);//adds keyhandler to gampepanel so we can listen to keys
         this.setFocusable(true);
+        setupGame();
     }
 
     public void setupGame(){
         aSetter.setObject();
-        
+        aSetter.setNPC();
         playMusic(0);
         
         gameState = playState;//initializes what state the game is in
@@ -196,8 +199,12 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
                 obj[i].draw(g2, this);
             }
         }
-        //DEBUG
-        
+        //NPC
+        for(int i = 0; i < npc.length;i++){
+            if(npc[i] != null){
+                npc[i].draw(g2);
+            }
+        }
         
         
         //PLAYER
@@ -206,6 +213,10 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
 
         ui.draw(g2);
 
+
+        
+
+        //DEBUG
         if(keyH.debugPressed == true){
             long drawEnd = 0;
             drawEnd = System.nanoTime();

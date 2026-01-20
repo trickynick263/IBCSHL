@@ -4,6 +4,7 @@ import main.GamePanel;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -67,14 +68,14 @@ public class Player extends Entity {
     }
     public void getPlayerImage(){
        
-        up1 = setup("running up");
-        up2 = setup("looking up");
-        down1 = setup("running down");
-        down2 = setup("looking down");
-        left1 = setup("running left");
-        left2 = setup("looking left");
-        right1 = setup("running right");
-        right2 = setup("looking right");
+        up1 = setup("/playerimage/running up");
+        up2 = setup("/playerimage/looking up");
+        down1 = setup("/playerimage/running down");
+        down2 = setup("/playerimage/looking down");
+        left1 = setup("/playerimage/running left");
+        left2 = setup("/playerimage/looking left");
+        right1 = setup("/playerimage/running right");
+        right2 = setup("/playerimage/looking right");
 
     }
     public BufferedImage setup(String imageName){
@@ -82,7 +83,7 @@ public class Player extends Entity {
         BufferedImage image = null;
 
         try{
-            image = ImageIO.read(getClass().getResourceAsStream("/res/playerimage/" + imageName + ".png"));
+            image = ImageIO.read(new File("res" + imageName + ".png"));
             image = uTool.scaleImage(image, gp.tileSize, gp.tileSize);
             
         } catch(IOException e){
