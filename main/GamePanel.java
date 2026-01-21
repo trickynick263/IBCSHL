@@ -169,7 +169,11 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
         if(gameState == playState){
         //we will change player position in this method on key preses for KeyHandler
         player.update();//calls the update method from the player class
-        
+        for(int i = 0;i < npc.length;i++){
+            if(npc[i] != null){
+                npc[i].update();
+            }
+        }
         }
         if(gameState == pauseState){
             

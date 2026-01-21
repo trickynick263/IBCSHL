@@ -154,6 +154,155 @@ public class CollisionChecker {
         return index;
 
     }
+    //CHECKS NPC OR MONSTER COLLISION
+    public int checkEntity(Entity entity, Entity[] target){
+
+    int index = 999;
+
+        for(int i = 0;i < target.length;i++){
+            if(target[i] != null)//we need to get entity's solid area position and
+            // get the objects solid area position
+            {
+                entity.solidArea.x = entity.worldX + entity.solidArea.x;
+                entity.solidArea.y = entity.worldY +  entity.solidArea.y;
+                //these lines have set code in case we wanted to change the solid area of the 
+                //objects later on and have more specific collsion detection and the whole tile isnt
+                //used for collision detection
+                target[i].solidArea.x = target[i].worldX + target[i].solidArea.x;
+                target[i].solidArea.y = target[i].worldY + target[i].solidArea.y;
+                /*KEY DIFFERENCES BETWEEN CHECK OBJECT
+                we just want to know if two entities are running into eachother and if they are something special will happen
+                we dont care if its a player, we just want an entity to be checked
+                */
+                switch(entity.direction){
+                case "up":
+                    entity.solidArea.y -= entity.speed;//predicts where entity will be next
+                    if(entity.solidArea.intersects(target[i].solidArea)){//sees if the solid areas intersect
+                        entity.collisionOn=true;
+                        
+                            index = i;//we will return the index of the object we collided with
+                        
+                        
+                    }
+                    break;
+                case "down":
+                    entity.solidArea.y += entity.speed;
+                    if(entity.solidArea.intersects(target[i].solidArea)){
+                        
+                        entity.collisionOn=true;
+                            index = i;//we will return the index of the object we collided with
+                        
+                    }
+                    break;
+                case "left":
+                    entity.solidArea.x -= entity.speed;
+                    if(entity.solidArea.intersects(target[i].solidArea)){
+                       
+                        entity.collisionOn=true;
+                            index = i;//we will return the index of the object we collided with
+                        
+                    }
+                    break;
+                case "right":
+                    entity.solidArea.x += entity.speed;
+                    if(entity.solidArea.intersects(target[i].solidArea)){
+                        
+                        entity.collisionOn=true;
+                            index = i;//we will return the index of the object we collided with
+                        
+                    }
+                    break;
+
+
+
+                }
+                entity.solidArea.x = entity.solidAreaDefaultX;
+                entity.solidArea.y = entity.solidAreaDefaultY;//we have to reset values
+                //so they dont keep increasing as we check for collisions
+                target[i].solidArea.x = target[i].solidAreaDefaultX;
+                target[i].solidArea.y = target[i].solidAreaDefaultY;
+
+
+
+
+            }
+
+        }
+        
+        
+        return index;
+
+    }
+
+    public void checkPlayer(Entity entity){//pasted from check entity method, we dont need to scan the array though.
+
+                entity.solidArea.x = entity.worldX + entity.solidArea.x;
+                entity.solidArea.y = entity.worldY +  entity.solidArea.y;
+                //these lines have set code in case we wanted to change the solid area of the 
+                //objects later on and have more specific collsion detection and the whole tile isnt
+                //used for collision detection
+                gp.player.solidArea.x = gp.player.worldX + gp.player.solidArea.x;
+                gp.player.solidArea.y = gp.player.worldY + gp.player.solidArea.y;
+                /*KEY DIFFERENCES BETWEEN CHECK OBJECT
+                we just want to know if two entities are running into eachother and if they are something special will happen
+                we dont care if its a player, we just want an entity to be checked
+                */
+                switch(entity.direction){
+                case "up":
+                    entity.solidArea.y -= entity.speed;//predicts where entity will be next
+                    if(entity.solidArea.intersects(gp.player.solidArea)){//sees if the solid areas intersect
+                        entity.collisionOn=true;
+                        
+                        
+                        
+                    }
+                    break;
+                case "down":
+                    entity.solidArea.y += entity.speed;
+                    if(entity.solidArea.intersects(gp.player.solidArea)){
+                        
+                        entity.collisionOn=true;
+                        
+                    }
+                    break;
+                case "left":
+                    entity.solidArea.x -= entity.speed;
+                    if(entity.solidArea.intersects(gp.player.solidArea)){
+                       
+                        entity.collisionOn=true;
+                        
+                    }
+                    break;
+                case "right":
+                    entity.solidArea.x += entity.speed;
+                    if(entity.solidArea.intersects(gp.player.solidArea)){
+                        
+                        entity.collisionOn=true;
+                        
+                    }
+                    break;
+
+
+
+                }
+                entity.solidArea.x = entity.solidAreaDefaultX;
+                entity.solidArea.y = entity.solidAreaDefaultY;//we have to reset values
+                //so they dont keep increasing as we check for collisions
+                gp.player.solidArea.x = gp.player.solidAreaDefaultX;
+                gp.player.solidArea.y = gp.player.solidAreaDefaultY;
+
+
+
+
+            }
+
+        
+        
+        
+        
+
+    
+
 
 
 

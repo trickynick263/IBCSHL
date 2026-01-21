@@ -19,7 +19,7 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
     public int speed;//speed of entity
 
     public GamePanel gp;
-
+    public int actionLockCounter = 0;
     public BufferedImage up1, up2, down1, down2, left1, left2, right1, right2;//images for different directions of entity
     public String direction;//direction entity is facing
     
@@ -46,6 +46,47 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
     }
 
     public void update(){
+            setAction();
+
+        collisionOn = false;
+        gp.cChecker.checkTile(this);
+        gp.cChecker.checkObject(this,false);
+        gp.cChecker.checkPlayer(this);
+        //copied from player class
+           if(collisionOn == false){
+            switch(direction){
+                case "up":
+                    worldY -= speed;//upper left corner is 0,0 so to go up we decrease y value
+                    break;
+                case "down":
+                    worldY += speed;
+                    break;
+                case "left":
+                    worldX -= speed;
+                    break;
+                case "right":
+                    worldX += speed;
+                    break;
+            }
+        }
+        
+
+        //SPRITE ANIMATION
+        if(collisionOn == false){
+        spriteCounter++;
+        if(spriteCounter > 12){//changes sprite every 12 frames
+            if(spriteNum == 1){
+                spriteNum = 2;//changes sprite images to swap between them
+            }//remember this gets called 60 times per second and the counter is increased
+            //a total of 60 times per second and which switch between images very often
+            else if(spriteNum == 2){
+                spriteNum = 1;
+            }
+            spriteCounter = 0;//this line right here resets the counter
+            //  so we can count to 12 again
+        }
+        }
+
 
     }
 /*The reason we create many new draw and update methods in a superclass is because the 

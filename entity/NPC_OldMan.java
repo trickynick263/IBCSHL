@@ -33,6 +33,8 @@ public class NPC_OldMan extends Entity{
     }
 
     public void setAction(){//sets character behavior with AI
+    
+    if(actionLockCounter == 120){
         Random random = new Random();
         int i = random.nextInt(100)+1;//random number from 1 to 100
     if(i <= 25){
@@ -47,6 +49,11 @@ public class NPC_OldMan extends Entity{
     if(i > 75 && i <= 100){
         direction = "right";
     }
+    actionLockCounter = 0;
+}
+else{
+    actionLockCounter++;
+}
 
     }
     
