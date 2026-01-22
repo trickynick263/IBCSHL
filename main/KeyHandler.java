@@ -5,7 +5,7 @@ import java.awt.event.KeyEvent;
 
 public class KeyHandler implements KeyListener{
     
-    public boolean upPressed, downPressed, leftPressed, rightPressed, debugPressed;
+    public boolean upPressed, downPressed, leftPressed, rightPressed, debugPressed,enterPressed;
     GamePanel gp;
     public KeyHandler(GamePanel gp){
         this.gp = gp;
@@ -21,7 +21,7 @@ public class KeyHandler implements KeyListener{
     @Override
     public void keyPressed(java.awt.event.KeyEvent e) {
         int code = e.getKeyCode();//gives a number based output from a key based input that tells which key is pressed
-        
+    if(gp.gameState == gp.playState){
         if(code == KeyEvent.VK_W){
             upPressed = true;
         }
@@ -34,17 +34,14 @@ public class KeyHandler implements KeyListener{
         if(code == KeyEvent.VK_D){
             rightPressed = true;
         }
-        
-        
-        
         if(code == KeyEvent.VK_P){
-            if(gp.gameState == gp.playState){
-                gp.gameState = gp.pauseState;
-            }
-            else if(gp.gameState == gp.pauseState){
-                gp.gameState = gp.playState;
-            }
+            gp.gameState = gp.pauseState; 
         }
+        if(code == KeyEvent.VK_ENTER){
+            enterPressed = true;; 
+        }
+
+        
         
 
         if(code == KeyEvent.VK_T){
@@ -55,6 +52,21 @@ public class KeyHandler implements KeyListener{
                 debugPressed = false;
             }
         }
+    }
+    //Pause state
+    else if(gp.gameState == gp.pauseState){
+        if(code == KeyEvent.VK_P){
+            gp.gameState = gp.playState;
+        }
+    }
+    //Dialogue state
+    else if(gp.gameState == gp.dialogueState){
+        if(code == KeyEvent.VK_ENTER){
+            gp.gameState = gp.playState;
+        }
+    }
+        
+        
     }
 
     @Override
@@ -72,6 +84,9 @@ public class KeyHandler implements KeyListener{
         }
         if(code == KeyEvent.VK_D){
             rightPressed = false;
+        }
+        if(code == KeyEvent.VK_ENTER){
+            enterPressed = false; 
         }
         
     }

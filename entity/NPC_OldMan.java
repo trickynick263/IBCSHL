@@ -15,7 +15,22 @@ public class NPC_OldMan extends Entity{
         direction = "down";
         speed = 1;
         getImage();
+        setDialogue();
 
+    }
+
+    public void setDialogue(){//STORE DIALOGUE TEXT
+        dialogue[0] = "whats going on bro";
+        dialogue[1] = "So you came to find the treasure?";
+        dialogue[2] = "I used to be a great wizard but now.. \nI'm way too old for that";
+        dialogue[3] = "Well, good luck.. \nI've heard too many daunting\n stories of the guardian";
+        
+        
+
+    }
+
+    public void speak(){
+        super.speak();
     }
 
 

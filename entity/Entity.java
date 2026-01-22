@@ -3,7 +3,7 @@ package entity;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.io.File;
+//import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -32,6 +32,9 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
     
     public int solidAreaDefaultX, solidAreaDefaultY;//to store default x and y of solid area for resetting after collision adjustments
     public boolean collisionOn = false;//flag to check if collision is on or off
+    //DIALOGUE
+    String[] dialogue = new String[20];
+    int dialogueIndex = 0;
     
 
 
@@ -44,6 +47,8 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
     public void setAction(){
 
     }
+
+    
 
     public void update(){
             setAction();
@@ -142,13 +147,36 @@ the requirements of an entity */
         }
     }
 
-    
+    public void speak(){
+        gp.ui.currentDialogue = dialogue[dialogueIndex];
+        dialogueIndex++;
+
+        if(dialogue[dialogueIndex] == null){
+            dialogueIndex = 0;
+        }
+        switch(gp.player.direction){
+        case "up":
+        direction = "down";
+        break;
+        case "down":
+        direction = "up";
+        break;
+        case"right":
+        direction = "left";
+        break;
+        case"left":
+        direction = "right";
+        break;
+        }
+    }
+
+
     public BufferedImage setup(String imagePath){
         UtilityTool uTool = new UtilityTool();
         BufferedImage image = null;
 
         try{
-            image = ImageIO.read(new File("res" + imagePath + ".png"));
+            image = ImageIO.read(getClass().getResourceAsStream("/res" + imagePath + ".png"));
             image = uTool.scaleImage(image, gp.tileSize, gp.tileSize);
             
         } catch(IOException e){

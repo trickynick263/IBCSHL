@@ -37,11 +37,11 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
     public final int playState = 0;//basically we tell the program about what state the game is in
     public final int pauseState = 1;//this can result in switching keybinds that are for other uses when
                                         //in different menus
+    public final int dialogueState = 2;
 
 
-
-    TileManager tileM = new TileManager(this);
-    KeyHandler keyH = new KeyHandler(this);//creates a new keyhandler object to handle keyboard inputs
+    public TileManager tileM = new TileManager(this);
+    public KeyHandler keyH = new KeyHandler(this);//creates a new keyhandler object to handle keyboard inputs
     Thread gameThread;//The existence of time in the construction of 2D games basically starts with this
     //Thread is something you can start and stop but will keep you program running until something special happens
     //Like closing the program or pausing in certain cases

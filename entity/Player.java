@@ -4,7 +4,7 @@ import main.GamePanel;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.io.File;
+//import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -83,7 +83,7 @@ public class Player extends Entity {
         BufferedImage image = null;
 
         try{
-            image = ImageIO.read(new File("res" + imageName + ".png"));
+            image = ImageIO.read(getClass().getResourceAsStream("/res" + imageName + ".png"));
             image = uTool.scaleImage(image, gp.tileSize, gp.tileSize);
             
         } catch(IOException e){
@@ -180,10 +180,14 @@ public class Player extends Entity {
 
     public void interactNPC(int i){
         if(i != 999){
-           System.out.println("You are hitting an npc!");
+           if(gp.keyH.enterPressed == true){
+            gp.gameState = gp.dialogueState;
+           gp.npc[i].speak();
+           }
 
-           
+           gp.keyH.enterPressed = false;
         }
+        
     }
 
 
