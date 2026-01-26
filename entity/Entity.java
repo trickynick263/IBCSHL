@@ -3,6 +3,7 @@ package entity;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.io.File;
 //import java.io.File;
 import java.io.IOException;
 
@@ -176,7 +177,7 @@ the requirements of an entity */
         BufferedImage image = null;
 
         try{
-            image = ImageIO.read(getClass().getResourceAsStream("/res" + imagePath + ".png"));
+        image = ImageIO.read(getClass().getResourceAsStream("/res" + imagePath + ".png"));//CHANGE GET FILE PATH METHOD ON HOME PC AND LAPTOP
             image = uTool.scaleImage(image, gp.tileSize, gp.tileSize);
             
         } catch(IOException e){

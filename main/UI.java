@@ -3,14 +3,18 @@ package main;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.Graphics2D;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 
 
 
 public class UI {
     GamePanel gp;
-    Font arial_40, arial_80B;
+    Font purisaB, pixel;
     Graphics2D g2;
     public boolean messageOn = false;
     public String message = "";
@@ -21,11 +25,17 @@ public class UI {
     public UI(GamePanel gp){
         this.gp = gp;
 
-        arial_40 = new Font("Arial", Font.PLAIN, 40);
+        /* 
+        try{
+            InputStream is = getClass().getResourceAsStream("/font/8514OEM.FON");
+            purisaB = Font.createFont(Font.TRUETYPE_FONT, is);
+        }catch(FontFormatException e){
+            e.printStackTrace();
+        }catch(IOException e){
+            e.printStackTrace();
+        }*/
+       pixel = new Font("Bodoni MT", Font.PLAIN, 80);
         
-        
-
-        arial_80B = new Font("Arial", Font.BOLD, 80);
         
         
     }
@@ -47,7 +57,7 @@ public class UI {
         //                   what font  /  what type, (bold,italics) / size
         
         this.g2 = g2;
-        g2.setFont(arial_40);
+        g2.setFont(pixel);
         g2.setColor(Color.white);
         if(gp.gameState == gp.playState){
 

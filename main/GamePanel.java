@@ -34,9 +34,9 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
 
  //GAME STATE
     public int gameState;
-    public final int playState = 0;//basically we tell the program about what state the game is in
-    public final int pauseState = 1;//this can result in switching keybinds that are for other uses when
-                                        //in different menus
+    public final int playState = 0;             //basically we tell the program about what state the game is in
+    public final int pauseState = 1;            //this can result in switching keybinds that are for other uses when
+                                                //in different menus
     public final int dialogueState = 2;
 
 
@@ -167,8 +167,8 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
     public void update(){
         
         if(gameState == playState){
-        //we will change player position in this method on key preses for KeyHandler
-        player.update();//calls the update method from the player class
+                                            //we will change player position in this method on key preses for KeyHandler
+        player.update();                    //calls the update method from the player class
         for(int i = 0;i < npc.length;i++){
             if(npc[i] != null){
                 npc[i].update();
