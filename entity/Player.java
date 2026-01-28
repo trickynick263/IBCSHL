@@ -84,7 +84,8 @@ public class Player extends Entity {
         BufferedImage image = null;
 
         try{
-            image = ImageIO.read(getClass().getResourceAsStream("/res" + imageName + ".png"));
+            image = ImageIO.read(getClass().getResourceAsStream("/res" + imageName + ".png")); //school pc
+            //image = ImageIO.read(new File("res" + imageName + ".png")); //home pc
             image = uTool.scaleImage(image, gp.tileSize, gp.tileSize);
             
         } catch(IOException e){
