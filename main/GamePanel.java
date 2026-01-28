@@ -34,11 +34,11 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
 
  //GAME STATE
     public int gameState;
-    public final int playState = 0;             //basically we tell the program about what state the game is in
+    public final int playState = 3;             //basically we tell the program about what state the game is in
     public final int pauseState = 1;            //this can result in switching keybinds that are for other uses when
                                                 //in different menus
     public final int dialogueState = 2;
-
+    public final int titleState = 0;
 
     public TileManager tileM = new TileManager(this);
     public KeyHandler keyH = new KeyHandler(this);//creates a new keyhandler object to handle keyboard inputs
@@ -74,9 +74,9 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
     public void setupGame(){
         aSetter.setObject();
         aSetter.setNPC();
-        playMusic(0);
+        //playMusic(0);
         
-        gameState = playState;//initializes what state the game is in
+        gameState = titleState;//initializes what state the game is in
     }
 
     public void startGameThread(){
@@ -195,6 +195,12 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
         //so that we can have the default behavior of jpanel and then add our custom behavior on top of it
         Graphics2D g2 = (Graphics2D)g;//casting g to graphics2D type so we can use graphics2D methods
         //draws a white rectangle that fills the screen
+        
+        //TITLE SCREEN
+        if(gameState == titleState){
+            ui.draw(g2);
+        }
+        else{
         //TILE
         tileM.draw(g2);//draws the tile manager first so the tiles are in the background
         //OBJECT
@@ -217,7 +223,7 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
 
         ui.draw(g2);
 
-
+        }
         
 
         //DEBUG

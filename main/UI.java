@@ -21,6 +21,9 @@ public class UI {
     int messageCounter = 0;
     public boolean gameFinished = false;
     public String currentDialogue;
+    public int commandNum = 0;
+    public int titleScreenState = 0;// 0: the first screen 1: second screen
+
 
     public UI(GamePanel gp){
         this.gp = gp;
@@ -59,6 +62,12 @@ public class UI {
         this.g2 = g2;
         g2.setFont(pixel);
         g2.setColor(Color.white);
+        if(gp.gameState == gp.titleState){
+            g2.setColor(new Color(0, 0, 0));//SETS BACKROUND COLOR OF TILE SCREEN
+            g2.fillRect(0,0,gp.screenWidth,gp.screenHeight);
+            
+            drawTitleScreen();
+        }
         if(gp.gameState == gp.playState){
 
         }
@@ -68,6 +77,115 @@ public class UI {
         if(gp.gameState == gp.dialogueState){
             drawDialogueScreen();
         }
+
+
+    }
+
+    public void drawTitleScreen(){
+        if(titleScreenState == 0){
+        //TITLE NAME
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD,90F));
+        String text = "The Golden Journey";
+        int x;
+        int y;
+        x = getXforCenteredText(text);
+        y = gp.tileSize * 3;
+
+        //SHADOWDED TEXT
+        g2.setColor(Color.gray);//we draw before so the main text overlaps
+        g2.drawString(text,x+5,y+5);
+        //MAIN COLOR
+        g2.setColor(Color.WHITE);
+        g2.drawString(text,x,y);
+
+        //BLUE BOY IMAGE
+        x = gp.screenWidth/2-(gp.tileSize * 2)/2;
+        y += 2 * gp.tileSize;
+        g2.drawImage(gp.player.down1,x,y,gp.tileSize *2,gp.tileSize * 2,null);
+
+        //MENU
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD,48F));
+        text = "NEW GAME";
+        x = getXforCenteredText(text);
+        y += gp.tileSize*3.5;
+        if(commandNum == 0){
+            g2.drawString(">",x-gp.tileSize,y);
+        }
+        
+        g2.drawString(text,x,y);
+        text = "LOAD GAME";
+        x = getXforCenteredText(text);
+        y += gp.tileSize*1;
+        g2.drawString(text,x,y);
+        if(commandNum == 1){
+            g2.drawString(">",x-gp.tileSize,y);
+        }
+
+        text = "QUIT";
+        x = getXforCenteredText(text);
+        y += gp.tileSize*1;
+        g2.drawString(text,x,y);
+        if(commandNum == 2){
+            g2.drawString(">",x-gp.tileSize,y);
+        }
+        }else if(titleScreenState == 1){
+            g2.setColor(Color.white);
+            g2.setFont(g2.getFont().deriveFont(42F));
+            String text = "Choose Your Class!";
+            int x = getXforCenteredText(text);
+            int y = gp.tileSize*3;
+            g2.drawString(text,x,y);
+            
+            text = "Berserker";
+            x = getXforCenteredText(text);
+            y += gp.tileSize*1;
+            g2.drawString(text,x,y);
+            if(commandNum == 0){
+                g2.drawString(">",x-gp.tileSize,y);
+            }
+
+            text = "Mage";
+            x = getXforCenteredText(text);
+            y += gp.tileSize*1;
+            g2.drawString(text,x,y);
+            if(commandNum == 1){
+                g2.drawString(">",x-gp.tileSize,y);
+            }
+
+            text = "Healer";
+            x = getXforCenteredText(text);
+            y += gp.tileSize*1;
+            g2.drawString(text,x,y);
+            if(commandNum == 2){
+                g2.drawString(">",x-gp.tileSize,y);
+            }
+
+            text = "Tank";
+            x = getXforCenteredText(text);
+            y += gp.tileSize*1;
+            g2.drawString(text,x,y);
+            if(commandNum == 3){
+                g2.drawString(">",x-gp.tileSize,y);
+            }
+
+            text = "Archer";
+            x = getXforCenteredText(text);
+            y += gp.tileSize*1;
+            g2.drawString(text,x,y);
+            if(commandNum == 4){
+                g2.drawString(">",x-gp.tileSize,y);
+            }
+
+            text = "Back";
+            x = getXforCenteredText(text);
+            y += gp.tileSize*2;
+            g2.drawString(text,x,y);
+            if(commandNum == 5){
+                g2.drawString(">",x-gp.tileSize,y);
+            }
+        }
+
+
 
 
     }
