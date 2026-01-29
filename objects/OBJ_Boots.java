@@ -14,7 +14,8 @@ public class OBJ_Boots extends SuperObject {
         name = "Boots";
 
         try {
-            image = ImageIO.read(new File("res/objects/boots.png"));
+            //image = ImageIO.read(new File("res/objects/boots.png"));
+            image = ImageIO.read(getClass().getResourceAsStream("/res/objects/boots.png"));
             image = uTool.scaleImage(image, gp.tileSize, gp.tileSize);
         } catch (IOException e) {
             e.printStackTrace();

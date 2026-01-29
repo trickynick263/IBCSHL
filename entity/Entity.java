@@ -4,7 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
-//import java.io.File;
+
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -36,6 +36,10 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
     //DIALOGUE
     String[] dialogue = new String[20];
     int dialogueIndex = 0;
+
+    //CHARACTER STATUS
+    public int maxLife;
+    public int life;
     
 
 

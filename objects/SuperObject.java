@@ -9,7 +9,7 @@ public class SuperObject {//parent class of all objects in the game
     
     
     public String name;
-    public java.awt.image.BufferedImage image;
+    public java.awt.image.BufferedImage image, image2, image3;//so we can read 3 images
     public boolean collision = false;
     public int worldX, worldY;//position of the object in the world
     public Rectangle solidArea = new Rectangle(0, 0, 48, 48);//default solid area for collision detection
