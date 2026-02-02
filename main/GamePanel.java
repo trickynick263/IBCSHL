@@ -52,7 +52,7 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
     public AssetSetter aSetter = new AssetSetter(this);
     public UI ui = new UI(this);
     public Entity npc[] = new Entity[10];
-    
+    public EventHandler eHandler = new EventHandler(this);
    
 
     

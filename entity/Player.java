@@ -129,6 +129,12 @@ public class Player extends Entity {
         interactNPC(npcIndex);
 
 
+        //CHECK EVENT
+        gp.eHandler.checkEvent();
+
+        gp.keyH.enterPressed = false;//so enter is no longer pressed
+        
+
 
         //IF COLLISION IS FALSE, PLAYER CAN MOVE
         if(collisionOn == false){
