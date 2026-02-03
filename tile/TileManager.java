@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 //import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -85,7 +86,8 @@ catch(IOException e){
     public void loadMap(String filePath){
         //we will load the map from a text file
         try{
-            InputStream is = getClass().getResourceAsStream(filePath);
+            InputStream is = getClass().getResourceAsStream(filePath); //school
+            //InputStream is = new FileInputStream(new File("res/maps/map.txt")); //home pc
             BufferedReader br = new BufferedReader(new InputStreamReader(is));//we gonna use this bufferedreader
             //to read the text file line by line so we can put whatever tiles on the map we want
             int col = 0;

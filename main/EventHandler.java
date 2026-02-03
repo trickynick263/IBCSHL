@@ -4,43 +4,71 @@ import java.awt.Rectangle;
 
 public class EventHandler {
     GamePanel gp;
-    Rectangle eventRect;
-    int eventRectDefaultX, eventRectDefaultY;
+    
+    EventRect eventRect[][];
+    int previousEventX, previousEventY;
+    boolean canTouchEvent = true;//we create these variables in order to record previous moves
+    //if the player is about 1 tile away from the event object after interacting with it, we will let the player interact with it again
 
     public EventHandler(GamePanel gp){
         this.gp = gp;
-        eventRect = new Rectangle();
-        eventRect.x = 23;
-        eventRect.y=23;
-        eventRect.width = 2;
-        eventRect.height = 2;
-        eventRectDefaultX = eventRect.x;
-        eventRectDefaultY = eventRect.y;
+        
+        eventRect = new EventRect[gp.maxWorldCol][gp.maxWorldRow];
+        int col = 0;
+        int row = 0;
+
+        while(col < gp.maxWorldCol && row < gp.maxWorldRow){//solid area for an event rect around the whole map
+        eventRect[col][row] = new EventRect();
+        eventRect[col][row].x = 23;
+        eventRect[col][row].y=23;
+        eventRect[col][row].width = 2;
+        eventRect[col][row].height = 2;
+        eventRect[col][row].eventRectDefaultX = eventRect[col][row].x;
+        eventRect[col][row].eventRectDefaultY = eventRect[col][row].y;
+        col++;
+        if(col == gp.maxWorldCol){
+            col = 0;
+            row++;
+        }
+    }
         // we create a tiny 2 by 2 rectangle that activates an event.
         //the reasom for such a tiny square is because we want to activate the event when the
         //player is at the center of the tile, not halfway through
+        
     }
 
     public void checkEvent(){
-        if(hit(10,10,"any") == true){damagePit(gp.dialogueState);}
+        //check if player is more than 1 tile away from event
+        int xDistance = Math.abs(gp.player.worldX - previousEventX);//|
+        int yDistance = Math.abs(gp.player.worldY - previousEventY);//|-Distance between two things
+        int distance = Math.max(xDistance, yDistance);              //|
+        if(distance > gp.tileSize){
+            canTouchEvent = true;
 
-        if(hit(8,2,"any")==true){ healingPool(gp.dialogueState);}
+        }
 
-        if(hit(6,4,"any") == true){teleport(gp.dialogueState);}
-    
+        if(canTouchEvent == true){
+            if(hit(10,10,"any") == true){damagePit(10,10,gp.dialogueState);}
+
+            if(hit(8,2,"any")==true){ healingPool(8,2,gp.dialogueState);}
+
+            if(hit(6,4,"any") == true){teleport(6,4,gp.dialogueState);}
+        }
     }
 
-    public boolean hit(int eventCol, int eventRow, String reqDirection){
+    public boolean hit(int col, int row, String reqDirection){
         boolean hit = false;
         gp.player.solidArea.x = gp.player.worldX + gp.player.solidArea.x;
         gp.player.solidArea.y = gp.player.worldY + gp.player.solidArea.y;
-        eventRect.x = eventCol*gp.tileSize + eventRect.x;
-        eventRect.y = eventRow*gp.tileSize + eventRect.y;
+        eventRect[col][row].x = col*gp.tileSize + eventRect[col][row].x;
+        eventRect[col][row].y = row*gp.tileSize + eventRect[col][row].y;
 
         //this checks if the two rectangles are hitting
-        if(gp.player.solidArea.intersects(eventRect)){
+        if(gp.player.solidArea.intersects(eventRect[col][row]) && eventRect[col][row].eventDone == false){
             if(gp.player.direction == reqDirection || reqDirection.contentEquals("any")){
                 hit = true;
+                previousEventX = gp.player.worldX;
+                previousEventY = gp.player.worldY;
             }
         }
         // by breaking down the if statements, we can set the req direction to "any"
@@ -49,35 +77,38 @@ public class EventHandler {
 
         gp.player.solidArea.x = gp.player.solidAreaDefaultX;
         gp.player.solidArea.y = gp.player.solidAreaDefaultY;
-        eventRect.x= eventRectDefaultX;
-        eventRect.y = eventRectDefaultY;
+        eventRect[col][row].x= eventRect[col][row].eventRectDefaultX;
+        eventRect[col][row].y = eventRect[col][row].eventRectDefaultY;
 
         //these mechanics are pretty similar to the 
         return hit;
     }
 
-    public void damagePit(int gameState){
+    public void damagePit(int col, int row,int gameState){
         gp.gameState = gameState;
         gp.ui.currentDialogue = "You fell into a pit!!!!";
         gp.player.life -=1;
+        canTouchEvent = false;
     }
 
-    public void healingPool(int gameState){
+    public void healingPool(int col, int row,int gameState){
         if(gp.keyH.enterPressed==true) {
         gp.gameState = gameState;
         gp.ui.currentDialogue = "The Magic Wall Has Healed You!";
         gp.player.life = gp.player.maxLife;
+        
         }
         
     }
 
     
 
-    public void teleport(int gameState){
+    public void teleport(int col, int row,int gameState){
         gp.gameState = gameState;
         gp.ui.currentDialogue = "Teleported!";
         gp.player.worldX = 25 * gp.tileSize;
         gp.player.worldY = 25*gp.tileSize;
+        canTouchEvent = false;
 
     }
 }

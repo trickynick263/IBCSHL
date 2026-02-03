@@ -1,5 +1,6 @@
 package objects;
 
+import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -15,9 +16,9 @@ public class OBJ_Heart extends SuperObject{
         name = "Heart";
 
         try {
-            //image = ImageIO.read(new File(/res/objects/heart.png"));
-            //image2 = ImageIO.read(new File("/res/objects/half heart.png"));
-            //image3 = ImageIO.read(new File("/res/objects/heart blank.png""));
+            //image = ImageIO.read(new File("res/objects/heart_full.png"));
+            //image2 = ImageIO.read(new File("res/objects/heart_half.png"));
+            //image3 = ImageIO.read(new File("res/objects/heart_blank.png"));
             image = ImageIO.read(getClass().getResourceAsStream("/res/objects/heart_full.png"));
             image2 = ImageIO.read(getClass().getResourceAsStream("/res/objects/heart_half.png"));
             image3 = ImageIO.read(getClass().getResourceAsStream("/res/objects/heart_blank.png"));

@@ -9,6 +9,8 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.imageio.ImageIO;
+
 import objects.OBJ_Heart;
 import objects.SuperObject;
 
@@ -27,6 +29,7 @@ public class UI {
     public int commandNum = 0;
     public int titleScreenState = 0;// 0: the first screen 1: second screen
     BufferedImage heart_full,heart_half,heart_blank;
+    BufferedImage img_beserk, img_mage, img_archer,img_tank,img_healer;
 
     public UI(GamePanel gp){
         this.gp = gp;
@@ -39,8 +42,33 @@ public class UI {
         heart_full = heart.image;
         heart_half = heart.image2;
         heart_blank = heart.image3;
+        /* >not working<:(
+        img_beserk = setup("beserk");
+        img_mage = setup("mage");
+        img_archer = setup("archer");
+        img_tank = setup("tank");
+        img_healer = setup("healer");
+        */
+
         
     }
+    //This method is for class images
+    public BufferedImage setup(String imageName){
+        UtilityTool uTool = new UtilityTool();
+        BufferedImage image = null;
+
+        try{
+            image = ImageIO.read(getClass().getResourceAsStream("/res/class" + imageName + ".png")); //school pc
+            //image = ImageIO.read(new File("res/class" + imageName + ".png")); //home pc
+            image = uTool.scaleImage(image, gp.tileSize, gp.tileSize);
+            
+        } catch(IOException e){
+            e.printStackTrace();
+        }
+        return image;
+    }
+
+
 
     public void showMessage(String text){
 
@@ -174,6 +202,7 @@ public class UI {
             if(commandNum == 0){
                 g2.drawString(">",x-gp.tileSize,y);
             }
+            g2.drawImage(img_beserk,x-gp.tileSize,y,gp.tileSize,gp.tileSize,null);
 
             text = "Mage";
             x = getXforCenteredText(text);
@@ -182,6 +211,7 @@ public class UI {
             if(commandNum == 1){
                 g2.drawString(">",x-gp.tileSize,y);
             }
+            g2.drawImage(img_mage,x-gp.tileSize/2,y,gp.tileSize,gp.tileSize,null);
 
             text = "Healer";
             x = getXforCenteredText(text);
@@ -190,6 +220,7 @@ public class UI {
             if(commandNum == 2){
                 g2.drawString(">",x-gp.tileSize,y);
             }
+            g2.drawImage(img_healer,x-gp.tileSize/2,y,gp.tileSize,gp.tileSize,null);
 
             text = "Tank";
             x = getXforCenteredText(text);
@@ -198,6 +229,7 @@ public class UI {
             if(commandNum == 3){
                 g2.drawString(">",x-gp.tileSize,y);
             }
+            g2.drawImage(img_tank,x-gp.tileSize/2,y,gp.tileSize,gp.tileSize,null);
 
             text = "Archer";
             x = getXforCenteredText(text);
@@ -206,6 +238,7 @@ public class UI {
             if(commandNum == 4){
                 g2.drawString(">",x-gp.tileSize,y);
             }
+            g2.drawImage(img_archer,x-gp.tileSize/2,y,gp.tileSize,gp.tileSize,null);
 
             text = "Back";
             x = getXforCenteredText(text);
