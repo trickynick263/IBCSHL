@@ -52,7 +52,8 @@ public class EventHandler {
 
             if(hit(8,2,"any")==true){ healingPool(8,2,gp.dialogueState);}
 
-            if(hit(6,4,"any") == true){teleport(6,4,gp.dialogueState);}
+            if(hit(6,4,"any") == true){teleport(6,4,gp.playState);}
+
         }
     }
 
@@ -103,12 +104,15 @@ public class EventHandler {
 
     
 
+    
+    
     public void teleport(int col, int row,int gameState){
         gp.gameState = gameState;
-        gp.ui.currentDialogue = "Teleported!";
+        
         gp.player.worldX = 25 * gp.tileSize;
         gp.player.worldY = 25*gp.tileSize;
         canTouchEvent = false;
 
     }
+   
 }

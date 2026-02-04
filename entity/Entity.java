@@ -22,7 +22,13 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
     public GamePanel gp;
     public int actionLockCounter = 0;
     public BufferedImage up1, up2, down1, down2, left1, left2, right1, right2;//images for different directions of entity
-    public String direction;//direction entity is facing
+    public String direction = "down";//direction entity is facing
+
+
+    //Transfer from superobject
+    public String name;
+    public java.awt.image.BufferedImage image, image2, image3;//so we can read 3 images
+    public boolean collision = false;
     
     
     

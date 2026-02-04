@@ -8,11 +8,10 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
-
 import javax.imageio.ImageIO;
 
-import objects.OBJ_Heart;
-import objects.SuperObject;
+
+
 
 
 
@@ -38,10 +37,19 @@ public class UI {
        pixel = new Font("Bodoni MT", Font.PLAIN, 80);
         
         //CREATE HUD OBJECT
-        SuperObject heart = new OBJ_Heart(gp);
-        heart_full = heart.image;
-        heart_half = heart.image2;
-        heart_blank = heart.image3;
+        try{
+            UtilityTool uTool = new UtilityTool();
+            heart_full = ImageIO.read(getClass().getResourceAsStream("/res/objects/heart_full.png"));
+            heart_half = ImageIO.read(getClass().getResourceAsStream("/res/objects/heart_half.png"));
+            heart_blank = ImageIO.read(getClass().getResourceAsStream("/res/objects/heart_blank.png"));
+            
+            heart_full = uTool.scaleImage(heart_full,gp.tileSize,gp.tileSize);
+            heart_half = uTool.scaleImage(heart_half,gp.tileSize,gp.tileSize);
+            heart_blank = uTool.scaleImage(heart_blank,gp.tileSize,gp.tileSize);
+
+        }catch(IOException e){
+        e.printStackTrace();}
+        
         /* >not working<:(
         img_beserk = setup("beserk");
         img_mage = setup("mage");

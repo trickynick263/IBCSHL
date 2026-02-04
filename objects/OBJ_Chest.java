@@ -1,24 +1,22 @@
 package objects;
 
 import main.GamePanel;
-import javax.imageio.ImageIO;
-import java.io.File;
-import java.io.IOException;
 
-public class OBJ_Chest extends SuperObject {
+
+import entity.Entity;
+
+
+/*We changed what class we extended the objects from. */
+public class OBJ_Chest extends Entity {
 
     GamePanel gp;
 
     public OBJ_Chest(GamePanel gp) {
-        this.gp = gp;
+        super(gp);
         name = "Chest";
+        down1 = setup("/objects/chest");
 
-        try {
-            //image = ImageIO.read(new File("res/objects/chest.png"));
-            image = ImageIO.read(getClass().getResourceAsStream("/res/objects/chest.png"));
-            image = uTool.scaleImage(image, gp.tileSize, gp.tileSize);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+       
     }
 }
+

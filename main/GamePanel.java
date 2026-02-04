@@ -2,13 +2,13 @@ package main;
 
 import entity.Entity;
 import entity.Player;
-import objects.SuperObject;
 import tile.TileManager;
-
 import javax.swing.JPanel;
 import java.awt.Dimension;//imports dimension for the screen we use to play the game
 import java.awt.Graphics2D;
-
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.awt.Color;
 
 public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
@@ -47,12 +47,15 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
     //Like closing the program or pausing in certain cases
     public CollisionChecker cChecker = new CollisionChecker(this);
     public Player player = new Player(this,keyH);//creates a new player object
-    public SuperObject obj[] = new SuperObject[10];//array to hold objects in the game, like keys, doors, etc
+    
+    //This line below was changed from superobject to fix render order
+    public Entity obj[] = new Entity[10];//array to hold objects in the game, like keys, doors, etc
     //10 different objects can be stored in the array, if we need more we can increase the size of the array
     public AssetSetter aSetter = new AssetSetter(this);
     public UI ui = new UI(this);
     public Entity npc[] = new Entity[10];
     public EventHandler eHandler = new EventHandler(this);
+    ArrayList<Entity> entityList = new ArrayList<>();
    
 
     
@@ -204,23 +207,38 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
         else{
         //TILE
         tileM.draw(g2);//draws the tile manager first so the tiles are in the background
-        //OBJECT
-        for(int i = 0; i < obj.length; i++){//draws all objects in the obj array
-            if(obj[i] != null){
-                obj[i].draw(g2, this);
-            }
-        }
+        
+        //ADDING NPCS TO ENTITY LIST
+        entityList.add(player);
+        
         //NPC
-        for(int i = 0; i < npc.length;i++){
+        for(int i = 0;i < npc.length;i++){
             if(npc[i] != null){
-                npc[i].draw(g2);
+                entityList.add(npc[i]);
             }
         }
         
-        
-        //PLAYER
-        player.draw(g2);//calls the draw method from the player class
-        //java asks what the dimensions of the rectangle are so we set them in the parameters
+        //OBJECT
+        for(int i = 0;i<obj.length;i++){
+            if(obj[i] != null){
+                entityList.add(obj[i]);
+            }
+        }
+        //SORTS ENTITY LIST BASED OFF OF WORLD Y VALUES
+        Collections.sort(entityList, new Comparator<Entity>(){
+            public int compare(Entity e1, Entity e2){
+                int result = Integer.compare(e1.worldY,e2.worldY); 
+                return result;
+            }
+        });
+        //DRAW ENTITIES
+        for(int i = 0; i < entityList.size();i++){
+            entityList.get(i).draw(g2);
+        }
+        //EMPTY THE ENTITY LIST
+        for(int i = 0;i < entityList.size();i++){
+            entityList.remove(i);
+        }
 
         ui.draw(g2);
 
