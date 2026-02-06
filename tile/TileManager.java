@@ -27,6 +27,7 @@ public class TileManager {
 
         getTileImage();
         loadMap("/res/maps/map.txt");
+        //THIS NEEDS TO BE CHANGED WITH A SLASH AT HOME AND BETWEEN SCHOOL
         
         
     }

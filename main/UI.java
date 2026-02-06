@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
@@ -42,6 +43,11 @@ public class UI {
             heart_full = ImageIO.read(getClass().getResourceAsStream("/res/objects/heart_full.png"));
             heart_half = ImageIO.read(getClass().getResourceAsStream("/res/objects/heart_half.png"));
             heart_blank = ImageIO.read(getClass().getResourceAsStream("/res/objects/heart_blank.png"));
+
+            //heart_full =ImageIO.read(new File("res/objects/heart_full.png"));
+            //heart_half = ImageIO.read(new File("res/objects/heart_half.png"));
+            //heart_blank = ImageIO.read(new File("res/objects/heart_blank.png"));
+
             
             heart_full = uTool.scaleImage(heart_full,gp.tileSize,gp.tileSize);
             heart_half = uTool.scaleImage(heart_half,gp.tileSize,gp.tileSize);

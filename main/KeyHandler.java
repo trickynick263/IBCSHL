@@ -25,7 +25,7 @@ public class KeyHandler implements KeyListener{
     if(gp.gameState == gp.titleState){
         if(gp.ui.titleScreenState == 0){
             if(code == KeyEvent.VK_W){
-                gp.ui.commandNum --;
+                gp.ui.commandNum--;
                 if(gp.ui.commandNum < 0){
                     gp.ui.commandNum = 2;
                 }

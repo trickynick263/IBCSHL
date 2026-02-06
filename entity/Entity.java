@@ -187,7 +187,7 @@ the requirements of an entity */
         BufferedImage image = null;
 
         try{
-        image = ImageIO.read(getClass().getResourceAsStream("/res" + imagePath + ".png")); //school pc
+            image = ImageIO.read(getClass().getResourceAsStream("/res" + imagePath + ".png")); //school pc
             //image = ImageIO.read(new File("res" + imagePath + ".png")); //home pc
             image = uTool.scaleImage(image, gp.tileSize, gp.tileSize);
             
