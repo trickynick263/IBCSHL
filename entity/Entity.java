@@ -46,6 +46,10 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
     //CHARACTER STATUS
     public int maxLife;
     public int life;
+
+    public boolean invincible = false;
+    public int invincibleCounter = 0;
+    public int type; //0 is player, 1 is npc, 2 is monster
     
 
 
@@ -67,7 +71,19 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
         collisionOn = false;
         gp.cChecker.checkTile(this);
         gp.cChecker.checkObject(this,false);
-        gp.cChecker.checkPlayer(this);
+        gp.cChecker.checkEntity(this, gp.npc);
+        gp.cChecker.checkEntity(this, gp.monster);
+        boolean contactPlayer = gp.cChecker.checkPlayer(this);
+
+        if(this.type == 2 && contactPlayer == true){
+            if(gp.player.invincible == false){
+                //we can give some damage
+                gp.player.life -=1;
+                gp.player.invincible = true;
+            }
+        }
+
+
         //copied from player class
            if(collisionOn == false){
             switch(direction){

@@ -1,6 +1,6 @@
 package main;
 
-import java.awt.Rectangle;
+
 
 public class EventHandler {
     GamePanel gp;
@@ -52,7 +52,8 @@ public class EventHandler {
 
             if(hit(8,2,"any")==true){ healingPool(8,2,gp.dialogueState);}
 
-            if(hit(6,4,"any") == true){teleport(6,4,gp.playState);}
+            if(hit(6,4,"any") == true){teleport(6,4,gp.playState, 25, 25);}
+            if(hit(25, 27, "any") == true){teleport(25,27,gp.playState,6,2);}
 
         }
     }
@@ -106,11 +107,11 @@ public class EventHandler {
 
     
     
-    public void teleport(int col, int row,int gameState){
+    public void teleport(int col, int row,int gameState,int tpCol,int tpRow){
         gp.gameState = gameState;
         
-        gp.player.worldX = 25 * gp.tileSize;
-        gp.player.worldY = 25*gp.tileSize;
+        gp.player.worldX = tpCol * gp.tileSize;
+        gp.player.worldY = tpRow*gp.tileSize;
         canTouchEvent = false;
 
     }

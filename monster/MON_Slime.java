@@ -11,7 +11,7 @@ public class MON_Slime extends Entity{
         speed = 1;
         maxLife = 4;
         life = maxLife;
-
+        type = 2;
         solidArea.x = 3;
         solidArea.y = 18;
         solidArea.width = 42;

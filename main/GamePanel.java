@@ -5,6 +5,7 @@ import entity.Player;
 import tile.TileManager;
 import javax.swing.JPanel;
 import java.awt.Dimension;//imports dimension for the screen we use to play the game
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -269,6 +270,8 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
             g2.drawString("X: " + player.worldX, 10, 300);
             g2.drawString("Draw Time: " + passed, 10, 400);
             System.out.println("Draw Time: " + passed);
+
+        //DEBUG
         }
 
         g2.dispose();//disposes if graphics context and releases system resources that it is using

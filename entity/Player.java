@@ -1,6 +1,8 @@
 package entity;
 import main.GamePanel;
 
+import java.awt.AlphaComposite;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -133,6 +135,12 @@ public class Player extends Entity {
 
         gp.keyH.enterPressed = false;//so enter is no longer pressed
         
+        //CHECK MONSTER COLLISION
+        int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
+        if(invincible == false){
+            contactMonster(monsterIndex);
+        }
+
 
 
         //IF COLLISION IS FALSE, PLAYER CAN MOVE
@@ -179,7 +187,16 @@ public class Player extends Entity {
             spriteNum = 1;//if no keys are pressed, set sprite to first image
         }
         
-        
+        //Needs to be outside key if statement
+        if(invincible == true){
+            invincibleCounter++;
+            if(invincibleCounter > 60){
+                invincible = false;
+                invincibleCounter = 0;
+            }
+        }
+        //DEBUG
+       
         
         
     }
@@ -189,6 +206,14 @@ public class Player extends Entity {
            
         }
     }
+
+    public void contactMonster(int i){
+        if(i!=999){
+            life-=1;
+            invincible = true;
+        }
+    }
+
 
     public void interactNPC(int i){
         if(i != 999){
@@ -245,8 +270,18 @@ public class Player extends Entity {
             }
             break;//                                                    image observer,js type null
         }//                                                            ^^^^
+        
+        if(invincible == true){
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.3f));
+        }
+
+        
+        
         g2.drawImage(image, screenX, screenY, null);//draws the image at the x and y position with the tile size width and height
         //the image above is drawn at a certain x and y position with an image corresponding to direction
 
+
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,1f));
+    
     }
 }

@@ -90,30 +90,18 @@ public class CollisionChecker {
                 switch(entity.direction){
                 case "up":
                     entity.solidArea.y -= entity.speed;//predicts where entity will be next
-                    if(entity.solidArea.intersects(gp.obj[i].solidArea)){//sees if the solid areas intersect
-                        if(gp.obj[i].collision == true){//if intersects and object has collision true
-                            entity.collisionOn = true;
-                        }
-                        if(player == true){
-                            index = i;//we will return the index of the object we collided with
-                        }
-                        
-                    }
                     break;
                 case "down":
                     entity.solidArea.y += entity.speed;
-                    if(entity.solidArea.intersects(gp.obj[i].solidArea)){
-                        if(gp.obj[i].collision == true){//if intersects and object has collision true
-                            entity.collisionOn = true;
-                        }
-                        if(player == true){
-                            index = i;//we will return the index of the object we collided with
-                        }
-                    }
                     break;
                 case "left":
                     entity.solidArea.x -= entity.speed;
-                    if(entity.solidArea.intersects(gp.obj[i].solidArea)){
+                    break;
+                case "right":
+                    entity.solidArea.x += entity.speed;
+                    break;
+                }
+                if(entity.solidArea.intersects(gp.obj[i].solidArea)){
                        if(gp.obj[i].collision == true){//if intersects and object has collision true
                             entity.collisionOn = true;
                         }
@@ -121,22 +109,6 @@ public class CollisionChecker {
                             index = i;//we will return the index of the object we collided with
                         }
                     }
-                    break;
-                case "right":
-                    entity.solidArea.x += entity.speed;
-                    if(entity.solidArea.intersects(gp.obj[i].solidArea)){
-                        if(gp.obj[i].collision == true){//if intersects and object has collision true
-                            entity.collisionOn = true;
-                        }
-                        if(player == true){
-                            index = i;//we will return the index of the object we collided with
-                        }
-                    }
-                    break;
-
-
-
-                }
                 entity.solidArea.x = entity.solidAreaDefaultX;
                 entity.solidArea.y = entity.solidAreaDefaultY;//we have to reset values
                 //so they dont keep increasing as we check for collisions
@@ -177,44 +149,22 @@ public class CollisionChecker {
                 switch(entity.direction){
                 case "up":
                     entity.solidArea.y -= entity.speed;//predicts where entity will be next
-                    if(entity.solidArea.intersects(target[i].solidArea)){//sees if the solid areas intersect
-                        entity.collisionOn=true;
-                        
-                            index = i;//we will return the index of the object we collided with
-                        
-                        
-                    }
                     break;
                 case "down":
                     entity.solidArea.y += entity.speed;
-                    if(entity.solidArea.intersects(target[i].solidArea)){
-                        
-                        entity.collisionOn=true;
-                            index = i;//we will return the index of the object we collided with
-                        
-                    }
                     break;
                 case "left":
                     entity.solidArea.x -= entity.speed;
-                    if(entity.solidArea.intersects(target[i].solidArea)){
-                       
-                        entity.collisionOn=true;
-                            index = i;//we will return the index of the object we collided with
-                        
-                    }
                     break;
                 case "right":
                     entity.solidArea.x += entity.speed;
-                    if(entity.solidArea.intersects(target[i].solidArea)){
-                        
-                        entity.collisionOn=true;
-                            index = i;//we will return the index of the object we collided with
-                        
-                    }
                     break;
-
-
-
+                }
+                if(entity.solidArea.intersects(target[i].solidArea)){ 
+                        if(target[i] != entity){
+                            entity.collisionOn=true;
+                            index = i;//we will return the index of the object we collided with   
+                        }         
                 }
                 entity.solidArea.x = entity.solidAreaDefaultX;
                 entity.solidArea.y = entity.solidAreaDefaultY;//we have to reset values
@@ -234,8 +184,8 @@ public class CollisionChecker {
 
     }
 
-    public void checkPlayer(Entity entity){//pasted from check entity method, we dont need to scan the array though.
-
+    public boolean checkPlayer(Entity entity){//pasted from check entity method, we dont need to scan the array though.
+                boolean contactPlayer = false;
                 entity.solidArea.x = entity.worldX + entity.solidArea.x;
                 entity.solidArea.y = entity.worldY +  entity.solidArea.y;
                 //these lines have set code in case we wanted to change the solid area of the 
@@ -250,40 +200,20 @@ public class CollisionChecker {
                 switch(entity.direction){
                 case "up":
                     entity.solidArea.y -= entity.speed;//predicts where entity will be next
-                    if(entity.solidArea.intersects(gp.player.solidArea)){//sees if the solid areas intersect
-                        entity.collisionOn=true;
-                        
-                        
-                        
-                    }
                     break;
                 case "down":
                     entity.solidArea.y += entity.speed;
-                    if(entity.solidArea.intersects(gp.player.solidArea)){
-                        
-                        entity.collisionOn=true;
-                        
-                    }
                     break;
                 case "left":
                     entity.solidArea.x -= entity.speed;
-                    if(entity.solidArea.intersects(gp.player.solidArea)){
-                       
-                        entity.collisionOn=true;
-                        
-                    }
                     break;
                 case "right":
                     entity.solidArea.x += entity.speed;
-                    if(entity.solidArea.intersects(gp.player.solidArea)){
-                        
-                        entity.collisionOn=true;
-                        
-                    }
                     break;
-
-
-
+                }
+                if(entity.solidArea.intersects(gp.player.solidArea)){//sees if the solid areas intersect
+                        entity.collisionOn=true;
+                        contactPlayer = true;
                 }
                 entity.solidArea.x = entity.solidAreaDefaultX;
                 entity.solidArea.y = entity.solidAreaDefaultY;//we have to reset values
@@ -291,7 +221,7 @@ public class CollisionChecker {
                 gp.player.solidArea.x = gp.player.solidAreaDefaultX;
                 gp.player.solidArea.y = gp.player.solidAreaDefaultY;
 
-
+                return contactPlayer;
 
 
             }
