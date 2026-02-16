@@ -25,7 +25,8 @@ public class Player extends Entity {
     //those are 
     //2 variables to fix the player in the center of the screen
     
-    
+    //TEST
+    int spriteChecker = 0;
     
     
     
@@ -38,6 +39,7 @@ public class Player extends Entity {
         this.keyH = keyH;
         setDefaultValues();
         getPlayerImage();
+        getPlayerAttackImage();
         //                                                                                            x,y,width,height
         solidArea = new Rectangle();//if we want to make a rectangle that is the size of a tile ->args(0, 0, 48, 48)
         solidArea.x = 8;
@@ -59,7 +61,11 @@ public class Player extends Entity {
 
         screenX = gp.screenWidth / 2 - (gp.tileSize / 2);//this will center the player on the screen
         screenY = gp.screenHeight / 2 - (gp.tileSize / 2);
-
+        
+        
+        //ATTACK AREA DETERMINES ATTACK RANGE AND AREA OF EFFECT
+        attackArea.width = 36;
+        attackArea.height = 36;
     }
     public void setDefaultValues(){
         worldX = gp.tileSize * 2;
@@ -75,24 +81,43 @@ public class Player extends Entity {
     }
     public void getPlayerImage(){
        
-        up1 = setup("/playerimage/running up");
-        up2 = setup("/playerimage/looking up");
-        down1 = setup("/playerimage/running down");
-        down2 = setup("/playerimage/looking down");
-        left1 = setup("/playerimage/running left");
-        left2 = setup("/playerimage/looking left");
-        right1 = setup("/playerimage/running right");
-        right2 = setup("/playerimage/looking right");
+        up1 = setup("/playerimage/player up 1", gp.tileSize, gp.tileSize);
+        up2 = setup("/playerimage/player up 2", gp.tileSize, gp.tileSize);
+        down1 = setup("/playerimage/player down 1", gp.tileSize, gp.tileSize);
+        down2 = setup("/playerimage/player down 2", gp.tileSize, gp.tileSize);
+        left1 = setup("/playerimage/player left 1", gp.tileSize, gp.tileSize);
+        left2 = setup("/playerimage/player left 2", gp.tileSize, gp.tileSize);
+        right1 = setup("/playerimage/player right 1", gp.tileSize, gp.tileSize);
+        right2 = setup("/playerimage/player right 2", gp.tileSize, gp.tileSize);
+
+
 
     }
-    public BufferedImage setup(String imageName){
+
+    public void getPlayerAttackImage(){
+        attackUp1 = setup("/playerimage/player attack up 1", gp.tileSize, gp.tileSize*2);
+        attackUp2 = setup("/playerimage/player attack up 2", gp.tileSize, gp.tileSize*2);
+        attackDown1 = setup("/playerimage/player attack down 1", gp.tileSize, gp.tileSize*2);
+        attackDown2 = setup("/playerimage/player attack down 2", gp.tileSize, gp.tileSize*2);
+        attackLeft1 = setup("/playerimage/player attack left 1", gp.tileSize*2, gp.tileSize);
+        attackLeft2 = setup("/playerimage/player attack left 2", gp.tileSize*2, gp.tileSize);
+        attackRight1 = setup("/playerimage/player attack right 1", gp.tileSize*2, gp.tileSize);
+        attackRight2 = setup("/playerimage/player attack right 2", gp.tileSize*2, gp.tileSize);
+        //we will call this method in the constructor so that the attack images are loaded when the game starts
+        // we add this in a different method because when we want to change what item or weapon the player
+        //has, we just swap methods in order to change what weapon the player wants to use and the corresponding attack images will be loaded
+    }
+
+
+
+    public BufferedImage setup(String imageName, int width, int height){
         UtilityTool uTool = new UtilityTool();
         BufferedImage image = null;
 
         try{
-            image = ImageIO.read(getClass().getResourceAsStream("/res" + imageName + ".png")); //school pc
-            //image = ImageIO.read(new File("res" + imageName + ".png")); //home pc
-            image = uTool.scaleImage(image, gp.tileSize, gp.tileSize);
+            //image = ImageIO.read(getClass().getResourceAsStream("/res" + imageName + ".png")); //school pc
+            image = ImageIO.read(new File("res" + imageName + ".png")); //home pc
+            image = uTool.scaleImage(image, width, height);
             
         } catch(IOException e){
             e.printStackTrace();
@@ -100,11 +125,17 @@ public class Player extends Entity {
         return image;
     }
     
-    public void update(){
+    public void update() {
+
+        if(attacking == true){
+            attacking();
+            return;//this will stop the player from moving when attacking
+        }
+
         
-        
+
         if(keyH.upPressed == true || keyH.downPressed == true || 
-            keyH.leftPressed == true || keyH.rightPressed == true){
+            keyH.leftPressed == true || keyH.rightPressed == true || keyH.enterPressed == true){
         
         if(keyH.upPressed == true){//we will now set the player's direction corresponding to directuion headed
             direction = "up";
@@ -133,7 +164,7 @@ public class Player extends Entity {
         //CHECK EVENT
         gp.eHandler.checkEvent();
 
-        gp.keyH.enterPressed = false;//so enter is no longer pressed
+        
         
         //CHECK MONSTER COLLISION
         int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
@@ -141,10 +172,11 @@ public class Player extends Entity {
             contactMonster(monsterIndex);
         }
 
+        
 
 
         //IF COLLISION IS FALSE, PLAYER CAN MOVE
-        if(collisionOn == false){
+        if(collisionOn == false && keyH.enterPressed == false){
             switch(direction){
                 case "up":
                     worldY -= speed;//upper left corner is 0,0 so to go up we decrease y value
@@ -163,30 +195,28 @@ public class Player extends Entity {
         
 
         //SPRITE ANIMATION
-        if(collisionOn == false){
+        
         spriteCounter++;
-        if(spriteCounter > 12){//changes sprite every 12 frames
-            if(spriteNum == 1){
-                spriteNum = 2;//changes sprite images to swap between them
-            }//remember this gets called 60 times per second and the counter is increased
-            //a total of 60 times per second and which switch between images very often
-            else if(spriteNum == 2){
-                spriteNum = 1;
-            }
-            spriteCounter = 0;//this line right here resets the counter
-            //  so we can count to 12 again
+        if(attacking == false){
+            spriteChecker = 12;
         }
-        }
-
-
-
-
-
-        }//this if statement will fix the bug where if no keys are pressed, the sprite will not keep moving
         else{
-            spriteNum = 1;//if no keys are pressed, set sprite to first image
+            spriteChecker = 24;
+        }
+            if(spriteCounter > spriteChecker){//changes sprite every 12 frames
+                if(spriteNum == 1){
+                    spriteNum = 2;//changes sprite images to swap between them
+                }//remember this gets called 60 times per second and the counter is increased
+                //a total of 60 times per second and which switch between images very often
+                else if(spriteNum == 2){
+                    spriteNum = 1;
+                }
+                spriteCounter = 0;//this line right here resets the counter
+                //  so we can count to 12 again
+            }
         }
         
+       
         //Needs to be outside key if statement
         if(invincible == true){
             invincibleCounter++;
@@ -195,10 +225,53 @@ public class Player extends Entity {
                 invincibleCounter = 0;
             }
         }
-        //DEBUG
-       
-        
-        
+    }
+
+    public void attacking(){
+        spriteNum = 1;
+        spriteCounter++;
+        if(spriteCounter <= 10){
+            spriteNum = 1;//shows first attacking image for the first 5 frames
+        }
+        if(spriteCounter > 10 && spriteCounter <=  30){
+            spriteNum = 2;//shows second attacking image for the next 20 frames
+            //Save current worldX, worldY, solidArea
+            int currentWorldX = worldX;
+            int currentWorldY = worldY;
+            int solidAreaWidth = solidArea.width;
+            int solidAreaHeight = solidArea.height;
+            //Adjust player's worldX/Y for the attackArea
+            switch(direction){
+                case "up":
+                    worldY -= attackArea.height;//moves the area were checking upwards so we can check for the sword hitting the enemy
+                    break;
+                case "down":
+                    worldY += attackArea.height;
+                    break;
+                case "left":
+                    worldX -= attackArea.width;
+                    break;
+                case "right":
+                    worldX += attackArea.width;
+                    break;
+            }
+            solidArea.width = attackArea.width;
+            solidArea.height = attackArea.height;
+            //this gets the monster that hit the player and if collision is detected then
+            int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
+            damageMonster(monsterIndex);
+            //After checking collision, restore original worldX/Y and solidArea
+            worldX = currentWorldX;
+            worldY = currentWorldY;
+            solidArea.width = solidAreaWidth;
+            solidArea.height = solidAreaHeight;
+
+        }
+        if(spriteCounter > 30){
+            spriteNum = 1;
+            spriteCounter = 0;
+            attacking = false;
+        }
     }
 
     public void pickUpObject(int index){
@@ -214,17 +287,29 @@ public class Player extends Entity {
         }
     }
 
+    public void damageMonster(int i){
+        if(i!=999){
+            if(gp.monster[i].invincible == false){
+                gp.monster[i].life -= 1;
+                gp.monster[i].invincible = true;
+            }
+            if(gp.monster[i].life <= 0){
+                gp.monster[i] = null;
+            }
+        }
+    }
+
 
     public void interactNPC(int i){
-        if(i != 999){
-           if(gp.keyH.enterPressed == true){
-            gp.gameState = gp.dialogueState;
-           gp.npc[i].speak();
-           }
-
-           gp.keyH.enterPressed = false;
-        }
-        
+        if(gp.keyH.enterPressed == true){
+            if(i != 999){
+                gp.gameState = gp.dialogueState;
+                gp.npc[i].speak();
+            }
+            else{
+                attacking = true;
+            }
+        } 
     }
 
 
@@ -232,52 +317,63 @@ public class Player extends Entity {
         //g2.setColor(Color.white);(our rectangle we will no longer use is here for testing)
         //g2.fillRect(x, y, gp.tileSize, gp.tileSize);
         BufferedImage image = null;
-        /* CASE AND SWITCH EXPLAINED
-        since i only did csa i didnt know what these meant.when using switch it is basically
-        saying check these possibilities for a variable such as the one below which is direction
-        if the variable is this >"in case"<, do this which is exactly what the program does below */
-        switch(direction){//these are the buffered images we loaded earlier
-        case "up"://based on direction we pick a differnt image to draw
-            if(spriteNum == 1){
-                image = up1;
+        /*We are going to create integer variables in order to adjust the position of the player when drawn on the
+         the right spot not matter how the player image is depending on its size, like 32x16 or 16x16 */
+        int tempScreenX = screenX;
+        int tempScreenY = screenY;
+        switch(direction){
+        case "up":
+            if(attacking == false){
+                if(spriteNum == 1){image = up1;}
+                if(spriteNum == 2){image = up2;}
             }
-            if(spriteNum == 2){
-                image = up2;
+            if(attacking == true){
+                tempScreenY = screenY - gp.tileSize;//we adjust the y position of the player when attacking up because the attack image is 2 tiles high
+                if(spriteNum == 1){image = attackUp1;}
+                if(spriteNum == 2){image = attackUp2;}
             }
             break;
         case "down":
-            if(spriteNum == 1){
-                image = down1;
+            if(attacking == false){
+                if(spriteNum == 1){image = down1;}
+                if(spriteNum == 2){image = down2;}
             }
-            if(spriteNum == 2){
-                image = down2;
+            if(attacking == true){
+                if(spriteNum == 1){image = attackDown1;}
+                if(spriteNum == 2){image = attackDown2;}
             }
             break;
         case "left":
-            if(spriteNum == 1){
-                image = left1;
+            if(attacking == false){
+                if(spriteNum == 1){image = left1;}
+                if(spriteNum == 2){image = left2;}
             }
-            if(spriteNum == 2){
-                image = left2;
+            if(attacking == true){
+                tempScreenX = screenX - 23;
+                if(spriteNum == 1){image = attackLeft1;}
+                if(spriteNum == 2){image = attackLeft2;}
             }
             break;
         case "right":
-            if(spriteNum == 1){
-                image = right1;
+            if(attacking == false){
+                if(spriteNum == 1){image = right1;}
+                if(spriteNum == 2){image = right2;}
             }
-            if(spriteNum == 2){
-                image = right2;
+            if(attacking == true){
+                tempScreenX = screenX - 23;
+                if(spriteNum == 1){image = attackRight1;}
+                if(spriteNum == 2){image = attackRight2;}
             }
-            break;//                                                    image observer,js type null
-        }//                                                            ^^^^
+            break;
+        }
         
         if(invincible == true){
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.3f));
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.3f));//sets the opacity of the player
         }
 
         
         
-        g2.drawImage(image, screenX, screenY, null);//draws the image at the x and y position with the tile size width and height
+        g2.drawImage(image, tempScreenX, tempScreenY, null);//draws the image at the x and y position with the tile size width and height
         //the image above is drawn at a certain x and y position with an image corresponding to direction
 
 

@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import java.awt.Dimension;//imports dimension for the screen we use to play the game
 import java.awt.Font;
 import java.awt.Graphics2D;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -251,9 +252,7 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
             entityList.get(i).draw(g2);
         }
         //EMPTY THE ENTITY LIST
-        for(int i = 0;i < entityList.size();i++){
-            entityList.remove(i);
-        }
+        entityList.clear();
 
         ui.draw(g2);
 

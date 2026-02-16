@@ -10,6 +10,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
+import entity.Entity;
+
+import objects.OBJ_Heart;
 
 
 
@@ -30,6 +33,7 @@ public class UI {
     public int titleScreenState = 0;// 0: the first screen 1: second screen
     BufferedImage heart_full,heart_half,heart_blank;
     BufferedImage img_beserk, img_mage, img_archer,img_tank,img_healer;
+    BufferedImage titleScreenImage;
 
     public UI(GamePanel gp){
         this.gp = gp;
@@ -38,24 +42,11 @@ public class UI {
        pixel = new Font("Bodoni MT", Font.PLAIN, 80);
         
         //CREATE HUD OBJECT
-        try{
-            UtilityTool uTool = new UtilityTool();
-            heart_full = ImageIO.read(getClass().getResourceAsStream("/res/objects/heart_full.png"));
-            heart_half = ImageIO.read(getClass().getResourceAsStream("/res/objects/heart_half.png"));
-            heart_blank = ImageIO.read(getClass().getResourceAsStream("/res/objects/heart_blank.png"));
+        Entity hrt = new OBJ_Heart(gp);
+            heart_full = hrt.image;
+            heart_half = hrt.image2;
+            heart_blank = hrt.image3;
 
-            //heart_full =ImageIO.read(new File("res/objects/heart_full.png"));
-            //heart_half = ImageIO.read(new File("res/objects/heart_half.png"));
-            //heart_blank = ImageIO.read(new File("res/objects/heart_blank.png"));
-
-            
-            heart_full = uTool.scaleImage(heart_full,gp.tileSize,gp.tileSize);
-            heart_half = uTool.scaleImage(heart_half,gp.tileSize,gp.tileSize);
-            heart_blank = uTool.scaleImage(heart_blank,gp.tileSize,gp.tileSize);
-
-        }catch(IOException e){
-        e.printStackTrace();}
-        
         /* >not working<:(
         img_beserk = setup("beserk");
         img_mage = setup("mage");
@@ -63,8 +54,15 @@ public class UI {
         img_tank = setup("tank");
         img_healer = setup("healer");
         */
-
         
+        
+        try{
+        titleScreenImage = ImageIO.read(getClass().getResourceAsStream("/res/playerimage/player attack right 2.png")); //school pc
+        //titleScreenImage = ImageIO.read(new File("res/playerimage/player attack right 1.png")); //home pc
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
     }
     //This method is for class images
     public BufferedImage setup(String imageName){
@@ -171,10 +169,10 @@ public class UI {
         g2.setColor(Color.WHITE);
         g2.drawString(text,x,y);
 
-        //BLUE BOY IMAGE
+        //PLAYER IMAGE
         x = gp.screenWidth/2-(gp.tileSize * 2)/2;
         y += 2 * gp.tileSize;
-        g2.drawImage(gp.player.down1,x,y,gp.tileSize *2,gp.tileSize * 2,null);
+        g2.drawImage(titleScreenImage,(x-gp.tileSize*1),y,gp.tileSize *4,gp.tileSize * 2,null);
 
         //MENU
         g2.setFont(g2.getFont().deriveFont(Font.BOLD,48F));

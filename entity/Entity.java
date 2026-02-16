@@ -1,5 +1,6 @@
 package entity;
 
+import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -23,20 +24,22 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
     public int actionLockCounter = 0;
     public BufferedImage up1, up2, down1, down2, left1, left2, right1, right2;//images for different directions of entity
     public String direction = "down";//direction entity is facing
+    public BufferedImage attackUp1, attackUp2, attackDown1, attackDown2,
+    attackLeft1, attackLeft2, attackRight1, attackRight2;//attack images for different directions
+    public boolean attacking = false;//flag to check if entity is attacking
 
+    //ATTACK
+    public Rectangle attackArea = new Rectangle(0,0,0,0);//area of attack for collision detection
+    //The parameters of the rectangle will be set based on what attack the player is doing, if they 
+    //are sweeping it might have a wider range while a sword chop might not
 
     //Transfer from superobject
     public String name;
     public java.awt.image.BufferedImage image, image2, image3;//so we can read 3 images
     public boolean collision = false;
-    
-    
-    
     public int spriteCounter = 0;//counts how many frames have passed to switch between sprite images
     public int spriteNum = 1;//which sprite image to use
-
     public Rectangle solidArea = new Rectangle(0,0,48,48);//default solid area for collision detection
-    
     public int solidAreaDefaultX, solidAreaDefaultY;//to store default x and y of solid area for resetting after collision adjustments
     public boolean collisionOn = false;//flag to check if collision is on or off
     //DIALOGUE
@@ -46,7 +49,6 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
     //CHARACTER STATUS
     public int maxLife;
     public int life;
-
     public boolean invincible = false;
     public int invincibleCounter = 0;
     public int type; //0 is player, 1 is npc, 2 is monster
@@ -118,6 +120,13 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
             //  so we can count to 12 again
         }
         }
+        if(invincible == true){
+            invincibleCounter++;
+            if(invincibleCounter > 30){
+                invincible = false;
+                invincibleCounter = 0;
+            }
+        }
 
 
     }
@@ -137,41 +146,31 @@ the requirements of an entity */
 
         switch(direction){//these are the buffered images we loaded earlier
         case "up"://based on direction we pick a differnt image to draw
-            if(spriteNum == 1){
-                image = up1;
-            }
-            if(spriteNum == 2){
-                image = up2;
-            }
+            if(spriteNum == 1){image = up1;}
+            if(spriteNum == 2){image = up2;}
             break;
         case "down":
-            if(spriteNum == 1){
-                image = down1;
-            }
-            if(spriteNum == 2){
-                image = down2;
-            }
+            if(spriteNum == 1){image = down1;}
+            if(spriteNum == 2){image = down2;}
             break;
         case "left":
-            if(spriteNum == 1){
-                image = left1;
-            }
-            if(spriteNum == 2){
-                image = left2;
-            }
+            if(spriteNum == 1){image = left1;}
+            if(spriteNum == 2){image = left2;}
             break;
         case "right":
-            if(spriteNum == 1){
-                image = right1;
-            }
-            if(spriteNum == 2){
-                image = right2;
-            }
+            if(spriteNum == 1){image = right1;}
+            if(spriteNum == 2){image = right2;}
             break;
         }  
 
+        if(invincible == true){
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.4f));//sets the opacity of the player
+        }
+
             g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
         }
+
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,1f));//sets the opacity of the player
     }
 
     public void speak(){
@@ -198,14 +197,14 @@ the requirements of an entity */
     }
 
 
-    public BufferedImage setup(String imagePath){
+    public BufferedImage setup(String imagePath, int width, int height){
         UtilityTool uTool = new UtilityTool();
         BufferedImage image = null;
 
         try{
-            image = ImageIO.read(getClass().getResourceAsStream("/res" + imagePath + ".png")); //school pc
-            //image = ImageIO.read(new File("res" + imagePath + ".png")); //home pc
-            image = uTool.scaleImage(image, gp.tileSize, gp.tileSize);
+            //image = ImageIO.read(getClass().getResourceAsStream("/res" + imagePath + ".png")); //school pc
+            image = ImageIO.read(new File("res" + imagePath + ".png")); //home pc
+            image = uTool.scaleImage(image, width, height);
             
         } catch(IOException e){
             e.printStackTrace();
