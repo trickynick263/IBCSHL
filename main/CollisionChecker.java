@@ -127,7 +127,7 @@ public class CollisionChecker {
 
     }
     //CHECKS NPC OR MONSTER COLLISION
-    public int checkEntity(Entity entity, Entity[] target){
+    public int   checkEntity(Entity entity, Entity[] target){
 
     int index = 999;
 

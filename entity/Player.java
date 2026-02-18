@@ -283,6 +283,7 @@ public class Player extends Entity {
     public void contactMonster(int i){
         if(i!=999){
             life-=1;
+            gp.playSE(6);
             invincible = true;
         }
     }
@@ -290,11 +291,13 @@ public class Player extends Entity {
     public void damageMonster(int i){
         if(i!=999){
             if(gp.monster[i].invincible == false){
+                gp.playSE(5);
                 gp.monster[i].life -= 1;
                 gp.monster[i].invincible = true;
+                gp.monster[i].damageReaction();//sets the direction of the monster to move away from the player
             }
             if(gp.monster[i].life <= 0){
-                gp.monster[i] = null;
+                gp.monster[i].dying = true;
             }
         }
     }
@@ -308,6 +311,7 @@ public class Player extends Entity {
             }
             else{
                 attacking = true;
+                gp.playSE(7);
             }
         } 
     }

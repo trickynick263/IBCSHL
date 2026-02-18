@@ -1,6 +1,7 @@
 package entity;
 
 import java.awt.AlphaComposite;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -27,11 +28,18 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
     public BufferedImage attackUp1, attackUp2, attackDown1, attackDown2,
     attackLeft1, attackLeft2, attackRight1, attackRight2;//attack images for different directions
     public boolean attacking = false;//flag to check if entity is attacking
-
+    public boolean alive = true;//flag to check if entity is alive
+    public boolean dying = false;//flag to check if entity is dying
+    public int dyingCounter = 0;//counter to track dying animation
+    boolean hpBarOn = false;//flag to check if hp bar should be drawn
+    int hpBarCounter = 0;//counter to track how long hp bar has been on
     //ATTACK
     public Rectangle attackArea = new Rectangle(0,0,0,0);//area of attack for collision detection
     //The parameters of the rectangle will be set based on what attack the player is doing, if they 
     //are sweeping it might have a wider range while a sword chop might not
+
+
+
 
     //Transfer from superobject
     public String name;
@@ -42,6 +50,8 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
     public Rectangle solidArea = new Rectangle(0,0,48,48);//default solid area for collision detection
     public int solidAreaDefaultX, solidAreaDefaultY;//to store default x and y of solid area for resetting after collision adjustments
     public boolean collisionOn = false;//flag to check if collision is on or off
+    
+    
     //DIALOGUE
     String[] dialogue = new String[20];
     int dialogueIndex = 0;
@@ -65,6 +75,10 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
 
     }
 
+    public void damageReaction(){
+        
+    }
+
     
 
     public void update(){
@@ -80,6 +94,7 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
         if(this.type == 2 && contactPlayer == true){
             if(gp.player.invincible == false){
                 //we can give some damage
+                gp.playSE(6);
                 gp.player.life -=1;
                 gp.player.invincible = true;
             }
@@ -163,14 +178,76 @@ the requirements of an entity */
             break;
         }  
 
+        //MONSTER HP BAR
+        if(type == 2 && hpBarOn == true){
+        
+        double oneScale = (double)gp.tileSize/maxLife;//this is how much pixels each hp is worth
+        double hpBarValue = oneScale*life;//this is how long the hp bar should
+        g2.setColor(new Color(0,0,0));
+        g2.fillRect(screenX-3, screenY - 18, gp.tileSize+6, 16);
+        g2.setColor(new Color(35,35,35));
+        g2.fillRect(screenX-2, screenY - 17, gp.tileSize+4, 14);
+        //LIFE BAR
+        g2.setColor(new Color(255,0,30));
+        g2.fillRect(screenX, screenY - 15, (int)hpBarValue, 10);
+        hpBarCounter++;
+        if(hpBarCounter > 600){
+            hpBarCounter = 0;
+            hpBarOn = false;
+        }
+    }   
+
+        
         if(invincible == true){
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.4f));//sets the opacity of the player
+            hpBarOn = true;
+            hpBarCounter = 0;
+            changeAlpha(g2, 0.4f);
+        }
+        if(dying == true){
+            dyingAnimation(g2);
         }
 
             g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
-        }
+        
 
-        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,1f));//sets the opacity of the player
+        changeAlpha(g2, 1f);//resets alpha value back to normal after drawing entity        
+        }
+    }
+
+    public void dyingAnimation(Graphics2D g2){
+        dyingCounter++;
+        int i = 9;//variable to control the speed of the animation, the higher the number the slower the animation
+        
+        if(dyingCounter<=i){
+            changeAlpha(g2, 0.0f);
+}
+        if(dyingCounter>i && dyingCounter<=i*2){
+            changeAlpha(g2, 1.0f);
+        }
+        if(dyingCounter>i*2 && dyingCounter<=i*3){
+            changeAlpha(g2, 0.0f);
+        }
+        if(dyingCounter>i*3 && dyingCounter<=i*4){
+            changeAlpha(g2, 1.0f);
+        }
+        if(dyingCounter>i*4 && dyingCounter<=i*5){
+            changeAlpha(g2, 0.0f);
+        }
+        if(dyingCounter>i*5 && dyingCounter<=i*6){
+            changeAlpha(g2, 1.0f);
+        }
+        if(dyingCounter>i*6 && dyingCounter<=i*7){
+            changeAlpha(g2, 0.0f);
+        }
+        if(dyingCounter > i*8){
+            alive = false;
+            dying = false;
+        }
+    }
+
+
+    public void changeAlpha(Graphics2D g2, float alphaValue){
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,alphaValue));
     }
 
     public void speak(){
