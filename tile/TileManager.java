@@ -46,23 +46,13 @@ public class TileManager {
 
         
         setup(1, "brick", true);
-         
         setup(2, "water", true);
-         
         setup(3, "earth", false);
-         
         setup(4, "tree", true);
-         
         setup(5, "sand", false);
-
-         
         setup(6, "log 1", true);
-        
         setup(7, "log 2", true);
-        
         setup(8, "log 3", true);
-
-        
         setup(9, "fence", true);
 
     }

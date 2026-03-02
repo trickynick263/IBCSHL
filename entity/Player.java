@@ -13,6 +13,8 @@ import javax.imageio.ImageIO;
 
 import main.KeyHandler;
 import main.UtilityTool;
+import objects.OBJ_Shield_Wood;
+import objects.OBJ_Sword_Normal;
 
 
 public class Player extends Entity {
@@ -22,6 +24,7 @@ public class Player extends Entity {
 
     public final int screenX;
     public final int screenY;
+    public boolean attackCanceled = false;
     //those are 
     //2 variables to fix the player in the center of the screen
     
@@ -76,9 +79,29 @@ public class Player extends Entity {
         //PLAYER STATUS
         maxLife = 6;
         life = maxLife;
+        level = 1;
+        strength = 1;
+        dexterity = 1;
+        nextLevelExp = 5;
+        exp = 0;
+        coin = 0;
+        currentWeapon = new OBJ_Sword_Normal(gp);
+        currentShield = new OBJ_Shield_Wood(gp);
+        attack = getAttack();
+        defense = getDefense();
+
+        
         
         
     }
+
+    public int getAttack(){
+        return attack = strength * currentWeapon.attackValue;
+    }
+    public int getDefense(){
+        return defense = dexterity * currentShield.defenseValue;
+    }
+
     public void getPlayerImage(){
        
         up1 = setup("/playerimage/player up 1", gp.tileSize, gp.tileSize);
@@ -172,9 +195,13 @@ public class Player extends Entity {
             contactMonster(monsterIndex);
         }
 
+        if(keyH.enterPressed == true && attackCanceled == false){
+            gp.playSE(7);
+            attacking = true;
+            spriteCounter = 0;
+        }
+        attackCanceled = false;
         
-
-
         //IF COLLISION IS FALSE, PLAYER CAN MOVE
         if(collisionOn == false && keyH.enterPressed == false){
             switch(direction){
@@ -306,13 +333,11 @@ public class Player extends Entity {
     public void interactNPC(int i){
         if(gp.keyH.enterPressed == true){
             if(i != 999){
+                attackCanceled = true;
                 gp.gameState = gp.dialogueState;
                 gp.npc[i].speak();
             }
-            else{
-                attacking = true;
-                gp.playSE(7);
-            }
+            
         } 
     }
 

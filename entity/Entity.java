@@ -33,6 +33,23 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
     public int dyingCounter = 0;//counter to track dying animation
     boolean hpBarOn = false;//flag to check if hp bar should be drawn
     int hpBarCounter = 0;//counter to track how long hp bar has been on
+    
+    public int level;
+    public int strength;
+    public int attack;
+    public int defense;
+    public int exp;
+    public int nextLevelExp;
+    public Entity currentWeapon;
+    public Entity currentShield;
+    public int dexterity;
+    public int coin;
+
+    //ITEM ATTRIBUTES
+    public int attackValue;//this will be used for the price of the item in shops and also for how much exp a monster gives when defeated
+    public int defenseValue;
+
+
     //ATTACK
     public Rectangle attackArea = new Rectangle(0,0,0,0);//area of attack for collision detection
     //The parameters of the rectangle will be set based on what attack the player is doing, if they 
