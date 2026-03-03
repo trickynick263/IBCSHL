@@ -21,6 +21,9 @@ public class MON_Slime extends Entity{
         solidArea.height = 30;
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
+        attack = 5;
+        defense = 0;
+        exp = 3;
 
         getImage();
     }

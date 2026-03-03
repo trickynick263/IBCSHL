@@ -11,7 +11,7 @@ public class Sound {
     Clip clip;//this is how we open sound files in java
     URL soundURL[] = new URL[30];//we use this to store the file path of the sound files
     public Sound(){//we initialize every sound in the array here
-        /* 
+        
         soundURL[0] = getClass().getResource("/res/sound/BlueBoyAdventure.wav");
         soundURL[1] = getClass().getResource("/res/sound/coin.wav");
         soundURL[2] = getClass().getResource("/res/sound/powerup.wav");
@@ -20,10 +20,11 @@ public class Sound {
         soundURL[5] = getClass().getResource("/res/sound/hitmonster.wav");
         soundURL[6] = getClass().getResource("/res/sound/receivedamage.wav");
         soundURL[7] = getClass().getResource("/res/sound/swingsword.wav");
-        */
+        soundURL[8] = getClass().getResource("/res/sound/cursor.wav");
+        
          
 
-        
+       /*  
         try        {
             soundURL[0] = new File("res/sound/BlueBoyAdventure.wav").toURI().toURL();
             soundURL[1] = new File("res/sound/coin.wav").toURI().toURL();
@@ -33,9 +34,10 @@ public class Sound {
             soundURL[5] = new File("res/sound/hitmonster.wav").toURI().toURL();
             soundURL[6] = new File("res/sound/receivedamage.wav").toURI().toURL();
             soundURL[7] = new File("res/sound/swingsword.wav").toURI().toURL(); 
+            soundURL[8] = new File("/res/sound/cursor.wav").toURI().toURL();
         }catch(Exception e){
             e.printStackTrace();
-        }
+        }*/
         
     }
 

@@ -9,5 +9,6 @@ public class OBJ_Shield_Wood extends Entity{
         name = "Wooden Shield";
         down1 = setup("/objects/shield",gp.tileSize,gp.tileSize);
         defenseValue = 1;
+        description =  "["+ name+ "]\n" +"Defend Maybe?";
     }
 }

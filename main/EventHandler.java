@@ -101,6 +101,7 @@ public class EventHandler {
         gp.player.attackCanceled = true;
         gp.ui.currentDialogue = "The Magic Wall Has Healed You!";
         gp.player.life = gp.player.maxLife;
+        gp.aSetter.setMonster();
         
         }
         

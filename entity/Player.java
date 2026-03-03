@@ -8,11 +8,14 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
 import main.KeyHandler;
 import main.UtilityTool;
+import objects.OBJ_Boots;
+import objects.OBJ_Key;
 import objects.OBJ_Shield_Wood;
 import objects.OBJ_Sword_Normal;
 
@@ -25,6 +28,8 @@ public class Player extends Entity {
     public final int screenX;
     public final int screenY;
     public boolean attackCanceled = false;
+    public ArrayList<Entity> inventory = new ArrayList<>();
+    public final int maxInventorySize = 20;
     //those are 
     //2 variables to fix the player in the center of the screen
     
@@ -43,7 +48,7 @@ public class Player extends Entity {
         setDefaultValues();
         getPlayerImage();
         getPlayerAttackImage();
-        //                                                                                            x,y,width,height
+        setItems();                                                                                           
         solidArea = new Rectangle();//if we want to make a rectangle that is the size of a tile ->args(0, 0, 48, 48)
         solidArea.x = 8;
         solidArea.y = 16;//we can also set the values one by one
@@ -54,12 +59,6 @@ public class Player extends Entity {
         
         solidArea.width = 32;
         solidArea.height = 32;
-        /*for using the rectangle for collision detection, imagine that the rectangle is one tile,
-        0,0 is the top left corner and if we increase the x we go to the left and start the collision there
-        and if we increase y we go down and start the collision there as well, in this scenario by making the 
-        width 32, we leave off another 8 pixels to make a low height, centered rctangle with a width smaller than 
-        a tile by 16 pixels, 8 from the left and 8 from the right
-        */
 
 
         screenX = gp.screenWidth / 2 - (gp.tileSize / 2);//this will center the player on the screen
@@ -69,6 +68,16 @@ public class Player extends Entity {
         //ATTACK AREA DETERMINES ATTACK RANGE AND AREA OF EFFECT
         attackArea.width = 36;
         attackArea.height = 36;
+    }
+
+    public void setItems(){
+        inventory.add(currentShield);
+        inventory.add(currentWeapon);
+        inventory.add(new OBJ_Key(gp));
+        inventory.add(new OBJ_Key(gp));
+        inventory.add(new OBJ_Boots(gp));
+        inventory.add(new OBJ_Key(gp));
+      
     }
     public void setDefaultValues(){
         worldX = gp.tileSize * 2;
@@ -309,7 +318,11 @@ public class Player extends Entity {
 
     public void contactMonster(int i){
         if(i!=999){
-            life-=1;
+            int damage = gp.monster[i].attack - defense;
+            if(damage < 0){
+                damage = 0;//in case monsters defense is higher than player's attack, we don't want to heal the monster by doing negative damage, so we set it to 0 instead
+            }
+            life-=damage;
             gp.playSE(6);
             invincible = true;
         }
@@ -319,13 +332,37 @@ public class Player extends Entity {
         if(i!=999){
             if(gp.monster[i].invincible == false){
                 gp.playSE(5);
-                gp.monster[i].life -= 1;
+                int damage = attack - gp.monster[i].defense;
+                if(damage < 0){
+                    damage = 0;//in case monsters defense is higher than player's attack, we don't want to heal the monster by doing negative damage, so we set it to 0 instead
+                }
+                gp.monster[i].life -= damage;
+                gp.ui.addMessage("You Hit the Monster for " + damage + " Damage!");
                 gp.monster[i].invincible = true;
                 gp.monster[i].damageReaction();//sets the direction of the monster to move away from the player
             }
-            if(gp.monster[i].life <= 0){
+            if(gp.monster[i].life <= 0 && gp.monster[i].alive == true){
                 gp.monster[i].dying = true;
+                gp.ui.addMessage("You Killed the "  + gp.monster[i].name + "!");
+                gp.ui.addMessage("Exp + "  + gp.monster[i].exp + "!");
+                exp+= gp.monster[i].exp;
+                checkLevelUp();
             }
+        }
+    }
+
+    public void checkLevelUp(){
+        if(exp>= nextLevelExp){
+            level++;
+            nextLevelExp = nextLevelExp + 10;
+            maxLife += 2;
+            strength++;
+            dexterity++;
+            attack = getAttack();
+            defense = getDefense();
+            gp.playSE(4);
+            gp.gameState = gp.dialogueState;
+            gp.ui.currentDialogue = "You are now level " + level + " now!\n" + "You feel way Stronger!";
         }
     }
 

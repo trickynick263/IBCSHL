@@ -44,6 +44,7 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
     public Entity currentShield;
     public int dexterity;
     public int coin;
+    public String description = "";
 
     //ITEM ATTRIBUTES
     public int attackValue;//this will be used for the price of the item in shops and also for how much exp a monster gives when defeated
@@ -112,7 +113,11 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
             if(gp.player.invincible == false){
                 //we can give some damage
                 gp.playSE(6);
-                gp.player.life -=1;
+                int damage = attack - gp.player.defense;
+                if(damage < 0){
+                    damage = 0;
+                }
+                gp.player.life -= damage;
                 gp.player.invincible = true;
             }
         }
@@ -234,7 +239,7 @@ the requirements of an entity */
     public void dyingAnimation(Graphics2D g2){
         dyingCounter++;
         int i = 9;//variable to control the speed of the animation, the higher the number the slower the animation
-        
+        alive = false;
         if(dyingCounter<=i){
             changeAlpha(g2, 0.0f);
 }

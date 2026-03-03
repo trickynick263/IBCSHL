@@ -23,6 +23,7 @@ public class OBJ_Door extends Entity {
         solidArea.height = 32;
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
+        description = "";
 
 
        
