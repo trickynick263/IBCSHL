@@ -79,8 +79,14 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
     public int life;
     public boolean invincible = false;
     public int invincibleCounter = 0;
-    public int type; //0 is player, 1 is npc, 2 is monster
-    
+    public int type; //0 is player, 1 is npc, 2 is monster //3 is weapon etc
+    public final int type_player = 0;
+    public final int type_npc = 1;
+    public final int type_monster = 2;
+    public final int type_sword = 3;
+    public final int type_axe = 4;
+    public final int type_shield = 5;
+    public final int type_consumable = 6;
 
 
 
@@ -109,7 +115,7 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
         gp.cChecker.checkEntity(this, gp.monster);
         boolean contactPlayer = gp.cChecker.checkPlayer(this);
 
-        if(this.type == 2 && contactPlayer == true){
+        if(this.type == type_monster && contactPlayer == true){
             if(gp.player.invincible == false){
                 //we can give some damage
                 gp.playSE(6);

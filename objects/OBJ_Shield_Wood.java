@@ -10,5 +10,6 @@ public class OBJ_Shield_Wood extends Entity{
         down1 = setup("/objects/shield",gp.tileSize,gp.tileSize);
         defenseValue = 1;
         description =  "["+ name+ "]\n" +"Defend Maybe?";
+        type = type_shield;
     }
 }

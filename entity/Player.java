@@ -73,10 +73,6 @@ public class Player extends Entity {
     public void setItems(){
         inventory.add(currentShield);
         inventory.add(currentWeapon);
-        inventory.add(new OBJ_Key(gp));
-        inventory.add(new OBJ_Key(gp));
-        inventory.add(new OBJ_Boots(gp));
-        inventory.add(new OBJ_Key(gp));
       
     }
     public void setDefaultValues(){
@@ -105,6 +101,7 @@ public class Player extends Entity {
     }
 
     public int getAttack(){
+        attackArea = currentWeapon.attackArea;//updates attack area when swapping equipment
         return attack = strength * currentWeapon.attackValue;
     }
     public int getDefense(){
@@ -312,7 +309,17 @@ public class Player extends Entity {
 
     public void pickUpObject(int index){
         if(index != 999){
-           
+            String text;
+            if(inventory.size() < maxInventorySize){
+                inventory.add(gp.obj[index]);
+                gp.playSE(1);
+                text = "Got a " + gp.obj[index].name + "!";
+           }
+           else{
+            text = "You cannot carry anymore items!";
+           }
+           gp.ui.addMessage(text);
+           gp.obj[index] = null;
         }
     }
 
@@ -363,6 +370,24 @@ public class Player extends Entity {
             gp.playSE(4);
             gp.gameState = gp.dialogueState;
             gp.ui.currentDialogue = "You are now level " + level + " now!\n" + "You feel way Stronger!";
+        }
+    }
+
+    public void selectItem(){
+        int itemIndex = gp.ui.getItemIndexOnSlot();
+        if(itemIndex < inventory.size()){
+            Entity selectedItem = inventory.get(itemIndex);
+            if(selectedItem.type == type_sword || selectedItem.type == type_axe){
+                currentWeapon = selectedItem;
+                attack = getAttack();
+            }
+            if(selectedItem.type == type_shield){
+                currentShield = selectedItem;
+                defense = getDefense();
+            }
+            if(selectedItem.type == type_consumable){
+                //later
+            }
         }
     }
 

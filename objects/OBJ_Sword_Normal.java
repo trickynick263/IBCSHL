@@ -10,5 +10,8 @@ public class OBJ_Sword_Normal extends Entity{
         down1 = setup("/objects/sword",gp.tileSize,gp.tileSize);
         attackValue = 1;
         description =  "["+ name+ "]\n" +"Kill or be killed...";
+        attackArea.width = 36;
+        attackArea.height = 36;
+        type = type_sword;
     }
 }
