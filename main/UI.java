@@ -1,27 +1,21 @@
 package main;
-
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.FontFormatException;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-
 import javax.imageio.ImageIO;
-import javax.sound.sampled.Line;
 
 import entity.Entity;
 
 import objects.OBJ_Heart;
-
-
-
-
-
+/* 
+import java.awt.FontFormatException;
+import java.io.File;
+import java.io.InputStream;
+import javax.sound.sampled.Line;*/
 
 
 public class UI {

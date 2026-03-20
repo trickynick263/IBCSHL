@@ -272,6 +272,7 @@ the requirements of an entity */
             dying = false;
         }
     }
+    
 
 
     public void changeAlpha(Graphics2D g2, float alphaValue){
@@ -315,6 +316,10 @@ the requirements of an entity */
             e.printStackTrace();
         }
         return image;
+    }
+
+    public void use(Entity entity) {
+        
     }
 
 

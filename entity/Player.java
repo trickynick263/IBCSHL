@@ -2,7 +2,6 @@ package entity;
 import main.GamePanel;
 
 import java.awt.AlphaComposite;
-import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -14,8 +13,6 @@ import javax.imageio.ImageIO;
 
 import main.KeyHandler;
 import main.UtilityTool;
-import objects.OBJ_Boots;
-import objects.OBJ_Key;
 import objects.OBJ_Shield_Wood;
 import objects.OBJ_Sword_Normal;
 
@@ -124,6 +121,7 @@ public class Player extends Entity {
     }
 
     public void getPlayerAttackImage(){
+        if(this.currentWeapon.type == type_sword){
         attackUp1 = setup("/playerimage/player attack up 1", gp.tileSize, gp.tileSize*2);
         attackUp2 = setup("/playerimage/player attack up 2", gp.tileSize, gp.tileSize*2);
         attackDown1 = setup("/playerimage/player attack down 1", gp.tileSize, gp.tileSize*2);
@@ -135,6 +133,20 @@ public class Player extends Entity {
         //we will call this method in the constructor so that the attack images are loaded when the game starts
         // we add this in a different method because when we want to change what item or weapon the player
         //has, we just swap methods in order to change what weapon the player wants to use and the corresponding attack images will be loaded
+        }
+        if(this.currentWeapon.type == type_axe){
+        attackUp1 = setup("/playerimage/player axe up 1", gp.tileSize, gp.tileSize*2);
+        attackUp2 = setup("/playerimage/player axe up 2", gp.tileSize, gp.tileSize*2);
+        attackDown1 = setup("/playerimage/player axe down 1", gp.tileSize, gp.tileSize*2);
+        attackDown2 = setup("/playerimage/player axe down 2", gp.tileSize, gp.tileSize*2);
+        attackLeft1 = setup("/playerimage/player axe left 1", gp.tileSize*2, gp.tileSize);
+        attackLeft2 = setup("/playerimage/player axe left 2", gp.tileSize*2, gp.tileSize);
+        attackRight1 = setup("/playerimage/player axe right 1", gp.tileSize*2, gp.tileSize);
+        attackRight2 = setup("/playerimage/player axe right 2", gp.tileSize*2, gp.tileSize);
+        //we will call this method in the constructor so that the attack images are loaded when the game starts
+        // we add this in a different method because when we want to change what item or weapon the player
+        //has, we just swap methods in order to change what weapon the player wants to use and the corresponding attack images will be loaded
+        }
     }
 
 
@@ -380,13 +392,15 @@ public class Player extends Entity {
             if(selectedItem.type == type_sword || selectedItem.type == type_axe){
                 currentWeapon = selectedItem;
                 attack = getAttack();
+                getPlayerAttackImage();
             }
             if(selectedItem.type == type_shield){
                 currentShield = selectedItem;
                 defense = getDefense();
             }
             if(selectedItem.type == type_consumable){
-                //later
+                selectedItem.use(this);
+                inventory.remove(itemIndex);
             }
         }
     }
@@ -418,7 +432,12 @@ public class Player extends Entity {
                 if(spriteNum == 1){image = up1;}
                 if(spriteNum == 2){image = up2;}
             }
-            if(attacking == true){
+            if(attacking == true && this.currentWeapon.type == type_sword){
+                tempScreenY = screenY - gp.tileSize;//we adjust the y position of the player when attacking up because the attack image is 2 tiles high
+                if(spriteNum == 1){image = attackUp1;}
+                if(spriteNum == 2){image = attackUp2;}
+            }
+            if(attacking == true && this.currentWeapon.type == type_axe){
                 tempScreenY = screenY - gp.tileSize;//we adjust the y position of the player when attacking up because the attack image is 2 tiles high
                 if(spriteNum == 1){image = attackUp1;}
                 if(spriteNum == 2){image = attackUp2;}
@@ -439,8 +458,13 @@ public class Player extends Entity {
                 if(spriteNum == 1){image = left1;}
                 if(spriteNum == 2){image = left2;}
             }
-            if(attacking == true){
+            if(attacking == true && this.currentWeapon.type == type_sword){
                 tempScreenX = screenX - 23;
+                if(spriteNum == 1){image = attackLeft1;}
+                if(spriteNum == 2){image = attackLeft2;}
+            }
+            if(attacking == true && this.currentWeapon.type == type_axe){
+                tempScreenX = screenX - 48;
                 if(spriteNum == 1){image = attackLeft1;}
                 if(spriteNum == 2){image = attackLeft2;}
             }
@@ -450,8 +474,13 @@ public class Player extends Entity {
                 if(spriteNum == 1){image = right1;}
                 if(spriteNum == 2){image = right2;}
             }
-            if(attacking == true){
+            if(attacking == true && this.currentWeapon.type == type_sword){
                 tempScreenX = screenX - 23;
+                if(spriteNum == 1){image = attackRight1;}
+                if(spriteNum == 2){image = attackRight2;}
+            }
+            if(attacking == true && this.currentWeapon.type == type_axe){
+                tempScreenX = screenX + 10;
                 if(spriteNum == 1){image = attackRight1;}
                 if(spriteNum == 2){image = attackRight2;}
             }

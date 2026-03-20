@@ -100,7 +100,7 @@ public class KeyHandler implements KeyListener{
                 }
                 if(gp.ui.commandNum == 2){
                     gp.gameState = gp.playState;
-                    gp.playMusic(0);
+                    //gp.playMusic(0);
                     //add class specific stuff...
                 }
                 if(gp.ui.commandNum == 3){
