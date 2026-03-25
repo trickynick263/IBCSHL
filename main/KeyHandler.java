@@ -5,7 +5,7 @@ import java.awt.event.KeyEvent;
 
 public class KeyHandler implements KeyListener{
     
-    public boolean upPressed, downPressed, leftPressed, rightPressed, debugPressed,enterPressed;
+    public boolean upPressed, downPressed, leftPressed, rightPressed, debugPressed,enterPressed, shotKeyPressed;
     GamePanel gp;
     public KeyHandler(GamePanel gp){
         this.gp = gp;
@@ -100,7 +100,7 @@ public class KeyHandler implements KeyListener{
                 }
                 if(gp.ui.commandNum == 2){
                     gp.gameState = gp.playState;
-                    //gp.playMusic(0);
+                    //`gp.playMusic(0);
                     //add class specific stuff...
                 }
                 if(gp.ui.commandNum == 3){

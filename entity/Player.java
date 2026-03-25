@@ -13,6 +13,7 @@ import javax.imageio.ImageIO;
 
 import main.KeyHandler;
 import main.UtilityTool;
+import objects.OBJ_BlueEnergyOrb;
 import objects.OBJ_Shield_Wood;
 import objects.OBJ_Sword_Normal;
 
@@ -91,6 +92,7 @@ public class Player extends Entity {
         currentShield = new OBJ_Shield_Wood(gp);
         attack = getAttack();
         defense = getDefense();
+        projectile = new OBJ_BlueEnergyOrb(gp);
 
         
         
@@ -260,6 +262,11 @@ public class Player extends Entity {
                 //  so we can count to 12 again
             }
         }
+        if(gp.keyH.shotKeyPressed == true && projectile.alive == false){
+            projectile.set(worldX,worldY,true,direction,this);
+            gp.projectileList.add(projectile);
+            gp.playSE(9);
+        }
         
        
         //Needs to be outside key if statement
@@ -337,13 +344,15 @@ public class Player extends Entity {
 
     public void contactMonster(int i){
         if(i!=999){
-            int damage = gp.monster[i].attack - defense;
-            if(damage < 0){
-                damage = 0;//in case monsters defense is higher than player's attack, we don't want to heal the monster by doing negative damage, so we set it to 0 instead
+            if(invincible == false && gp.monster[i].dying == false){
+                int damage = gp.monster[i].attack - defense;
+                if(damage < 0){
+                    damage = 0;//in case monsters defense is higher than player's attack, we don't want to heal the monster by doing negative damage, so we set it to 0 instead
+                }
+                life-=damage;
+                gp.playSE(6);
+                invincible = true;
             }
-            life-=damage;
-            gp.playSE(6);
-            invincible = true;
         }
     }
 

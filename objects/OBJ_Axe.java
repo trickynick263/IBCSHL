@@ -18,6 +18,7 @@ public class OBJ_Axe extends Entity {
         description =  "["+ name+ "]\n" +"A basic tool used \nfor basic things";
         attackArea.width = 30;
         attackArea.height = 30;
+        attackValue = 1;
         type = type_axe;
     }
 }

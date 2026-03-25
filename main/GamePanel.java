@@ -61,7 +61,7 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
     public EventHandler eHandler = new EventHandler(this);
     ArrayList<Entity> entityList = new ArrayList<>();
     public Entity[] monster = new Entity[20];
-   
+    public ArrayList<Entity> projectileList = new ArrayList<>();
 
     
     
@@ -194,6 +194,16 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
                 }
             }
         }
+        for(int i = 0;i < projectileList.size();i++){
+            if(projectileList.get(i) != null){
+                if(projectileList.get(i).alive == true){    
+                    projectileList.get(i).update();
+                }
+                if(projectileList.get(i).alive == false){
+                    projectileList.remove(i);
+                }
+            }
+        }
         }
         if(gameState == pauseState){
             
@@ -245,6 +255,12 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
         for(int i = 0;i<obj.length;i++){
             if(obj[i] != null){
                 entityList.add(obj[i]);
+            }
+        }
+        //PROJECTILES
+        for(int i = 0;i<projectileList.size();i++){
+            if(projectileList.get(i) != null){
+                entityList.add(projectileList.get(i));
             }
         }
         //SORTS ENTITY LIST BASED OFF OF WORLD Y VALUES

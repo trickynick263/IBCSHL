@@ -33,7 +33,10 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
     public int dyingCounter = 0;//counter to track dying animation
     boolean hpBarOn = false;//flag to check if hp bar should be drawn
     int hpBarCounter = 0;//counter to track how long hp bar has been on
-    
+    public int maxMana;
+    public int mana;
+    public Projectile projectile;
+    public int useCost;
     public int level;
     public int strength;
     public int attack;
