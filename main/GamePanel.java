@@ -25,8 +25,8 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
     public final int screenHeight = tileSize * maxScreenRow;//576 pixels vertically
 
     //World settings
-    public final int maxWorldCol = 50;
-    public final int maxWorldRow = 50;
+    public final int maxWorldCol = 100;
+    public final int maxWorldRow = 100;
     
 
 
@@ -53,7 +53,7 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
     public Player player = new Player(this,keyH);//creates a new player object
     
     //This line below was changed from superobject to fix render order
-    public Entity obj[] = new Entity[10];//array to hold objects in the game, like keys, doors, etc
+    public Entity obj[] = new Entity[20];//array to hold objects in the game, like keys, doors, etc
     //10 different objects can be stored in the array, if we need more we can increase the size of the array
     public AssetSetter aSetter = new AssetSetter(this);
     public UI ui = new UI(this);
@@ -190,6 +190,7 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
                     monster[i].update();
                 }
                 if(monster[i].alive == false && monster[i].dying == false){
+                    monster[i].checkDrop();
                     monster[i] = null;
                 }
             }

@@ -1,6 +1,7 @@
 package objects;
 
 
+import entity.Entity;
 import entity.Projectile;
 import main.GamePanel;
 
@@ -11,7 +12,7 @@ public class OBJ_BlueEnergyOrb extends Projectile{
         super(gp);
         this.gp = gp;
         name = "Blue Orb";
-        speed = 20;
+        speed = 12;
         maxLife = 80;
         life = maxLife;
         attack = 2;
@@ -29,6 +30,18 @@ public class OBJ_BlueEnergyOrb extends Projectile{
         left2 = setup("/projectile/fireball left 2", gp.tileSize, gp.tileSize);
         right1 = setup("/projectile/fireball right 1", gp.tileSize, gp.tileSize);
         right2 = setup("/projectile/fireball right 2", gp.tileSize, gp.tileSize);
+    }
+
+    public boolean hasSufficientMana(Entity user){
+        boolean hasMana = false;
+        if(user.mana >= useCost){
+            hasMana = true;
+        }
+        return hasMana;
+    }
+
+    public void subtractMana(Entity user){
+        user.mana -= useCost;
     }
 }
 

@@ -48,12 +48,12 @@ public class EventHandler {
         }
 
         if(canTouchEvent == true){
-            if(hit(10,10,"any") == true){damagePit(10,10,gp.dialogueState);}
+            if(hit(49,49,"any") == true){damagePit(10,10,gp.dialogueState);}
 
-            if(hit(8,2,"any")==true){ healingPool(8,2,gp.dialogueState);}
+            if(hit(48,48,"any")==true){ healingPool(8,2,gp.dialogueState);}
 
-            if(hit(6,4,"any") == true){teleport(6,4,gp.playState, 25, 25);}
-            if(hit(25, 27, "any") == true){teleport(25,27,gp.playState,6,2);}
+            if(hit(48,47,"any") == true){teleport(17,59,gp.playState);}
+            if(hit(18 , 57, "any") == true){teleport(48,40,gp.playState);}
 
         }
     }
@@ -101,6 +101,7 @@ public class EventHandler {
         gp.player.attackCanceled = true;
         gp.ui.currentDialogue = "The Magic Wall Has Healed You!";
         gp.player.life = gp.player.maxLife;
+        gp.player.mana = gp.player.maxMana;
         gp.aSetter.setMonster();
         
         }
@@ -111,11 +112,11 @@ public class EventHandler {
 
     
     
-    public void teleport(int col, int row,int gameState,int tpCol,int tpRow){
+    public void teleport(int col, int row,int gameState){
         gp.gameState = gameState;
         
-        gp.player.worldX = tpCol * gp.tileSize;
-        gp.player.worldY = tpRow*gp.tileSize;
+        gp.player.worldX = col * gp.tileSize;
+        gp.player.worldY = row * gp.tileSize;
         canTouchEvent = false;
 
     }

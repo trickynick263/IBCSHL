@@ -3,6 +3,10 @@ import java.util.Random;
 
 import entity.Entity;
 import main.GamePanel;
+import objects.OBJ_GoldCoin;
+import objects.OBJ_Heart;
+import objects.OBJ_ManaCrystal;
+import objects.OBJ_Rock;
 
 public class MON_Slime extends Entity{
     GamePanel gp;
@@ -24,6 +28,7 @@ public class MON_Slime extends Entity{
         attack = 5;
         defense = 0;
         exp = 3;
+        projectile= new OBJ_Rock(gp);
 
         getImage();
     }
@@ -56,17 +61,52 @@ public class MON_Slime extends Entity{
         direction = "right";
     }
     actionLockCounter = 0;
+
+    
 }
 else{
     actionLockCounter++;
 }
-
+int i = new Random().nextInt(100)+1;
+if(i > 99 && projectile.alive == false && shotAvailableCounter == 30){
+    projectile.set(worldX, worldY, true, direction, this);
+    gp.projectileList.add(projectile);
+    shotAvailableCounter = 0;
+}
     
-    }
+}
 
 
 public void damageReaction(){
     actionLockCounter = 0;
     direction = gp.player.direction;
 }
+
+public void checkDrop(){
+    int i = new Random().nextInt(100)+1;
+    if(i < 50){
+        
+        dropItem(new OBJ_GoldCoin(gp));
+    }
+    if(i >= 50 && i < 75){
+        dropItem(new OBJ_Heart(gp));
+    }
+    if(i >= 75 && i < 100){
+        dropItem(new OBJ_ManaCrystal(gp));
+    }
+}
+
+public boolean hasSufficientMana(Entity user){
+        boolean hasMana = false;
+        if(user.ammo >= useCost){
+            hasMana = true;
+        }
+        return hasMana;
+    }
+
+    public void subtractMana(Entity user){
+        user.ammo -= useCost;
+    }
+
+
 }

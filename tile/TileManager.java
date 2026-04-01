@@ -22,7 +22,7 @@ public class TileManager {
     public int mapTileNum[][];//2d array to store the map information from the text file
     public TileManager(GamePanel gp){
         this.gp = gp;
-        tile = new Tile[10];//array of tiles, we can have 10 different tiles like grass,water,brick
+        tile = new Tile[20];//array of tiles, we can have 10 different tiles like grass,water,brick
         mapTileNum = new int[gp.maxWorldCol][gp.maxWorldRow];//initializing the 2d array with the size of the screen in tiles
 
         getTileImage();
@@ -54,6 +54,8 @@ public class TileManager {
         setup(7, "log 2", true);
         setup(8, "log 3", true);
         setup(9, "fence", true);
+        setup(10, "teleport",false);
+
 
     }
 public void setup(int index, String imagePath, boolean collision){

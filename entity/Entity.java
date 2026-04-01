@@ -48,7 +48,9 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
     public int dexterity;
     public int coin;
     public String description = "";
-
+    public int ammo;
+    public int manaRegenCounter = 0;
+    public int shotAvailableCounter = 0;//counter to track how long until the player can shoot again
     //ITEM ATTRIBUTES
     public int attackValue;//this will be used for the price of the item in shops and also for how much exp a monster gives when defeated
     public int defenseValue;
@@ -79,6 +81,7 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
 
     //CHARACTER STATUS
     public int maxLife;
+    public int value;
     public int life;
     public boolean invincible = false;
     public int invincibleCounter = 0;
@@ -90,6 +93,7 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
     public final int type_axe = 4;
     public final int type_shield = 5;
     public final int type_consumable = 6;
+    public final int type_pickupOnly = 7;//this is for items that can only be picked up and not equipped like coins and potions
 
 
 
@@ -119,16 +123,7 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
         boolean contactPlayer = gp.cChecker.checkPlayer(this);
 
         if(this.type == type_monster && contactPlayer == true){
-            if(gp.player.invincible == false){
-                //we can give some damage
-                gp.playSE(6);
-                int damage = attack - gp.player.defense;
-                if(damage < 0){
-                    damage = 0;
-                }
-                gp.player.life -= damage;
-                gp.player.invincible = true;
-            }
+            damagePlayer(attack);
         }
 
 
@@ -173,8 +168,56 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
                 invincibleCounter = 0;
             }
         }
+        if(shotAvailableCounter < 30){
+            shotAvailableCounter++;//this is the counter to track how long until the player can shoot again, it gets reset to 0 when the player shoots and then counts up to 30
+        }
+        if(this.mana < this.maxMana){
+            manaRegenCounter++;
+        }
+        if(manaRegenCounter > 300){
+            if(mana < maxMana){
+                mana++;
+            }
+            manaRegenCounter = 0;
+        }
+        if(life > maxLife){
+            life = maxLife;
+        }
+        if(life < 0){
+            life = 0;
+        }
+        if(mana > maxMana){
+            mana = maxMana;
+        }
+    }
 
+    public void checkDrop(){
 
+    }
+
+    public void dropItem(Entity droppedItem){
+        for(int i = 0; i < gp.obj.length; i++){
+            if(gp.obj[i] == null){
+                gp.obj[i] = droppedItem;
+                gp.obj[i].worldX = worldX;
+                gp.obj[i].worldY = worldY;
+                break;
+            }
+        }
+    }
+    public void damagePlayer(int attack){
+        
+            if(gp.player.invincible == false){
+                //we can give some damage
+                gp.playSE(6);
+                int damage = attack - gp.player.defense;
+                if(damage < 0){
+                    damage = 0;
+                }
+                gp.player.life -= damage;
+                gp.player.invincible = true;
+            }
+        
     }
 /*The reason we create many new draw and update methods in a superclass is because the 
 methods and attributes get passed down to things like the npcs, player, and anything else that fits
@@ -238,7 +281,7 @@ the requirements of an entity */
             dyingAnimation(g2);
         }
 
-            g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+            g2.drawImage(image, screenX, screenY, null);
         
 
         changeAlpha(g2, 1f);//resets alpha value back to normal after drawing entity        

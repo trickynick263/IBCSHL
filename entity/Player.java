@@ -74,8 +74,8 @@ public class Player extends Entity {
       
     }
     public void setDefaultValues(){
-        worldX = gp.tileSize * 2;
-        worldY = gp.tileSize * 3;//starting position of player in the world
+        worldX = gp.tileSize * 50;
+        worldY = gp.tileSize * 50;//starting position of player in the world
         speed = 4;
         direction = "down";
         
@@ -86,8 +86,11 @@ public class Player extends Entity {
         strength = 1;
         dexterity = 1;
         nextLevelExp = 5;
+        maxMana = 4;
+        mana = maxMana;
         exp = 0;
         coin = 0;
+        ammo = 10;
         currentWeapon = new OBJ_Sword_Normal(gp);
         currentShield = new OBJ_Shield_Wood(gp);
         attack = getAttack();
@@ -158,8 +161,8 @@ public class Player extends Entity {
         BufferedImage image = null;
 
         try{
-            //image = ImageIO.read(getClass().getResourceAsStream("/res" + imageName + ".png")); //school pc
-            image = ImageIO.read(new File("res" + imageName + ".png")); //home pc
+            image = ImageIO.read(getClass().getResourceAsStream("/res" + imageName + ".png")); //school pc
+            //image = ImageIO.read(new File("res" + imageName + ".png")); //home pc
             image = uTool.scaleImage(image, width, height);
             
         } catch(IOException e){
@@ -262,9 +265,16 @@ public class Player extends Entity {
                 //  so we can count to 12 again
             }
         }
-        if(gp.keyH.shotKeyPressed == true && projectile.alive == false){
+        if(gp.keyH.shotKeyPressed == true && projectile.alive == false 
+            && shotAvailableCounter == 30 && projectile.hasSufficientMana(this) == true){
+            //Set the projectile's worldX and worldY to the player's worldX and worldY
             projectile.set(worldX,worldY,true,direction,this);
+            //Subtract mana cost from player
+            projectile.subtractMana(this);
+            //we will set the projectile's alive to true so that it can be drawn and updated in the game loop
             gp.projectileList.add(projectile);
+            shotAvailableCounter = 0;//resets the counter so that the player has to wait 30 frames before shooting again
+            //we will also play a sound effect when the projectile is shot
             gp.playSE(9);
         }
         
@@ -276,6 +286,28 @@ public class Player extends Entity {
                 invincible = false;
                 invincibleCounter = 0;
             }
+        }
+        if(shotAvailableCounter < 30){
+            shotAvailableCounter++;//this is the counter to track how long until the player can shoot again, it gets reset to 0 when the player shoots and then counts up to 30
+        }
+        
+        if(this.mana < this.maxMana){
+            manaRegenCounter++;
+        }
+        if(manaRegenCounter > 300){
+            if(mana < maxMana){
+                mana++;
+            }
+            manaRegenCounter = 0;
+        }
+        if(life > maxLife){
+            life = maxLife;
+        }
+        if(mana > maxMana){
+            mana = maxMana;
+        }
+        if(life < 0){
+            life = 0;
         }
     }
 
@@ -311,7 +343,7 @@ public class Player extends Entity {
             solidArea.height = attackArea.height;
             //this gets the monster that hit the player and if collision is detected then
             int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
-            damageMonster(monsterIndex);
+            damageMonster(monsterIndex,attack);
             //After checking collision, restore original worldX/Y and solidArea
             worldX = currentWorldX;
             worldY = currentWorldY;
@@ -327,18 +359,28 @@ public class Player extends Entity {
     }
 
     public void pickUpObject(int index){
-        if(index != 999){
-            String text;
-            if(inventory.size() < maxInventorySize){
-                inventory.add(gp.obj[index]);
-                gp.playSE(1);
-                text = "Got a " + gp.obj[index].name + "!";
-           }
-           else{
-            text = "You cannot carry anymore items!";
-           }
-           gp.ui.addMessage(text);
-           gp.obj[index] = null;
+        //PICK ONLY OBJECTS
+        if(index != 999 && gp.obj[index].type == type_pickupOnly){
+            if(gp.obj[index].type == type_pickupOnly){
+                gp.obj[index].use(this);
+                gp.obj[index] = null;
+            }
+
+        }    //INVENTORY ITEMS
+        else{
+            if(index != 999){
+                    String text;
+                    if(inventory.size() < maxInventorySize){
+                        inventory.add(gp.obj[index]);
+                        gp.playSE(1);
+                        text = "Got a " + gp.obj[index].name + "!";
+                }
+                else{
+                    text = "You cannot carry anymore items!";
+                }
+                gp.ui.addMessage(text);
+                gp.obj[index] = null;
+            }
         }
     }
 
@@ -356,7 +398,7 @@ public class Player extends Entity {
         }
     }
 
-    public void damageMonster(int i){
+    public void damageMonster(int i,int attack){
         if(i!=999){
             if(gp.monster[i].invincible == false){
                 gp.playSE(5);

@@ -16,6 +16,7 @@ import java.awt.FontFormatException;
 import java.io.File;
 import java.io.InputStream;
 import javax.sound.sampled.Line;*/
+import objects.OBJ_ManaCrystal;
 
 
 public class UI {
@@ -29,7 +30,7 @@ public class UI {
     public String currentDialogue;
     public int commandNum = 0;
     public int titleScreenState = 0;// 0: the first screen 1: second screen
-    BufferedImage heart_full,heart_half,heart_blank;
+    BufferedImage heart_full,heart_half,heart_blank, crystal_full, crystal_blank;
     BufferedImage img_beserk, img_mage, img_archer,img_tank,img_healer;
     BufferedImage titleScreenImage;
     ArrayList<Integer> messageCounter = new ArrayList<Integer>();
@@ -48,13 +49,11 @@ public class UI {
             heart_half = hrt.image2;
             heart_blank = hrt.image3;
 
-        /* >not working<:(
-        img_beserk = setup("beserk");
-        img_mage = setup("mage");
-        img_archer = setup("archer");
-        img_tank = setup("tank");
-        img_healer = setup("healer");
-        */
+        Entity crs = new OBJ_ManaCrystal(gp);
+            crystal_full = crs.image;
+            crystal_blank = crs.image2;
+
+        
         
         
         try{
@@ -108,6 +107,9 @@ public class UI {
         if(gp.gameState == gp.playState){
             drawPlayerLife();
             drawMessage();
+            if(gp.player.mana != gp.player.maxMana){
+                drawManaLoading();
+            }
         }
         if(gp.gameState == gp.pauseState){
                 drawPauseScreen();
@@ -123,6 +125,25 @@ public class UI {
         }
 
 
+    }
+
+    public void drawManaLoading(){
+        int x = gp.tileSize/2+5;
+        int y = gp.tileSize*3-5;
+        int width = gp.tileSize*2;
+        int height = 15;
+        String text = "Recharging Mana...";
+        g2.setColor(Color.gray.darker().darker().darker());
+        g2.fillRoundRect(x, y, width+10, height+10,7,7);
+        g2.setColor(Color.lightGray);
+        g2.fillRoundRect(x+5, y+5, width, height,7,7);
+        g2.setColor(Color.cyan.darker());
+        g2.fillRoundRect(x+5, y+5, 2*((int)(48 * gp.player.manaRegenCounter/(double)300)), height,7,7);
+        g2.setColor(Color.DARK_GRAY);
+        g2.setFont(g2.getFont().deriveFont(11F));
+        g2.drawString(text,x+ 10,y+ 15);
+        
+        
     }
 
     public void drawInventory(){
@@ -225,7 +246,7 @@ public class UI {
         final int frameX = gp.tileSize * 2;
         final int frameY = gp.tileSize;
         final int frameWidth = gp.tileSize * 5;
-        final int frameHeight = gp.tileSize * 10;
+        final int frameHeight = gp.tileSize * 10 + 24;
 
         drawSubWindow(frameX, frameY, frameWidth, frameHeight);
 
@@ -242,6 +263,9 @@ public class UI {
         textY += lineHeight;
 
         g2.drawString("Life", textX, textY);
+        textY += lineHeight;
+
+        g2.drawString("Mana", textX, textY);
         textY += lineHeight;
 
         g2.drawString("Strength", textX, textY);
@@ -287,6 +311,11 @@ public class UI {
         textX = getXforAlignToRightText(value, tailX);
         g2.drawString(value, textX, textY);
         textY += lineHeight;
+
+        value = String.valueOf(gp.player.mana) + "/" + String.valueOf(gp.player.maxMana);
+        textX = getXforAlignToRightText(value, tailX);
+        g2.drawString(value, textX, textY);
+        textY += lineHeight;
         
         value = String.valueOf(gp.player.strength);
         textX = getXforAlignToRightText(value, tailX);
@@ -321,7 +350,9 @@ public class UI {
         value = String.valueOf(gp.player.coin);
         textX = getXforAlignToRightText(value, tailX);
         g2.drawString(value, textX, textY);
-        textY += lineHeight + 15;
+        textY += lineHeight;
+
+        
         
         g2.drawImage(gp.player.currentWeapon.down1, tailX - gp.tileSize, textY - lineHeight, null);
         textY += lineHeight;
@@ -356,6 +387,26 @@ public class UI {
             i++;
             x+=gp.tileSize;
         }
+
+        //DRAW MAX MANA
+        x = gp.tileSize/2;
+        y = gp.tileSize*2-15;
+        i = 0;
+        while(i < gp.player.maxMana){
+            g2.drawImage(crystal_blank, x , y, null);
+            i++;
+            x+=gp.tileSize/2 + 14;
+        }
+        //DRAW CURRENT MANA
+        x = gp.tileSize/2;
+        y = gp.tileSize*2-15;
+        i = 0;
+        while(i<gp.player.mana){
+        g2.drawImage(crystal_full,x,y,null);
+            i++;
+            x+=gp.tileSize/2 + 14;
+        }
+            
 
     }
 
