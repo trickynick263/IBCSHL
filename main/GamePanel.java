@@ -3,6 +3,8 @@ package main;
 import entity.Entity;
 import entity.Player;
 import tile.TileManager;
+import tiles_interactive.InteractiveTile;
+
 import javax.swing.JPanel;
 import java.awt.Dimension;//imports dimension for the screen we use to play the game
 import java.awt.Font;
@@ -62,7 +64,7 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
     ArrayList<Entity> entityList = new ArrayList<>();
     public Entity[] monster = new Entity[20];
     public ArrayList<Entity> projectileList = new ArrayList<>();
-
+    public InteractiveTile[] iTile = new InteractiveTile[20];
     
     
     //SOUND
@@ -83,9 +85,7 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
         aSetter.setObject();
         aSetter.setNPC();
         aSetter.setMonster();
-        //playMusic(0);
-        
-        
+        aSetter.setInteractiveTile();
         gameState = titleState;//initializes what state the game is in
     }
 
@@ -110,8 +110,6 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
         int drawCount = 0;
 
         while(gameThread != null){//as long as gamethread exists the game will keep running
-            
-            
             // we are going to update information such as character positions
             
             // we are going to draw the screen with the updated information
@@ -205,6 +203,11 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
                 }
             }
         }
+        for(int i = 0;i < iTile.length;i++){
+            if(iTile[i] != null){
+                iTile[i].update();
+            }
+        }
         }
         if(gameState == pauseState){
             
@@ -234,6 +237,13 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
         else{
         //TILE
         tileM.draw(g2);//draws the tile manager first so the tiles are in the background
+
+        //INTERACTIVE TILES
+        for(int i = 0;i < iTile.length;i++){
+            if(iTile[i] != null){
+                iTile[i].draw(g2);
+            }
+        }
         
         //ADDING NPCS TO ENTITY LIST
         entityList.add(player);

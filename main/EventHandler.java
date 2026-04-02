@@ -114,7 +114,7 @@ public class EventHandler {
     
     public void teleport(int col, int row,int gameState){
         gp.gameState = gameState;
-        
+        gp.playSE(11);
         gp.player.worldX = col * gp.tileSize;
         gp.player.worldY = row * gp.tileSize;
         canTouchEvent = false;

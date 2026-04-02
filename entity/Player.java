@@ -206,9 +206,11 @@ public class Player extends Entity {
         int npcIndex = gp.cChecker.checkEntity(this, gp.npc);
         interactNPC(npcIndex);
 
-
         //CHECK EVENT
         gp.eHandler.checkEvent();
+
+        //CHECK INTERACTIVE TILE COLLISION
+        int iTileIndex = gp.cChecker.checkEntity(this, gp.iTile);
 
         
         
@@ -344,6 +346,10 @@ public class Player extends Entity {
             //this gets the monster that hit the player and if collision is detected then
             int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
             damageMonster(monsterIndex,attack);
+
+            int iTileIndex = gp.cChecker.checkEntity(this, gp.iTile);
+            damageInteractiveTile(iTileIndex);
+
             //After checking collision, restore original worldX/Y and solidArea
             worldX = currentWorldX;
             worldY = currentWorldY;
@@ -355,6 +361,18 @@ public class Player extends Entity {
             spriteNum = 1;
             spriteCounter = 0;
             attacking = false;
+        }
+    }
+
+    public void damageInteractiveTile(int index){
+        if(index != 999 && gp.iTile[index].destructible == true &&gp.iTile[index].invincible == false && gp.iTile[index].isCorrectItem(this) == true){
+            gp.iTile[index].playSE();
+            gp.iTile[index].life--;
+            gp.iTile[index].invincible = true;
+
+            if(gp.iTile[index].life <= 0){
+                gp.iTile[index] = gp.iTile[index].getDestroyedForm();//if the tile is destructible and we hit it, we set it to null so it disappears   
+            }
         }
     }
 
