@@ -8,8 +8,11 @@ import tiles_interactive.InteractiveTile;
 import javax.swing.JPanel;
 import java.awt.Dimension;//imports dimension for the screen we use to play the game
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
-
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -21,14 +24,20 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
     final int scale = 3;//since modern computers have much higher resolutions, 16 by 16 looks small, so we can scale the size to make it bigger
     
     public final int tileSize = originalTileSize * scale;//48 by 48 | allows us to get our actual tile size
-    public final int maxScreenCol = 16;
+    public final int maxScreenCol = 20;//number of columns in the screen, 20 tiles horizontally
     public final int maxScreenRow = 12;//4 to 3 ratio, 16 tiles horizontally 12 tiles vertically
-    public final int screenWidth = tileSize * maxScreenCol;//768 pixels horizontally
+    public final int screenWidth = tileSize * maxScreenCol;//960 pixels horizontally
     public final int screenHeight = tileSize * maxScreenRow;//576 pixels vertically
 
     //World settings
     public final int maxWorldCol = 100;
     public final int maxWorldRow = 100;
+    //FOR FULL SCREEN
+    int screenWidth2 = screenWidth;
+    int screenHeight2 = screenHeight;
+    BufferedImage tempScreen;
+    Graphics2D g2;
+    public boolean fullScreenOn = false;
     
 
 
@@ -44,6 +53,7 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
     public final int dialogueState = 2;
     public final int titleState = 0;
     public final int characterState = 4;
+    public final int optionsState = 5;
 
 
     public TileManager tileM = new TileManager(this);
@@ -65,6 +75,7 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
     public Entity[] monster = new Entity[20];
     public ArrayList<Entity> projectileList = new ArrayList<>();
     public InteractiveTile[] iTile = new InteractiveTile[20];
+    public ArrayList<Entity> particleList = new ArrayList<>();
     
     
     //SOUND
@@ -77,7 +88,7 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
         this.setBackground(Color.black);//background color
         this.setDoubleBuffered(true);//if set to true, drawing from this component will be done in an offscreen painting buffer
         this.addKeyListener(keyH);//adds keyhandler to gampepanel so we can listen to keys
-        this.setFocusable(true);
+        this.setFocusable(true);//makes the gamepanel focusable so it can receive key inputs
         setupGame();
     }
 
@@ -87,6 +98,11 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
         aSetter.setMonster();
         aSetter.setInteractiveTile();
         gameState = titleState;//initializes what state the game is in
+
+        tempScreen = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_ARGB);//creates a new buffered image that we can draw on, this is used for full screen mode to draw the game on a smaller screen and then scale it up to fit the full screen
+        g2 = (Graphics2D)tempScreen.getGraphics();//creates a graphics2D object to draw on the buffered image, this is used for full screen mode to draw the game on a smaller screen and then scale it up to fit the full screen
+
+        
     }
 
     public void startGameThread(){
@@ -109,17 +125,7 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
         long timer = 0;
         int drawCount = 0;
 
-        while(gameThread != null){//as long as gamethread exists the game will keep running
-            // we are going to update information such as character positions
-            
-            // we are going to draw the screen with the updated information
-            /* lets say that we press a down arrow and that should make the player character go down
-            , what we first do is we update the player information and then we redraw the screen 
-            according to the new player information */
-
-            //long currentTime = System.nanoTime();//gets the current time in nanoseconds to manage updating the game
-            //above shows how to get the current time and how long the system has been running for
-            
+        while(gameThread != null){
             currentTime = System.nanoTime();
             delta += (currentTime - lastTime) / drawInterval;
             timer += (currentTime - lastTime);
@@ -127,9 +133,10 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
             if(delta >= 1){
             
             update();
-            repaint();
+            drawToTempScreen();//draw everything to the temp screen first and then scale it up to the full screen in
+            drawToScreen();//draw the buffered image to the screen, this is used for full screen mode to draw the game on a smaller screen and then scale it up to fit the full screen
             delta--;
-            drawCount++;//calls the paintcomponent method, confusing but its how java works
+            drawCount++;
         }
 
         if(timer >= 1000000000){
@@ -203,6 +210,16 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
                 }
             }
         }
+        for(int i = 0;i < particleList.size();i++){
+            if(particleList.get(i) != null){
+                if(particleList.get(i).alive == true){    
+                    particleList.get(i).update();
+                }
+                if(particleList.get(i).alive == false){
+                    particleList.remove(i);
+                }
+            }
+        }
         for(int i = 0;i < iTile.length;i++){
             if(iTile[i] != null){
                 iTile[i].update();
@@ -216,19 +233,29 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
 
     }
 
-    public void paintComponent(java.awt.Graphics g){
-        //DEBUG
+    public void drawToScreen(){
+        Graphics g = getGraphics();
+        g.drawImage(tempScreen, 0, 0, screenWidth2, screenHeight2, null);
+        g.dispose();
+    }
+
+    public void setFullScreen(){
         
-            long drawStart = 0;
+        //GET LOCAL SCREEN DEVICE
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();//gets the local graphics environment, which is the collection of graphics devices (monitors) that are available on the system
+        GraphicsDevice gd = ge.getDefaultScreenDevice();//gets the default screen device, which is the monitor we are using
+        gd.setFullScreenWindow(Main.window);//sets the window to full screen mode
+
+        //GET FULLSCREEN SIZE FOR HEIGHT AND WIDTH
+        screenWidth2 = Main.window.getWidth();
+        screenHeight2 = Main.window.getHeight();
+    }
+
+    public void drawToTempScreen(){
+        long drawStart = 0;
         if(keyH.debugPressed == true){
             drawStart = System.nanoTime();
         }
-        
-        
-        super.paintComponent(g);//calls the paintcomponent method of the superclass(jpanel)
-        //so that we can have the default behavior of jpanel and then add our custom behavior on top of it
-        Graphics2D g2 = (Graphics2D)g;//casting g to graphics2D type so we can use graphics2D methods
-        //draws a white rectangle that fills the screen
         
         //TITLE SCREEN
         if(gameState == titleState){
@@ -274,6 +301,12 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
                 entityList.add(projectileList.get(i));
             }
         }
+        //PARTICLES
+        for(int i = 0;i<particleList.size();i++){
+            if(particleList.get(i) != null){
+                entityList.add(particleList.get(i));
+            }
+        }
         //SORTS ENTITY LIST BASED OFF OF WORLD Y VALUES
         Collections.sort(entityList, new Comparator<Entity>(){
             public int compare(Entity e1, Entity e2){
@@ -309,11 +342,9 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
 
         //DEBUG
         }
-
-        g2.dispose();//disposes if graphics context and releases system resources that it is using
-        //good practice to call dispose when done with graphics context as it helps to prevent memory leaks
-        
     }
+
+    
 
     public void playMusic(int i){
 

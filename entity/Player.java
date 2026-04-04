@@ -13,6 +13,7 @@ import javax.imageio.ImageIO;
 
 import main.KeyHandler;
 import main.UtilityTool;
+import objects.OBJ_Axe;
 import objects.OBJ_BlueEnergyOrb;
 import objects.OBJ_Shield_Wood;
 import objects.OBJ_Sword_Normal;
@@ -33,6 +34,9 @@ public class Player extends Entity {
     
     //TEST
     int spriteChecker = 0;
+
+    //TEST FOR JUMP ABILITY
+    public int jumpCounter = 0;
     
     
     
@@ -71,6 +75,7 @@ public class Player extends Entity {
     public void setItems(){
         inventory.add(currentShield);
         inventory.add(currentWeapon);
+        inventory.add(new OBJ_Axe(gp));
       
     }
     public void setDefaultValues(){
@@ -244,6 +249,9 @@ public class Player extends Entity {
                     break;
             }
         }
+
+        
+        
         
 
         //SPRITE ANIMATION
@@ -365,10 +373,13 @@ public class Player extends Entity {
     }
 
     public void damageInteractiveTile(int index){
-        if(index != 999 && gp.iTile[index].destructible == true &&gp.iTile[index].invincible == false && gp.iTile[index].isCorrectItem(this) == true){
+        if(index != 999 && gp.iTile[index].destructible == true && gp.iTile[index].invincible == false && gp.iTile[index].isCorrectItem(this) == true){
             gp.iTile[index].playSE();
             gp.iTile[index].life--;
             gp.iTile[index].invincible = true;
+
+            //generating particles
+            generateParticle(gp.iTile[index],gp.iTile[index] );
 
             if(gp.iTile[index].life <= 0){
                 gp.iTile[index] = gp.iTile[index].getDestroyedForm();//if the tile is destructible and we hit it, we set it to null so it disappears   

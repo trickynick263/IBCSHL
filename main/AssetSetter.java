@@ -22,36 +22,36 @@ public class AssetSetter {
     public void setObject(){
         int i = 0;
         gp.obj[i] = new OBJ_Key(gp);
-        gp.obj[i].worldX = gp.tileSize * 55;
-        gp.obj[i].worldY = gp.tileSize * 55;
+        gp.obj[i].worldX = gp.tileSize * 65;
+        gp.obj[i].worldY = gp.tileSize * 65;
         i++;
         gp.obj[i] = new OBJ_Axe(gp);
-        gp.obj[i].worldX = gp.tileSize * 54;
-        gp.obj[i].worldY = gp.tileSize * 54;
+        gp.obj[i].worldX = gp.tileSize * 64;
+        gp.obj[i].worldY = gp.tileSize * 64;
         i++;
         gp.obj[i] = new OBJ_Metal_Shield(gp);
-        gp.obj[i].worldX = gp.tileSize * 53;
-        gp.obj[i].worldY = gp.tileSize * 53;
+        gp.obj[i].worldX = gp.tileSize * 63;
+        gp.obj[i].worldY = gp.tileSize * 63;
         i++;
         gp.obj[i] = new OBJ_Potion_Pink(gp);
-        gp.obj[i].worldX = gp.tileSize * 52;
-        gp.obj[i].worldY = gp.tileSize * 52;
+        gp.obj[i].worldX = gp.tileSize * 62;
+        gp.obj[i].worldY = gp.tileSize * 62;
         i++;
         gp.obj[i] = new OBJ_GoldCoin(gp);
-        gp.obj[i].worldX = gp.tileSize * 51;
-        gp.obj[i].worldY = gp.tileSize * 51;
+        gp.obj[i].worldX = gp.tileSize * 61;
+        gp.obj[i].worldY = gp.tileSize * 61;
         i++;
         gp.obj[i] = new OBJ_Heart(gp);
-        gp.obj[i].worldX = gp.tileSize * 56;
-        gp.obj[i].worldY = gp.tileSize * 56;
+        gp.obj[i].worldX = gp.tileSize * 60;
+        gp.obj[i].worldY = gp.tileSize * 61;
         i++;
         gp.obj[i] = new OBJ_ManaCrystal(gp);
-        gp.obj[i].worldX = gp.tileSize * 57;
-        gp.obj[i].worldY = gp.tileSize * 57;
+        gp.obj[i].worldX = gp.tileSize * 59;
+        gp.obj[i].worldY = gp.tileSize * 61;
         i++;
         gp.obj[i] = new OBJ_GoldCoin(gp);
         gp.obj[i].worldX = gp.tileSize * 58;
-        gp.obj[i].worldY = gp.tileSize * 58;
+        gp.obj[i].worldY = gp.tileSize * 61;
         i++;
 
 
@@ -90,20 +90,15 @@ public class AssetSetter {
 
     public void setInteractiveTile(){
         int i = 0;
-        gp.iTile[i] = new IT_DryTree(gp,43,50);
+        gp.iTile[i] = new IT_DryTree(gp,58,48);
         i++;
-        gp.iTile[i] = new IT_DryTree(gp,42,50);
+        gp.iTile[i] = new IT_DryTree(gp,58,47);
         
         i++;
-        gp.iTile[i] = new IT_DryTree(gp,41,50);
+        gp.iTile[i] = new IT_DryTree(gp,58,46);
         
         i++;
-        gp.iTile[i] = new IT_DryTree(gp,40,50);
         
-        i++;
-        gp.iTile[i] = new IT_DryTree(gp,39,50);
-        
-        i++;
     }
 
     

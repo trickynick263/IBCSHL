@@ -22,10 +22,12 @@ public class TileManager {
     public int mapTileNum[][];//2d array to store the map information from the text file
     public TileManager(GamePanel gp){
         this.gp = gp;
-        tile = new Tile[20];//array of tiles, we can have 10 different tiles like grass,water,brick
+        tile = new Tile[50];//array of tiles, we can have 10 different tiles like grass,water,brick
         mapTileNum = new int[gp.maxWorldCol][gp.maxWorldRow];//initializing the 2d array with the size of the screen in tiles
 
         getTileImage();
+
+
         loadMap("res/maps/map.txt");
         //THIS NEEDS TO BE CHANGED WITH A SLASH AT HOME AND BETWEEN SCHOOL
         
@@ -34,7 +36,7 @@ public class TileManager {
 
     public void getTileImage(){
     
-        setup(0, "grass", false);
+        
         //default tile is no collsion so you dont need to set it to false
         
         //Scaling images to fit tile size, saves drawing time during the game loop
@@ -43,19 +45,53 @@ public class TileManager {
         Graphics2D g2d = scaledImage.createGraphics();//creates a graphics2D object to draw the image
         g2d.drawImage(tile[0].image, 0, 0, gp.tileSize, gp.tileSize, null);
         tile[0].image = scaledImage;*/
-
         
-        setup(1, "brick", true);
-        setup(2, "water", true);
-        setup(3, "earth", false);
-        setup(4, "tree", true);
-        setup(5, "sand", false);
-        setup(6, "log 1", true);
-        setup(7, "log 2", true);
-        setup(8, "log 3", true);
-        setup(9, "fence", true);
-        setup(10, "teleport",false);
-
+        
+        
+        
+        setup(0, "grass v0", false);
+        setup(1, "grass v1", false);
+        setup(2, "grass v2", false);
+        setup(3, "brick", true);
+        setup(4, "earth", false);
+        setup(5, "road v0", false);
+        setup(6, "water v0", true);
+        setup(7, "water v1", true);
+        setup(8, "water v2", true);
+        setup(9, "land to road bottom left corner v0", false);
+        setup(10, "land to road bottom left corner v2", false);
+        setup(11, "land to road top left corner v0", false);
+        setup(12, "land to road top left corner v2", false);
+        setup(13, "land to road bottom right corner v0", false);
+        setup(14, "land to road bottom right corner v2", false);
+        setup(15, "land to road top right corner v0", false);
+        setup(16, "land to road top right corner v2", false);
+        setup(17, "land to road up to down" , false);
+        setup(18, "land to road down to up", false);
+        setup(19, "bottom left land to water", false);
+        setup(20, "bottom left land to water corner", true);
+        setup(21, "bottom right land to water", false);
+        setup(22, "bottom right land to water corner", true);
+        setup(23, "land to road left to right", false);
+        setup(24, "land to road right to left", false);
+        setup(25, "tree", true);
+        setup(26, "land to water down to up", true);
+        setup(27, "land to water up to down", true);
+        setup(28, "land to water left to right", true);
+        setup(29, "land to water right to left", true);
+        setup(30, "top left land to water corner", true);
+        setup(31, "top right land to water corner", true);
+        setup(32, "top left land to water", false);
+        setup(33, "top right land to water", false);
+        
+        setup(34, "land to water left to right v1", true);
+        setup(35, "land to water right to left v1", true);
+        setup(36, "top right land to water corner v1", true);
+        setup(37, "top left land to water corner v1", true);
+        setup(38, "bottom left land to water corner v1", true);
+        setup(39, "bottom right land to water corner v1", true);
+        
+       
 
     }
 public void setup(int index, String imagePath, boolean collision){

@@ -1,6 +1,9 @@
 package tiles_interactive;
 
 import main.GamePanel;
+
+import java.awt.Color;
+
 import entity.Entity;
 
 public class IT_DryTree extends InteractiveTile{
@@ -14,7 +17,7 @@ public class IT_DryTree extends InteractiveTile{
         destructible = true;
         life = 3;
     }
-
+    //DONT FORGET TO ADD THESE METHODS TO THE SUPERCLASS(ENTITY)
     public boolean isCorrectItem(Entity entity){
         //check if the correct item is used on the tile
         boolean isCorrect = false;
@@ -24,10 +27,30 @@ public class IT_DryTree extends InteractiveTile{
         return isCorrect;
     }
     public void playSE(){
-        gp.playSE(10);
+        gp.playSE(10);//play the sound effect for breaking a tree
     }
     public InteractiveTile getDestroyedForm(){
         InteractiveTile tile = new IT_Trunk(gp, worldX/gp.tileSize, worldY/gp.tileSize);
-        return tile;
+        return tile;//after the tree is destroyed, it becomes a trunk
+    }
+
+    public Color getParticleColor(){
+        Color color = new Color(65,50,30);
+        return color;//color of the particle
+    }
+
+    public int getParticleSize(){
+        int size = 6;//size of the particle which is 6 pixels
+        return size;
+    }
+
+    public int getParticleSpeed(){
+        int speed = 1;//how fast the particle moves
+        return speed;
+    }
+
+    public int getParticleMaxLife(){
+        int maxLife = 20;
+        return maxLife;//how long the particle lasts
     }
 }

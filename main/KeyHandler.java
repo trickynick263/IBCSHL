@@ -1,6 +1,6 @@
 package main;
 import java.awt.event.KeyListener;
-
+import java.awt.RenderingHints.Key;
 import java.awt.event.KeyEvent;
 
 public class KeyHandler implements KeyListener{
@@ -41,8 +41,42 @@ public class KeyHandler implements KeyListener{
     else if(gp.gameState == gp.characterState){
         characterState(code);
     }
-        
-        
+    //Options state
+    else if(gp.gameState == gp.optionsState){
+        optionsState(code);
+    }
+
+    }
+
+    public void optionsState(int code){
+        if(code == KeyEvent.VK_ESCAPE){
+            gp.gameState = gp.playState;
+        }
+        if(code == KeyEvent.VK_ENTER){
+            enterPressed = true;
+        }
+
+        int maxCommandNum = 0;
+        switch(gp.ui.subState){//options substate will have different max command nums based on which substate it is in
+            case 0: maxCommandNum = 5; break;
+            case 1: maxCommandNum = 0; break;
+            case 2: maxCommandNum = 0; break;
+        }
+
+        if(code == KeyEvent.VK_W){
+                gp.ui.commandNum --;
+                gp.playSE(8);
+                if(gp.ui.commandNum < 0){
+                    gp.ui.commandNum = maxCommandNum;
+                }
+            }
+        if(code == KeyEvent.VK_S){
+                gp.ui.commandNum ++;
+                gp.playSE(8);
+                if(gp.ui.commandNum > maxCommandNum){
+                    gp.ui.commandNum = 0;
+                }        
+        }
     }
     
     public void titleState(int code){
@@ -50,12 +84,14 @@ public class KeyHandler implements KeyListener{
         if(gp.ui.titleScreenState == 0){
             if(code == KeyEvent.VK_W){
                 gp.ui.commandNum--;
+                gp.playSE(8);
                 if(gp.ui.commandNum < 0){
                     gp.ui.commandNum = 2;
                 }
             }
             if(code == KeyEvent.VK_S){
                 gp.ui.commandNum +=1;
+                gp.playSE(8);
                 if(gp.ui.commandNum > 2){
                     gp.ui.commandNum = 0;
                 }        
@@ -63,6 +99,7 @@ public class KeyHandler implements KeyListener{
             if(code == KeyEvent.VK_ENTER){
                 if(gp.ui.commandNum == 0){
                     gp.ui.titleScreenState = 1;
+                    gp.ui.commandNum = 0;
                     
                 }
                 if(gp.ui.commandNum == 1){
@@ -76,12 +113,14 @@ public class KeyHandler implements KeyListener{
         else if(gp.ui.titleScreenState == 1){
             if(code == KeyEvent.VK_W){
                 gp.ui.commandNum --;
+                gp.playSE(8);
                 if(gp.ui.commandNum < 0){
                     gp.ui.commandNum = 5;
                 }
             }
             if(code == KeyEvent.VK_S){
                 gp.ui.commandNum +=1;
+                gp.playSE(8);
                 if(gp.ui.commandNum > 5){
                     gp.ui.commandNum = 0;
                 }        
@@ -115,6 +154,7 @@ public class KeyHandler implements KeyListener{
                 }
                 if(gp.ui.commandNum == 5){
                     gp.ui.titleScreenState = 0;
+                    gp.ui.commandNum = 0;
                 }
             }
         }
@@ -147,6 +187,9 @@ public class KeyHandler implements KeyListener{
         }
         if(code == KeyEvent.VK_C){
             gp.gameState = gp.characterState;
+        }
+        if(code == KeyEvent.VK_ESCAPE){
+            gp.gameState = gp.optionsState;
         }
 
         
@@ -236,7 +279,7 @@ public class KeyHandler implements KeyListener{
         }
         if(code == KeyEvent.VK_F){
             shotKeyPressed = false;
-        }
+        } 
         
     }
     

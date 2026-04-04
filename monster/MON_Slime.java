@@ -1,4 +1,5 @@
 package monster;
+import java.awt.Color;
 import java.util.Random;
 
 import entity.Entity;
@@ -106,6 +107,27 @@ public boolean hasSufficientMana(Entity user){
 
     public void subtractMana(Entity user){
         user.ammo -= useCost;
+    }
+
+
+    public Color getParticleColor(){
+        Color color = new Color(128,128,128 );
+        return color;//color of the particle
+    }
+
+    public int getParticleSize(){
+        int size = 6;//size of the particle which is 6 pixels
+        return size;
+    }
+
+    public int getParticleSpeed(){
+        int speed = 1;//how fast the particle moves
+        return speed;
+    }
+
+    public int getParticleMaxLife(){
+        int maxLife = 20;
+        return maxLife;//how long the particle lasts
     }
 
 

@@ -368,6 +368,43 @@ the requirements of an entity */
     public void use(Entity entity) {
         
     }
+    //METHODS FOR PARTICLE EFFECTS and inside Interactive Tiles class
+     public Color getParticleColor(){
+        Color color = null;
+        return color;//color of the particle
+    }
+
+    public int getParticleSize(){
+        int size = 0;//size of the particle which is 6 pixels
+        return size;
+    }
+
+    public int getParticleSpeed(){
+        int speed = 0;//how fast the particle moves
+        return speed;
+    }
+
+    public int getParticleMaxLife(){
+        int maxLife = 0;
+        return maxLife;//how long the particle lasts
+    }
+    public void generateParticle(Entity generator, Entity target){
+        Color color = generator.getParticleColor();
+        int size = generator.getParticleSize();
+        int speed = generator.getParticleSpeed();
+        int maxLife = generator.getParticleMaxLife();
+
+        Particle p1 = new Particle(gp, target, color, size, speed, maxLife, -1, -1);
+        gp.particleList.add(p1);
+        Particle p2 = new Particle(gp, target, color, size, speed, maxLife, -1, 1);
+        gp.particleList.add(p2);
+        Particle p3 = new Particle(gp, target, color, size, speed, maxLife, 1, -1);
+        gp.particleList.add(p3);
+        Particle p4 = new Particle(gp, target, color, size, speed, maxLife, 1, 1);
+        gp.particleList.add(p4);
+
+        
+    }
 
 
 
