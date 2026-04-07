@@ -146,9 +146,13 @@ public class UI {
         switch(subState){
             case 0: options_Top(frameX, frameY); break;
             case 1: options_fullScreenNotification(frameX, frameY);  break;
-            case 2: break;
+            case 2: options_Controls(frameX,frameY); break;
+            case 3: options_QuitGame(frameX,frameY); break;
         }
-
+        if(titleScreenState != 0){
+            titleScreenState = 0;
+        }
+        
         gp.keyH.enterPressed = false;
     }
 
@@ -198,6 +202,10 @@ public class UI {
         g2.drawString("Controls",textX,textY);
         if(commandNum == 3){
             g2.drawString(">",textX-gp.tileSize/2,textY);
+            if(gp.keyH.enterPressed == true){
+                subState = 2;
+                commandNum = 0;
+            }
         }
 
 
@@ -206,6 +214,10 @@ public class UI {
         g2.drawString("Quit Game",textX,textY);
         if(commandNum == 4){
             g2.drawString(">",textX-gp.tileSize/2,textY);
+            if(gp.keyH.enterPressed == true){
+                subState = 3;
+                commandNum = 0;
+            }
         }
 
         //BACK OPTION
@@ -213,6 +225,11 @@ public class UI {
         g2.drawString("Back",textX,textY);
         if(commandNum == 5){
             g2.drawString(">",textX-gp.tileSize/2,textY);
+            if(gp.keyH.enterPressed == true){
+                gp.gameState = gp.playState;
+                subState = 0;
+                commandNum = 0;
+            }
         }
 
 
@@ -229,12 +246,105 @@ public class UI {
         //MUSIC VOLUME SLIDER
         textY += gp.tileSize;
         g2.drawRect(textX, textY, 120, gp.tileSize/2);
+        g2.fillRect(textX, textY, 120 * gp.music.volumeScale / 5, gp.tileSize/2);
 
         //SE VOLUME SLIDER
         textY += gp.tileSize;
         g2.drawRect(textX, textY, 120, gp.tileSize/2);
+        g2.fillRect(textX, textY, 120 * gp.se.volumeScale / 5, gp.tileSize/2);
+
+        gp.config.saveConfig();//saves our information we change in game
 
     }
+
+    public void options_QuitGame(int frameX,int frameY){
+        g2.setFont(g2.getFont().deriveFont(28F));
+        int textX = frameX + gp.tileSize;
+        int textY = frameY + gp.tileSize;
+        currentDialogue = "Are you sure you want \nto quit? \n \nThis action will return \nyou to the Title Screen.";
+        for(String line : currentDialogue.split("\n")){
+            g2.drawString(line,textX,textY);
+            textY+=40;
+        }
+        g2.setFont(g2.getFont().deriveFont(32F));
+        //RETURN TO MAIN MENU
+        String text = "Return to Title Screen";
+        textX = getXforCenteredText(text);
+        textY += gp.tileSize*3;
+        g2.drawString(text,textX,textY);
+        if(commandNum == 0){
+            g2.drawString(">",textX-25,textY);
+            if(gp.keyH.enterPressed == true){
+                gp.gameState = gp.titleState;
+                subState = 0;
+                commandNum = 0;
+            }
+        }
+        
+        //KEEP PLAYING
+        text = "Keep Playing";
+        textX = getXforCenteredText(text);
+        textY += gp.tileSize;
+        g2.drawString(text,textX,textY);
+        if(commandNum == 1){
+            g2.drawString(">",textX-25,textY);
+            if(gp.keyH.enterPressed == true){
+                subState = 0;
+                commandNum = 4;
+                titleScreenState = 0;
+                gp.music.stop();
+            }
+        }
+
+
+
+
+
+
+    }
+
+    public void options_Controls(int frameX, int frameY){
+        g2.setFont(g2.getFont().deriveFont(28F));
+        int textX;
+        int textY;
+
+        //TITLE
+        String text = "Controls";
+        textX = getXforCenteredText(text);
+        textY = frameY + gp.tileSize;
+        g2.drawString(text,textX,textY);
+
+        textX = frameX + gp.tileSize; textY += gp.tileSize;
+        g2.drawString("Move",textX,textY); textY += gp.tileSize;
+        g2.drawString("Confirm/Attack",textX,textY); textY += gp.tileSize;
+        g2.drawString("Shoot/Cast",textX,textY); textY += gp.tileSize;
+        g2.drawString("Character Screen",textX,textY); textY += gp.tileSize;
+        g2.drawString("Pause",textX,textY); textY += gp.tileSize;
+        g2.drawString("Options",textX,textY); textY += gp.tileSize;
+
+        textX = frameX + (int)(gp.tileSize*5.5);
+        textY = frameY + gp.tileSize*2;
+        g2.drawString("WASD",textX,textY); textY += gp.tileSize;
+        g2.drawString("ENTER",textX,textY); textY += gp.tileSize;
+        g2.drawString("F",textX,textY); textY += gp.tileSize;
+        g2.drawString("C",textX,textY); textY += gp.tileSize;
+        g2.drawString("P",textX,textY); textY += gp.tileSize;
+        g2.drawString("ESCAPE",textX,textY); textY += gp.tileSize;
+        
+        //BACK BUTTON
+        textX = frameX + gp.tileSize;
+        textY = frameY + gp.tileSize*9;
+        g2.drawString("Back",textX,textY);
+        if(commandNum == 0){
+            g2.drawString(">",textX-gp.tileSize/2,textY);
+            if(gp.keyH.enterPressed == true){
+                subState = 0;
+            }
+        }
+
+        
+        
+    }   
 
     public void options_fullScreenNotification(int frameX, int frameY){
 

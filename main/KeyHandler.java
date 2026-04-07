@@ -61,6 +61,7 @@ public class KeyHandler implements KeyListener{
             case 0: maxCommandNum = 5; break;
             case 1: maxCommandNum = 0; break;
             case 2: maxCommandNum = 0; break;
+            case 3: maxCommandNum = 1; break;
         }
 
         if(code == KeyEvent.VK_W){
@@ -77,6 +78,42 @@ public class KeyHandler implements KeyListener{
                     gp.ui.commandNum = 0;
                 }        
         }
+        if(code == KeyEvent.VK_A){
+            if(gp.ui.subState == 0){
+                if(gp.ui.commandNum == 1){
+                    if(gp.music.volumeScale > 0){
+                        gp.music.volumeScale--;
+                        gp.music.checkVolume();
+                        //playSE(SOMETHING IN THE FUTURE)
+                    }
+                }
+                if(gp.ui.commandNum == 2){
+                    if(gp.se.volumeScale > 0){
+                        gp.se.volumeScale--;
+                        //playSE(SOMETHING IN THE FUTURE)
+                    }
+                }
+            }
+        }
+        if(code == KeyEvent.VK_D){
+            if(gp.ui.subState == 0){
+                if(gp.ui.commandNum == 1){
+                    if(gp.music.volumeScale < 5){
+                        gp.music.volumeScale++;
+                        gp.music.checkVolume();
+                        //playSE(SOMETHING IN THE FUTURE)
+                    }
+                }
+                if(gp.ui.commandNum == 2){
+                    if(gp.se.volumeScale < 5){
+                        gp.se.volumeScale++;
+                        //playSE(SOMETHING IN THE FUTURE)
+                    }
+                }
+            }
+        }
+            
+        
     }
     
     public void titleState(int code){
@@ -99,6 +136,7 @@ public class KeyHandler implements KeyListener{
             if(code == KeyEvent.VK_ENTER){
                 if(gp.ui.commandNum == 0){
                     gp.ui.titleScreenState = 1;
+                    
                     gp.ui.commandNum = 0;
                     
                 }
@@ -129,17 +167,17 @@ public class KeyHandler implements KeyListener{
                 if(gp.ui.commandNum == 0){
                     gp.gameState = gp.playState;
                     gp.playMusic(0);
-
                     //add class specific stuff...  
                 }
                 if(gp.ui.commandNum == 1){
                     gp.gameState = gp.playState;
                     gp.playMusic(0);
                     //add class specific stuff...
+                    
                 }
                 if(gp.ui.commandNum == 2){
                     gp.gameState = gp.playState;
-                    //`gp.playMusic(0);
+                    gp.playMusic(0);
                     //add class specific stuff...
                 }
                 if(gp.ui.commandNum == 3){

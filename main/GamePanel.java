@@ -63,7 +63,8 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
     //Like closing the program or pausing in certain cases
     public CollisionChecker cChecker = new CollisionChecker(this);
     public Player player = new Player(this,keyH);//creates a new player object
-    
+    Config config = new Config(this);
+
     //This line below was changed from superobject to fix render order
     public Entity obj[] = new Entity[20];//array to hold objects in the game, like keys, doors, etc
     //10 different objects can be stored in the array, if we need more we can increase the size of the array
@@ -98,6 +99,7 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
         aSetter.setMonster();
         aSetter.setInteractiveTile();
         gameState = titleState;//initializes what state the game is in
+        this.music.volumeScale = 2;
 
         tempScreen = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_ARGB);//creates a new buffered image that we can draw on, this is used for full screen mode to draw the game on a smaller screen and then scale it up to fit the full screen
         g2 = (Graphics2D)tempScreen.getGraphics();//creates a graphics2D object to draw on the buffered image, this is used for full screen mode to draw the game on a smaller screen and then scale it up to fit the full screen

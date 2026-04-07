@@ -7,12 +7,16 @@ import java.net.URL;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 
 public class Sound {
-    Clip clip;//this is how we open sound files in java
-    URL soundURL[] = new URL[30];//we use this to store the file path of the sound files
+    Clip clip;
+    URL soundURL[] = new URL[30];
+    FloatControl fc;
+    int volumeScale = 3;
+    float volume;
     public Sound(){//we initialize every sound in the array here
-         
+       /* */  
         soundURL[0] = getClass().getResource("/res/sound/adventure.wav");
         soundURL[1] = getClass().getResource("/res/sound/coin.wav");
         soundURL[2] = getClass().getResource("/res/sound/powerup.wav");
@@ -56,8 +60,9 @@ public class Sound {
 
             AudioInputStream ais = AudioSystem.getAudioInputStream(soundURL[i]);
             clip = AudioSystem.getClip();
-            clip.open(ais);//these lines are basically a format of opening an audio file in java
-            //
+            clip.open(ais);
+            fc = (FloatControl)clip.getControl(FloatControl.Type.MASTER_GAIN);
+            checkVolume();
         }catch(Exception e){
 
         }
@@ -77,6 +82,18 @@ public class Sound {
 
     public void stop(){
         clip.stop();
+    }
+
+    public void checkVolume(){
+        switch(volumeScale){
+            case 0: volume = -80f; break;
+            case 1: volume = -20f; break;
+            case 2: volume = -12f; break;
+            case 3: volume = -5f; break;
+            case 4: volume = 1f; break;
+            case 5: volume = 6f; break;
+        }
+        fc.setValue(volume);
     }
 
 
