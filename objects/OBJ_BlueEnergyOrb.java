@@ -14,7 +14,7 @@ public class OBJ_BlueEnergyOrb extends Projectile{
         super(gp);
         this.gp = gp;
         name = "Blue Orb";
-        speed = 12;
+        speed = 6;
         maxLife = 80;
         life = maxLife;
         attack = 2;

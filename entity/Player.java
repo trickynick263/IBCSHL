@@ -73,6 +73,7 @@ public class Player extends Entity {
     }
 
     public void setItems(){
+        inventory.clear();
         inventory.add(currentShield);
         inventory.add(currentWeapon);
         inventory.add(new OBJ_Axe(gp));
@@ -285,7 +286,7 @@ public class Player extends Entity {
             gp.projectileList.add(projectile);
             shotAvailableCounter = 0;//resets the counter so that the player has to wait 30 frames before shooting again
             //we will also play a sound effect when the projectile is shot
-            gp.playSE(9);
+            gp.playSE(29);
         }
         
        
@@ -316,9 +317,12 @@ public class Player extends Entity {
         if(mana > maxMana){
             mana = maxMana;
         }
-        if(life < 0){
-            life = 0;
+        if(life <= 0){
+            gp.gameState  = gp.gameOverState;
+            gp.playSE(12);
         }
+
+
     }
 
     public void attacking(){
@@ -370,6 +374,18 @@ public class Player extends Entity {
             spriteCounter = 0;
             attacking = false;
         }
+    }
+
+    public void setDefaultPositions(){
+        worldX = gp.tileSize * 50;
+        worldY = gp.tileSize * 50;
+        direction = "down";
+    }
+
+    public void restoreLifeAndMana(){
+        life = maxLife;
+        mana = maxMana;
+        invincible = false;
     }
 
     public void damageInteractiveTile(int index){

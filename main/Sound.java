@@ -26,10 +26,11 @@ public class Sound {
         soundURL[6] = getClass().getResource("/res/sound/receivedamage.wav");
         soundURL[7] = getClass().getResource("/res/sound/swingsword.wav");
         soundURL[8] = getClass().getResource("/res/sound/cursor.wav");
-        soundURL[9] = getClass().getResource("/res/sound/burning.wav");
+        soundURL[29] = getClass().getResource("/res/sound/burning.wav");
         soundURL[10] = getClass().getResource("/res/sound/treebreak.wav");
         soundURL[11] = getClass().getResource("/res/sound/teleport.wav");
-        
+        soundURL[12] = getClass().getResource("/res/sound/death.wav");
+        /* */
          
 
          /* 
@@ -42,10 +43,11 @@ public class Sound {
             soundURL[5] = new File("res/sound/hitmonster.wav").toURI().toURL();
             soundURL[6] = new File("res/sound/receivedamage.wav").toURI().toURL();
             soundURL[7] = new File("res/sound/swingsword.wav").toURI().toURL(); 
-            soundURL[8] = new File("/res/sound/cursor.wav").toURI().toURL();
-            soundURL[9] = new File("/res/sound/burning.wav").toURI().toURL();
-            soundURL[10] = new File("/res/sound/treebreak.wav").toURI().toURL();
-            soundURL[11] = new File("/res/sound/teleport.wav").toURI().toURL();
+            soundURL[8] = new File("res/sound/cursor.wav").toURI().toURL();
+            soundURL[9] = new File("res/sound/burning.wav").toURI().toURL();
+            soundURL[10] = new File("res/sound/treebreak.wav").toURI().toURL();
+            soundURL[11] = new File("res/sound/teleport.wav").toURI().toURL();
+            soundURL[12] = new File("res/sound/death.wav").toURI().toURL();
         }catch(Exception e){
             e.printStackTrace();
         }

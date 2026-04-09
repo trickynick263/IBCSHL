@@ -54,6 +54,7 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
     public final int titleState = 0;
     public final int characterState = 4;
     public final int optionsState = 5;
+    public final int gameOverState = 6;
 
 
     public TileManager tileM = new TileManager(this);
@@ -344,6 +345,25 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
 
         //DEBUG
         }
+    }
+
+    public void retry(){
+        player.setDefaultPositions();
+        player.restoreLifeAndMana();
+        aSetter.setNPC();
+        aSetter.setMonster();
+    }
+
+    public void restart(){
+        player.setDefaultPositions();
+        player.setItems();
+        aSetter.setObject();
+        aSetter.setNPC();
+        aSetter.setMonster();
+        aSetter.setInteractiveTile();
+
+
+
     }
 
     
