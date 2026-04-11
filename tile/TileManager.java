@@ -19,16 +19,17 @@ import javax.imageio.ImageIO;
 public class TileManager {
     GamePanel gp;
     public Tile[] tile;
-    public int mapTileNum[][];//2d array to store the map information from the text file
+    public int mapTileNum[][][];//2d array to store the map information from the text file
     public TileManager(GamePanel gp){
         this.gp = gp;
         tile = new Tile[50];//array of tiles, we can have 10 different tiles like grass,water,brick
-        mapTileNum = new int[gp.maxWorldCol][gp.maxWorldRow];//initializing the 2d array with the size of the screen in tiles
+        mapTileNum = new int[gp.maxMap][gp.maxWorldCol][gp.maxWorldRow];//initializing the 2d array with the size of the screen in tiles
 
         getTileImage();
 
 
-        loadMap("/res/maps/map.txt");
+        loadMap("res/maps/map.txt",0);
+        loadMap("res/maps/interior.txt",1);
         //THIS NEEDS TO BE CHANGED WITH A SLASH AT HOME AND BETWEEN SCHOOL
         
         
@@ -83,14 +84,15 @@ public class TileManager {
         setup(31, "top right land to water corner", true);
         setup(32, "top left land to water", false);
         setup(33, "top right land to water", false);
-        
         setup(34, "land to water left to right v1", true);
         setup(35, "land to water right to left v1", true);
         setup(36, "top right land to water corner v1", true);
         setup(37, "top left land to water corner v1", true);
         setup(38, "bottom left land to water corner v1", true);
         setup(39, "bottom right land to water corner v1", true);
-        
+        setup(40,"table",true);
+        setup(41,"floorboard",false);
+        setup(42,"hut",false);
        
 
     }
@@ -100,8 +102,8 @@ UtilityTool uTool = new UtilityTool();
 
 try{
     tile[index] = new Tile();
-    tile[index].image = ImageIO.read(getClass().getResourceAsStream("/res/tiles/" + imagePath + ".png")); //school pc
-    //tile[index].image = ImageIO.read(new File("res/tiles/" + imagePath + ".png")); //home pc
+    //tile[index].image = ImageIO.read(getClass().getResourceAsStream("/res/tiles/" + imagePath + ".png")); //school pc
+    tile[index].image = ImageIO.read(new File("res/tiles/" + imagePath + ".png")); //home pc
     tile[index].image = uTool.scaleImage(tile[index].image, gp.tileSize, gp.tileSize);
     tile[index].collision = collision;
 
@@ -112,21 +114,23 @@ catch(IOException e){
 
 }
 
-    public void loadMap(String filePath){
+    public void loadMap(String filePath, int mapNum){
         //we will load the map from a text file
         try{
-            InputStream is = getClass().getResourceAsStream(filePath); //school
-            //InputStream is = new FileInputStream(new File("res/maps/map.txt")); //home pc
+            //InputStream is = getClass().getResourceAsStream(filePath); //school
+            InputStream is = new FileInputStream(new File(filePath)); //home pc
             BufferedReader br = new BufferedReader(new InputStreamReader(is));//we gonna use this bufferedreader
-            //to read the text file line by line so we can put whatever tiles on the map we want
             int col = 0;
             int row = 0;
             while(col < gp.maxWorldCol && row < gp.maxWorldRow){
                 String line = br.readLine();//reads one line of the text file at a time
                 while(col < gp.maxWorldCol){
-                    String numbers[] = line.split(" ");//splits the line into individual numbers based on spaces
+                    String numbers[] = line.trim().split(" ");
+                    if(numbers.length != gp.maxWorldCol){
+                        System.out.println("❌ ERROR at row " + row + " → length = " + numbers.length);
+                    }
                     int num = Integer.parseInt(numbers[col]);//converts the string number to an integer
-                    mapTileNum[col][row] = num;//stores the number in the 2d array at the correct position
+                    mapTileNum[mapNum][col][row] = num;//stores the number in the 2d array at the correct position
                     col++;
                 }
                 if(col == gp.maxWorldCol){
@@ -145,18 +149,12 @@ catch(IOException e){
     }
     public void draw(Graphics2D g2){
     
-        //g2.drawImage(tile[1].image, 0, 0,gp.tileSize, gp.tileSize, null);//how we draw an image and we
-        //also choose the coordinates as seen on the method parameters
         int worldCol = 0;
         int worldRow = 0;
         
         while(worldCol < gp.maxWorldCol && worldRow < gp.maxWorldRow){
-            //we will use a while loop to pain the canvas as it is so much
-            // more efficient and easier, this will allow us to basically automate the process
-            //of drawing tiles across the screen
             
-            
-            int tileNum = mapTileNum[worldCol][worldRow];//gets the tile number from the 2d array
+            int tileNum = mapTileNum[gp.currentMap][worldCol][worldRow];//gets the tile number from the 2d array
             int worldX = worldCol * gp.tileSize;
             int worldY = worldRow * gp.tileSize;
 
@@ -177,8 +175,7 @@ catch(IOException e){
             {
                 worldCol = 0;
                 worldRow++;
-            }//We will use a txt file to let the game know which tiles to use, it should correspond 1 0 2 or others to
-            //which tile we want to use at that position on the map
+            }
 
         }
 

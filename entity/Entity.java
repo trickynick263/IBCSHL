@@ -197,11 +197,11 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
     }
 
     public void dropItem(Entity droppedItem){
-        for(int i = 0; i < gp.obj.length; i++){
-            if(gp.obj[i] == null){
-                gp.obj[i] = droppedItem;
-                gp.obj[i].worldX = worldX;
-                gp.obj[i].worldY = worldY;
+        for(int i = 0; i < gp.obj[1].length; i++){
+            if(gp.obj[gp.currentMap][i] == null){
+                gp.obj[gp.currentMap][i] = droppedItem;
+                gp.obj[gp.currentMap][i].worldX = worldX;
+                gp.obj[gp.currentMap][i].worldY = worldY;
                 break;
             }
         }
@@ -355,8 +355,8 @@ the requirements of an entity */
         BufferedImage image = null;
 
         try{
-            image = ImageIO.read(getClass().getResourceAsStream("/res" + imagePath + ".png")); //school pc
-            //image = ImageIO.read(new File("res" + imagePath + ".png")); //home pc
+            //image = ImageIO.read(getClass().getResourceAsStream("/res" + imagePath + ".png")); //school pc
+            image = ImageIO.read(new File("res" + imagePath + ".png")); //home pc
             image = uTool.scaleImage(image, width, height);
             
         } catch(IOException e){

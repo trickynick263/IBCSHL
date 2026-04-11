@@ -16,7 +16,7 @@ public class Sound {
     int volumeScale = 3;
     float volume;
     public Sound(){//we initialize every sound in the array here
-       /* */  
+       /*   
         soundURL[0] = getClass().getResource("/res/sound/adventure.wav");
         soundURL[1] = getClass().getResource("/res/sound/coin.wav");
         soundURL[2] = getClass().getResource("/res/sound/powerup.wav");
@@ -30,12 +30,14 @@ public class Sound {
         soundURL[10] = getClass().getResource("/res/sound/treebreak.wav");
         soundURL[11] = getClass().getResource("/res/sound/teleport.wav");
         soundURL[12] = getClass().getResource("/res/sound/death.wav");
-        /* */
+        soundURL[13] = getClass().getResource("/res/sound/stairs.wav");
+
+         */
          
 
-         /* 
+          
         try        {
-            soundURL[0] = new File("res/sound/BlueBoyAdventure.wav").toURI().toURL();
+            soundURL[0] = new File("res/sound/adventure.wav").toURI().toURL();
             soundURL[1] = new File("res/sound/coin.wav").toURI().toURL();
             soundURL[2] = new File("res/sound/powerup.wav").toURI().toURL();
             soundURL[3] = new File("res/sound/unlock.wav").toURI().toURL();
@@ -48,10 +50,11 @@ public class Sound {
             soundURL[10] = new File("res/sound/treebreak.wav").toURI().toURL();
             soundURL[11] = new File("res/sound/teleport.wav").toURI().toURL();
             soundURL[12] = new File("res/sound/death.wav").toURI().toURL();
+            soundURL[13] = new File("res/sound/stairs.wav").toURI().toURL();
         }catch(Exception e){
             e.printStackTrace();
         }
-            */
+            
             
         
     }

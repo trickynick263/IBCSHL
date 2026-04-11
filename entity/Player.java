@@ -167,8 +167,8 @@ public class Player extends Entity {
         BufferedImage image = null;
 
         try{
-            image = ImageIO.read(getClass().getResourceAsStream("/res" + imageName + ".png")); //school pc
-            //image = ImageIO.read(new File("res" + imageName + ".png")); //home pc
+            //image = ImageIO.read(getClass().getResourceAsStream("/res" + imageName + ".png")); //school pc
+            image = ImageIO.read(new File("res" + imageName + ".png")); //home pc
             image = uTool.scaleImage(image, width, height);
             
         } catch(IOException e){
@@ -207,6 +207,7 @@ public class Player extends Entity {
         gp.cChecker.checkTile(this);//checks tile collision, we pass in the player object
         int objIndex = gp.cChecker.checkObject(this,true);
         pickUpObject(objIndex);
+        
 
         //CHECK NPC Collision
         int npcIndex = gp.cChecker.checkEntity(this, gp.npc);
@@ -286,7 +287,7 @@ public class Player extends Entity {
             gp.projectileList.add(projectile);
             shotAvailableCounter = 0;//resets the counter so that the player has to wait 30 frames before shooting again
             //we will also play a sound effect when the projectile is shot
-            gp.playSE(29);
+            gp.playSE(9);
         }
         
        
@@ -319,6 +320,8 @@ public class Player extends Entity {
         }
         if(life <= 0){
             gp.gameState  = gp.gameOverState;
+            gp.stopMusic();
+            gp.ui.commandNum = -1;
             gp.playSE(12);
         }
 
@@ -328,10 +331,10 @@ public class Player extends Entity {
     public void attacking(){
         spriteNum = 1;
         spriteCounter++;
-        if(spriteCounter <= 10){
+        if(spriteCounter <= 5){
             spriteNum = 1;//shows first attacking image for the first 5 frames
         }
-        if(spriteCounter > 10 && spriteCounter <=  30){
+        if(spriteCounter > 5 && spriteCounter <=  25){
             spriteNum = 2;//shows second attacking image for the next 20 frames
             //Save current worldX, worldY, solidArea
             int currentWorldX = worldX;
@@ -369,7 +372,7 @@ public class Player extends Entity {
             solidArea.height = solidAreaHeight;
 
         }
-        if(spriteCounter > 30){
+        if(spriteCounter > 25){
             spriteNum = 1;
             spriteCounter = 0;
             attacking = false;
@@ -389,26 +392,26 @@ public class Player extends Entity {
     }
 
     public void damageInteractiveTile(int index){
-        if(index != 999 && gp.iTile[index].destructible == true && gp.iTile[index].invincible == false && gp.iTile[index].isCorrectItem(this) == true){
-            gp.iTile[index].playSE();
-            gp.iTile[index].life--;
-            gp.iTile[index].invincible = true;
+        if(index != 999 && gp.iTile[gp.currentMap][index].destructible == true && gp.iTile[gp.currentMap][index].invincible == false && gp.iTile[gp.currentMap][index].isCorrectItem(this) == true){
+            gp.iTile[gp.currentMap][index].playSE();
+            gp.iTile[gp.currentMap][index].life--;
+            gp.iTile[gp.currentMap][index].invincible = true;
 
             //generating particles
-            generateParticle(gp.iTile[index],gp.iTile[index] );
+            generateParticle(gp.iTile[gp.currentMap][index],gp.iTile[gp.currentMap][index] );
 
-            if(gp.iTile[index].life <= 0){
-                gp.iTile[index] = gp.iTile[index].getDestroyedForm();//if the tile is destructible and we hit it, we set it to null so it disappears   
+            if(gp.iTile[gp.currentMap][index].life <= 0){
+                gp.iTile[gp.currentMap][index] = gp.iTile[gp.currentMap][index].getDestroyedForm();//if the tile is destructible and we hit it, we set it to null so it disappears   
             }
         }
     }
 
     public void pickUpObject(int index){
         //PICK ONLY OBJECTS
-        if(index != 999 && gp.obj[index].type == type_pickupOnly){
-            if(gp.obj[index].type == type_pickupOnly){
-                gp.obj[index].use(this);
-                gp.obj[index] = null;
+        if(index != 999 && gp.obj[gp.currentMap][index].type == type_pickupOnly){
+            if(gp.obj[gp.currentMap][index].type == type_pickupOnly){
+                gp.obj[gp.currentMap][index].use(this);
+                gp.obj[gp.currentMap][index] = null;
             }
 
         }    //INVENTORY ITEMS
@@ -416,23 +419,23 @@ public class Player extends Entity {
             if(index != 999){
                     String text;
                     if(inventory.size() < maxInventorySize){
-                        inventory.add(gp.obj[index]);
+                        inventory.add(gp.obj[gp.currentMap][index]);
                         gp.playSE(1);
-                        text = "Got a " + gp.obj[index].name + "!";
+                        text = "Got a " + gp.obj[gp.currentMap][index].name + "!";
                 }
                 else{
                     text = "You cannot carry anymore items!";
                 }
                 gp.ui.addMessage(text);
-                gp.obj[index] = null;
+                gp.obj[gp.currentMap][index] = null;
             }
         }
     }
 
     public void contactMonster(int i){
         if(i!=999){
-            if(invincible == false && gp.monster[i].dying == false){
-                int damage = gp.monster[i].attack - defense;
+            if(invincible == false && gp.monster[gp.currentMap][i].dying == false){
+                int damage = gp.monster[gp.currentMap][i].attack - defense;
                 if(damage < 0){
                     damage = 0;//in case monsters defense is higher than player's attack, we don't want to heal the monster by doing negative damage, so we set it to 0 instead
                 }
@@ -445,22 +448,22 @@ public class Player extends Entity {
 
     public void damageMonster(int i,int attack){
         if(i!=999){
-            if(gp.monster[i].invincible == false){
+            if(gp.monster[gp.currentMap][i].invincible == false){
                 gp.playSE(5);
-                int damage = attack - gp.monster[i].defense;
+                int damage = attack - gp.monster[gp.currentMap][i].defense;
                 if(damage < 0){
                     damage = 0;//in case monsters defense is higher than player's attack, we don't want to heal the monster by doing negative damage, so we set it to 0 instead
                 }
-                gp.monster[i].life -= damage;
+                gp.monster[gp.currentMap][i].life -= damage;
                 gp.ui.addMessage("You Hit the Monster for " + damage + " Damage!");
-                gp.monster[i].invincible = true;
-                gp.monster[i].damageReaction();//sets the direction of the monster to move away from the player
+                gp.monster[gp.currentMap][i].invincible = true;
+                gp.monster[gp.currentMap][i].damageReaction();//sets the direction of the monster to move away from the player
             }
-            if(gp.monster[i].life <= 0 && gp.monster[i].alive == true){
-                gp.monster[i].dying = true;
-                gp.ui.addMessage("You Killed the "  + gp.monster[i].name + "!");
-                gp.ui.addMessage("Exp + "  + gp.monster[i].exp + "!");
-                exp+= gp.monster[i].exp;
+            if(gp.monster[gp.currentMap][i].life <= 0 && gp.monster[gp.currentMap][i].alive == true){
+                gp.monster[gp.currentMap][i].dying = true;
+                gp.ui.addMessage("You Killed the "  + gp.monster[gp.currentMap][i].name + "!");
+                gp.ui.addMessage("Exp + "  + gp.monster[gp.currentMap][i].exp + "!");
+                exp+= gp.monster[gp.currentMap][i].exp;
                 checkLevelUp();
             }
         }
@@ -507,7 +510,7 @@ public class Player extends Entity {
             if(i != 999){
                 attackCanceled = true;
                 gp.gameState = gp.dialogueState;
-                gp.npc[i].speak();
+                gp.npc[gp.currentMap][i].speak();
             }
             
         } 
