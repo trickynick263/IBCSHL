@@ -7,8 +7,8 @@ public class EventHandler {
     
     EventRect eventRect[][][];
     int previousEventX, previousEventY;
-    boolean canTouchEvent = true;//we create these variables in order to record previous moves
-    //if the player is about 1 tile away from the event object after interacting with it, we will let the player interact with it again
+    boolean canTouchEvent = true;
+    int tempMap, tempCol, tempRow;
 
     public EventHandler(GamePanel gp){
         this.gp = gp;
@@ -38,9 +38,6 @@ public class EventHandler {
         }
         
     }
-        // we create a tiny 2 by 2 rectangle that activates an event.
-        //the reasom for such a tiny square is because we want to activate the event when the
-        //player is at the center of the tile, not halfway through
         
     }
 
@@ -57,10 +54,10 @@ public class EventHandler {
         if(canTouchEvent == true){
             if(hit(0,30,30,"any") == true){damagePit(gp.dialogueState);}
             else if(hit(0,48,48,"any")==true){ healingPool(gp.dialogueState);}
-            else if(hit(0,39,48,"any") == true){teleport(0,29,51,gp.playState);}
-            else if(hit(0,30,50, "any") == true){teleport(0,50,50,gp.playState);}
-            else if(hit(0,24,72,"any") == true){teleport(1,12,50,gp.playState);}
-            else if(hit(1,12,50,"any") == true){teleport(0,24,72,gp.playState);}
+            else if(hit(0,39,48,"any") == true){teleport(0,29,51);}
+            else if(hit(0,30,50, "any") == true){teleport(0,50,50);}
+            else if(hit(0,24,72,"any") == true){teleport(1,12,50);}
+            else if(hit(1,12,50,"any") == true){teleport(0,24,72);}
         }
     }
 
@@ -112,14 +109,12 @@ public class EventHandler {
     }
     
     
-    public void teleport(int map,int col, int row,int gameState){
-        gp.gameState = gameState;
-        gp.currentMap = map;
+    public void teleport(int map,int col, int row){
+        gp.gameState = gp.transitionState;
+        tempMap = map;
+        tempCol = col;
+        tempRow = row;
         gp.playSE(13);
-        gp.player.worldX = col * gp.tileSize;
-        gp.player.worldY = row * gp.tileSize;
-        previousEventX = gp.player.worldX;
-        previousEventY = gp.player.worldY;
         canTouchEvent = false;
 
     }

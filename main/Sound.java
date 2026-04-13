@@ -16,7 +16,7 @@ public class Sound {
     int volumeScale = 3;
     float volume;
     public Sound(){//we initialize every sound in the array here
-       /*   
+         
         soundURL[0] = getClass().getResource("/res/sound/adventure.wav");
         soundURL[1] = getClass().getResource("/res/sound/coin.wav");
         soundURL[2] = getClass().getResource("/res/sound/powerup.wav");
@@ -32,10 +32,10 @@ public class Sound {
         soundURL[12] = getClass().getResource("/res/sound/death.wav");
         soundURL[13] = getClass().getResource("/res/sound/stairs.wav");
 
-         */
+         
          
 
-          
+          /* 
         try        {
             soundURL[0] = new File("res/sound/adventure.wav").toURI().toURL();
             soundURL[1] = new File("res/sound/coin.wav").toURI().toURL();
@@ -54,6 +54,7 @@ public class Sound {
         }catch(Exception e){
             e.printStackTrace();
         }
+            */
             
             
         

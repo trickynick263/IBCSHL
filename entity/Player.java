@@ -27,8 +27,7 @@ public class Player extends Entity {
     public final int screenX;
     public final int screenY;
     public boolean attackCanceled = false;
-    public ArrayList<Entity> inventory = new ArrayList<>();
-    public final int maxInventorySize = 20;
+    
     //those are 
     //2 variables to fix the player in the center of the screen
     
@@ -167,8 +166,8 @@ public class Player extends Entity {
         BufferedImage image = null;
 
         try{
-            //image = ImageIO.read(getClass().getResourceAsStream("/res" + imageName + ".png")); //school pc
-            image = ImageIO.read(new File("res" + imageName + ".png")); //home pc
+            image = ImageIO.read(getClass().getResourceAsStream("/res" + imageName + ".png")); //school pc
+            //image = ImageIO.read(new File("res" + imageName + ".png")); //home pc
             image = uTool.scaleImage(image, width, height);
             
         } catch(IOException e){

@@ -52,14 +52,15 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
 
  //GAME STATE
     public int gameState;
-    public final int playState = 3;             //basically we tell the program about what state the game is in
-    public final int pauseState = 1;            //this can result in switching keybinds that are for other uses when
-                                                //in different menus
+    public final int playState = 3;             
+    public final int pauseState = 1;
     public final int dialogueState = 2;
     public final int titleState = 0;
     public final int characterState = 4;
     public final int optionsState = 5;
     public final int gameOverState = 6;
+    public final int transitionState = 7;
+    public final int tradeState = 8;
 
 
     public TileManager tileM = new TileManager(this);
@@ -73,12 +74,12 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
     public Entity npc[][] = new Entity[maxMap][10];
     public Entity[][] monster = new Entity[maxMap][20];
     public InteractiveTile[][] iTile = new InteractiveTile[maxMap][20];
-    public AssetSetter aSetter = new AssetSetter(this);
     public UI ui = new UI(this);
     public EventHandler eHandler = new EventHandler(this);
     ArrayList<Entity> entityList = new ArrayList<>();
     public ArrayList<Entity> projectileList = new ArrayList<>();
     public ArrayList<Entity> particleList = new ArrayList<>();
+    public AssetSetter aSetter = new AssetSetter(this);
     
     
     //SOUND

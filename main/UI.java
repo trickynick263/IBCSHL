@@ -39,6 +39,8 @@ public class UI {
     public int slotCol = 0;
     public int slotRow = 0;
     public int subState = 0;
+    int counter = 0;
+    public Entity npc;
 
     public UI(GamePanel gp){
         this.gp = gp;
@@ -132,8 +134,60 @@ public class UI {
         if(gp.gameState == gp.gameOverState){
             drawDeathScreen();
         }
+        if(gp.gameState == gp.transitionState){
+            drawTransition();
+        }
+        if(gp.gameState == gp.tradeState){
+            drawTradeScreen();
+        }
 
 
+    }
+
+    public void drawTradeScreen(){
+        switch(subState){
+            case 0: trade_select(); break;
+            case 1: trade_buy(); break;
+            case 2: trade_sell(); break;
+        }
+        gp.keyH.enterPressed = false;
+    }
+
+
+    public void trade_select(){
+
+        drawDialogueScreen();
+        //Draw Window
+
+        int x = gp.tileSize * 15;
+        int y = gp.tileSize * 4;
+        int width = gp.tileSize * 3;
+        int height = (int)(gp.tileSize * 3.5);
+        drawSubWindow(x,y,width,height);
+
+    }
+
+    public void trade_buy(){
+
+    }
+
+    public void trade_sell(){
+
+    }
+
+    public void drawTransition(){
+        counter++;
+        g2.setColor(new Color(0,0,0,counter*5));
+        g2.fillRect(0,0,gp.screenWidth,gp.screenHeight);
+        if(counter == 50){
+            counter = 0;
+            gp.gameState = gp.playState;
+            gp.currentMap = gp.eHandler.tempMap;
+            gp.player.worldX = gp.eHandler.tempCol * gp.tileSize;
+            gp.player.worldY = gp.eHandler.tempRow * gp.tileSize;
+            gp.eHandler.previousEventX = gp.player.worldX;
+            gp.eHandler.previousEventY = gp.player.worldY;
+        }
     }
 
     public void drawDeathScreen(){

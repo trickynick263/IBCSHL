@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
@@ -33,6 +34,7 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
     public int dyingCounter = 0;//counter to track dying animation
     boolean hpBarOn = false;//flag to check if hp bar should be drawn
     int hpBarCounter = 0;//counter to track how long hp bar has been on
+    
     public int maxMana;
     public int mana;
     public Projectile projectile;
@@ -54,6 +56,9 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
     //ITEM ATTRIBUTES
     public int attackValue;//this will be used for the price of the item in shops and also for how much exp a monster gives when defeated
     public int defenseValue;
+
+    public ArrayList<Entity> inventory = new ArrayList<>();
+    public final int maxInventorySize = 20;
 
 
     //ATTACK
@@ -148,9 +153,9 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
         
 
         //SPRITE ANIMATION
-        if(collisionOn == false){
+        
         spriteCounter++;
-        if(spriteCounter > 12){//changes sprite every 12 frames
+        if(spriteCounter > 30){//changes sprite every 12 frames
             if(spriteNum == 1){
                 spriteNum = 2;//changes sprite images to swap between them
             }//remember this gets called 60 times per second and the counter is increased
@@ -161,7 +166,7 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
             spriteCounter = 0;//this line right here resets the counter
             //  so we can count to 12 again
         }
-        }
+        
         if(invincible == true){
             invincibleCounter++;
             if(invincibleCounter > 30){
@@ -355,8 +360,8 @@ the requirements of an entity */
         BufferedImage image = null;
 
         try{
-            //image = ImageIO.read(getClass().getResourceAsStream("/res" + imagePath + ".png")); //school pc
-            image = ImageIO.read(new File("res" + imagePath + ".png")); //home pc
+            image = ImageIO.read(getClass().getResourceAsStream("/res" + imagePath + ".png")); //school pc
+            //image = ImageIO.read(new File("res" + imagePath + ".png")); //home pc
             image = uTool.scaleImage(image, width, height);
             
         } catch(IOException e){

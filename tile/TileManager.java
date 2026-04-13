@@ -28,8 +28,8 @@ public class TileManager {
         getTileImage();
 
 
-        loadMap("res/maps/map.txt",0);
-        loadMap("res/maps/interior.txt",1);
+        loadMap("/res/maps/map.txt",0);
+        loadMap("/res/maps/interior.txt",1);
         //THIS NEEDS TO BE CHANGED WITH A SLASH AT HOME AND BETWEEN SCHOOL
         
         
@@ -101,9 +101,12 @@ UtilityTool uTool = new UtilityTool();
 
 
 try{
+
+
+    
     tile[index] = new Tile();
-    //tile[index].image = ImageIO.read(getClass().getResourceAsStream("/res/tiles/" + imagePath + ".png")); //school pc
-    tile[index].image = ImageIO.read(new File("res/tiles/" + imagePath + ".png")); //home pc
+    tile[index].image = ImageIO.read(getClass().getResourceAsStream("/res/tiles/" + imagePath + ".png")); //school pc
+    //tile[index].image = ImageIO.read(new File("res/tiles/" + imagePath + ".png")); //home pc
     tile[index].image = uTool.scaleImage(tile[index].image, gp.tileSize, gp.tileSize);
     tile[index].collision = collision;
 
@@ -117,8 +120,8 @@ catch(IOException e){
     public void loadMap(String filePath, int mapNum){
         //we will load the map from a text file
         try{
-            //InputStream is = getClass().getResourceAsStream(filePath); //school
-            InputStream is = new FileInputStream(new File(filePath)); //home pc
+            InputStream is = getClass().getResourceAsStream(filePath); //school
+            //InputStream is = new FileInputStream(new File(filePath)); //home pc
             BufferedReader br = new BufferedReader(new InputStreamReader(is));//we gonna use this bufferedreader
             int col = 0;
             int row = 0;
