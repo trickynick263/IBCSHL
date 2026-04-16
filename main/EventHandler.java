@@ -1,6 +1,6 @@
 package main;
 
-
+import entity.Entity;
 
 public class EventHandler {
     GamePanel gp;
@@ -58,6 +58,7 @@ public class EventHandler {
             else if(hit(0,30,50, "any") == true){teleport(0,50,50);}
             else if(hit(0,24,72,"any") == true){teleport(1,12,50);}
             else if(hit(1,12,50,"any") == true){teleport(0,24,72);}
+            else if(hit(1,12,46,"up") == true){speak(gp.npc[1][0]);}
         }
     }
 
@@ -92,6 +93,16 @@ public class EventHandler {
         gp.ui.currentDialogue = "You fell into a pit!!!!";
         gp.player.life -=1;
         canTouchEvent = false;
+    }
+
+    public void speak(Entity entity){
+        if(gp.keyH.enterPressed == true){
+            gp.gameState = gp.dialogueState;
+            gp.player.attackCanceled = true;
+            gp.keyH.enterPressed = false;
+            entity.speak();
+            
+        }
     }
 
     public void healingPool(int gameState){

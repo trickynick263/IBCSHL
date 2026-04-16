@@ -13,6 +13,7 @@ public class OBJ_Potion_Pink extends Entity{
         description =  "["+ name+ "]\n" +"For Healing..";
         type = type_consumable;
         value = 5;
+        price = 15;
     }
     public void use(Entity entity){
         gp.gameState = gp.dialogueState;

@@ -56,6 +56,7 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
     //ITEM ATTRIBUTES
     public int attackValue;//this will be used for the price of the item in shops and also for how much exp a monster gives when defeated
     public int defenseValue;
+    public int price;
 
     public ArrayList<Entity> inventory = new ArrayList<>();
     public final int maxInventorySize = 20;

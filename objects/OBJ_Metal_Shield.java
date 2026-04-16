@@ -10,5 +10,6 @@ public class OBJ_Metal_Shield extends Entity{
         down1 = setup("/objects/metal shield",gp.tileSize,gp.tileSize);
         description = "["+name+"]\n" + "An upgraded shield..";
         type = type_shield;
+        price = 100;
     }
 }

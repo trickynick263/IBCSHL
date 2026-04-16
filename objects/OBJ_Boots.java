@@ -17,5 +17,7 @@ public class OBJ_Boots extends Entity {
         down1 = setup("/objects/boots", gp.tileSize, gp.tileSize);
         description =  "["+ name+ "]\n" +"FAST FAST FAST...   \na little stylish though";
         type = type_consumable;
+        price = 50;
+        
     }
 }

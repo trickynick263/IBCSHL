@@ -79,8 +79,10 @@ public class Player extends Entity {
       
     }
     public void setDefaultValues(){
-        worldX = gp.tileSize * 50;
-        worldY = gp.tileSize * 50;//starting position of player in the world
+        worldX = gp.tileSize * 12;
+        worldY = gp.tileSize * 49;
+        gp.currentMap = 1;
+
         speed = 4;
         direction = "down";
         
@@ -94,7 +96,7 @@ public class Player extends Entity {
         maxMana = 4;
         mana = maxMana;
         exp = 0;
-        coin = 0;
+        coin = 500;
         ammo = 10;
         currentWeapon = new OBJ_Sword_Normal(gp);
         currentShield = new OBJ_Shield_Wood(gp);
@@ -484,7 +486,7 @@ public class Player extends Entity {
     }
 
     public void selectItem(){
-        int itemIndex = gp.ui.getItemIndexOnSlot();
+        int itemIndex = gp.ui.getItemIndexOnSlot(gp.ui.playerSlotCol, gp.ui.playerSlotRow);
         if(itemIndex < inventory.size()){
             Entity selectedItem = inventory.get(itemIndex);
             if(selectedItem.type == type_sword || selectedItem.type == type_axe){

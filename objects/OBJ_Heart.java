@@ -25,7 +25,7 @@ public class OBJ_Heart extends Entity{
         gp.playSE(2);
         gp.ui.addMessage("You healed " + value + " HP!");
         entity.life += value;
-
+        price = 10;
     }
     
 }
