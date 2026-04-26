@@ -41,6 +41,7 @@ public class NPC_OldMan extends Entity{
 
     public void speak(){
         super.speak();
+        onPath = true;
     }
 
 
@@ -58,7 +59,11 @@ public class NPC_OldMan extends Entity{
     }
 
     public void setAction(){//sets character behavior with AI
-    
+    if(onPath == true){
+        int goalCol = 36;
+        int goalRow = 66;
+        searchPath(goalCol, goalRow);
+    }
     if(actionLockCounter == 120){
         Random random = new Random();
         int i = random.nextInt(100)+1;//random number from 1 to 100

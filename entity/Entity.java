@@ -34,6 +34,7 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
     public int dyingCounter = 0;//counter to track dying animation
     boolean hpBarOn = false;//flag to check if hp bar should be drawn
     int hpBarCounter = 0;//counter to track how long hp bar has been on
+    public boolean onPath = false;//flag to check if entity is on path to follow the player
     
     public int maxMana;
     public int mana;
@@ -121,19 +122,8 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
     public void update(){
             setAction();
 
-        collisionOn = false;
-        gp.cChecker.checkTile(this);
-        gp.cChecker.checkObject(this,false);
-        gp.cChecker.checkEntity(this, gp.npc);
-        gp.cChecker.checkEntity(this, gp.monster);
-        gp.cChecker.checkEntity(this, gp.iTile);
-        boolean contactPlayer = gp.cChecker.checkPlayer(this);
 
-        if(this.type == type_monster && contactPlayer == true){
-            damagePlayer(attack);
-        }
-
-
+        checkCollision();
         //copied from player class
            if(collisionOn == false){
             switch(direction){
@@ -200,6 +190,47 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
 
     public void checkDrop(){
 
+    }
+
+    public void checkCollision(){
+        collisionOn = false;
+        gp.cChecker.checkTile(this);
+        gp.cChecker.checkObject(this,false);
+        gp.cChecker.checkEntity(this, gp.npc);
+        gp.cChecker.checkEntity(this, gp.monster);
+        gp.cChecker.checkEntity(this, gp.iTile);
+        boolean contactPlayer = gp.cChecker.checkPlayer(this);
+
+        if(this.type == type_monster && contactPlayer == true){
+            damagePlayer(attack);
+        }
+    }
+
+    public void searchPath(int goalCol, int goalRow){
+        int startCol = (worldX+solidArea.x) / gp.tileSize;
+        int startRow = (worldY+solidArea.y) / gp.tileSize;
+
+        gp.pFinder.setNodes(startCol, startRow, goalCol, goalRow);
+        if(gp.pFinder.search() ==true){
+            //next Worldx and worldy
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            // LEFT OFF HERE
+        }
     }
 
     public void dropItem(Entity droppedItem){

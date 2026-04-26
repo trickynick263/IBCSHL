@@ -8,6 +8,9 @@ import tiles_interactive.InteractiveTile;
 
 
 import javax.swing.JPanel;
+
+import AI.PathFinder;
+
 import java.awt.Dimension;//imports dimension for the screen we use to play the game
 import java.awt.Font;
 import java.awt.Graphics;
@@ -80,6 +83,7 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
     public ArrayList<Entity> projectileList = new ArrayList<>();
     public ArrayList<Entity> particleList = new ArrayList<>();
     public AssetSetter aSetter = new AssetSetter(this);
+    public PathFinder pFinder = new PathFinder(this);
     
     
     //SOUND
