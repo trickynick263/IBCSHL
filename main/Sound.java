@@ -15,8 +15,11 @@ public class Sound {
     FloatControl fc;
     int volumeScale = 3;
     float volume;
-    public Sound(){//we initialize every sound in the array here
-         
+    GamePanel gp;
+    public Sound(GamePanel gp){//we initialize every sound in the array here
+        this.gp = gp;
+        if(gp.atHome == false){
+        getClass().getResourceAsStream("/res/sound/adventure.wav");
         soundURL[0] = getClass().getResource("/res/sound/adventure.wav");
         soundURL[1] = getClass().getResource("/res/sound/coin.wav");
         soundURL[2] = getClass().getResource("/res/sound/powerup.wav");
@@ -26,17 +29,14 @@ public class Sound {
         soundURL[6] = getClass().getResource("/res/sound/receivedamage.wav");
         soundURL[7] = getClass().getResource("/res/sound/swingsword.wav");
         soundURL[8] = getClass().getResource("/res/sound/cursor.wav");
-        soundURL[29] = getClass().getResource("/res/sound/burning.wav");
+        soundURL[9] = getClass().getResource("/res/sound/burning.wav");
         soundURL[10] = getClass().getResource("/res/sound/treebreak.wav");
         soundURL[11] = getClass().getResource("/res/sound/teleport.wav");
         soundURL[12] = getClass().getResource("/res/sound/death.wav");
         soundURL[13] = getClass().getResource("/res/sound/stairs.wav");
-
-         
-         
-
-          /* 
-        try        {
+        }
+        else{
+             try        {
             soundURL[0] = new File("res/sound/adventure.wav").toURI().toURL();
             soundURL[1] = new File("res/sound/coin.wav").toURI().toURL();
             soundURL[2] = new File("res/sound/powerup.wav").toURI().toURL();
@@ -54,7 +54,13 @@ public class Sound {
         }catch(Exception e){
             e.printStackTrace();
         }
-            */
+        }
+
+         
+         
+
+        
+       
             
             
         

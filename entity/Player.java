@@ -79,8 +79,8 @@ public class Player extends Entity {
       
     }
     public void setDefaultValues(){
-        worldX = gp.tileSize * 35;
-        worldY = gp.tileSize * 65;
+        worldX = gp.tileSize * 40;
+        worldY = gp.tileSize * 40;
         gp.currentMap = 0;
 
         speed = 4;
@@ -166,31 +166,22 @@ public class Player extends Entity {
     public BufferedImage setup(String imageName, int width, int height){
         UtilityTool uTool = new UtilityTool();
         BufferedImage image = null;
-
         try{
-            image = ImageIO.read(getClass().getResourceAsStream("/res" + imageName + ".png")); //school pc
             //image = ImageIO.read(new File("res" + imageName + ".png")); //home pc
+            image = ImageIO.read(getClass().getResourceAsStream("/res" + imageName + ".png")); //school pc
             image = uTool.scaleImage(image, width, height);
-            
-        } catch(IOException e){
-            e.printStackTrace();
-        }
+        } catch(IOException e){e.printStackTrace();}
         return image;
     }
     
     public void update() {
 
-        if(attacking == true){
-            attacking();
-            return;//this will stop the player from moving when attacking
-        }
-
-        
+        if(attacking == true){attacking();return;}
 
         if(keyH.upPressed == true || keyH.downPressed == true || 
             keyH.leftPressed == true || keyH.rightPressed == true || keyH.enterPressed == true){
         
-        if(keyH.upPressed == true){//we will now set the player's direction corresponding to directuion headed
+        if(keyH.upPressed == true){
             direction = "up";
         }
         else if(keyH.downPressed == true){
@@ -204,8 +195,8 @@ public class Player extends Entity {
         }
         
         //CHECK TILE COLLISION
-        collisionOn = false;//resets collision flag for next check
-        gp.cChecker.checkTile(this);//checks tile collision, we pass in the player object
+        collisionOn = false;
+        gp.cChecker.checkTile(this);
         int objIndex = gp.cChecker.checkObject(this,true);
         pickUpObject(objIndex);
         
@@ -239,7 +230,7 @@ public class Player extends Entity {
         if(collisionOn == false && keyH.enterPressed == false){
             switch(direction){
                 case "up":
-                    worldY -= speed;//upper left corner is 0,0 so to go up we decrease y value
+                    worldY -= speed;
                     break;
                 case "down":
                     worldY += speed;
@@ -252,13 +243,7 @@ public class Player extends Entity {
                     break;
             }
         }
-
-        
-        
-        
-
         //SPRITE ANIMATION
-        
         spriteCounter++;
         if(attacking == false){
             spriteChecker = 12;
@@ -280,19 +265,12 @@ public class Player extends Entity {
         }
         if(gp.keyH.shotKeyPressed == true && projectile.alive == false 
             && shotAvailableCounter == 30 && projectile.hasSufficientMana(this) == true){
-            //Set the projectile's worldX and worldY to the player's worldX and worldY
             projectile.set(worldX,worldY,true,direction,this);
-            //Subtract mana cost from player
             projectile.subtractMana(this);
-            //we will set the projectile's alive to true so that it can be drawn and updated in the game loop
             gp.projectileList.add(projectile);
-            shotAvailableCounter = 0;//resets the counter so that the player has to wait 30 frames before shooting again
-            //we will also play a sound effect when the projectile is shot
+            shotAvailableCounter = 0;
             gp.playSE(9);
         }
-        
-       
-        //Needs to be outside key if statement
         if(invincible == true){
             invincibleCounter++;
             if(invincibleCounter > 60){
@@ -301,7 +279,7 @@ public class Player extends Entity {
             }
         }
         if(shotAvailableCounter < 30){
-            shotAvailableCounter++;//this is the counter to track how long until the player can shoot again, it gets reset to 0 when the player shoots and then counts up to 30
+            shotAvailableCounter++;
         }
         
         if(this.mana < this.maxMana){
@@ -333,11 +311,10 @@ public class Player extends Entity {
         spriteNum = 1;
         spriteCounter++;
         if(spriteCounter <= 5){
-            spriteNum = 1;//shows first attacking image for the first 5 frames
+            spriteNum = 1;
         }
         if(spriteCounter > 5 && spriteCounter <=  25){
-            spriteNum = 2;//shows second attacking image for the next 20 frames
-            //Save current worldX, worldY, solidArea
+            spriteNum = 2;
             int currentWorldX = worldX;
             int currentWorldY = worldY;
             int solidAreaWidth = solidArea.width;
@@ -345,7 +322,7 @@ public class Player extends Entity {
             //Adjust player's worldX/Y for the attackArea
             switch(direction){
                 case "up":
-                    worldY -= attackArea.height;//moves the area were checking upwards so we can check for the sword hitting the enemy
+                    worldY -= attackArea.height;
                     break;
                 case "down":
                     worldY += attackArea.height;
@@ -359,7 +336,6 @@ public class Player extends Entity {
             }
             solidArea.width = attackArea.width;
             solidArea.height = attackArea.height;
-            //this gets the monster that hit the player and if collision is detected then
             int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
             damageMonster(monsterIndex,attack);
 

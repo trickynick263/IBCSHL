@@ -13,7 +13,7 @@ public class NPC_OldMan extends Entity{
     public NPC_OldMan(GamePanel gp){
         super(gp);
         direction = "down";
-        speed = 1;
+        speed = 2;
         getImage();
         setDialogue();
 
@@ -42,6 +42,7 @@ public class NPC_OldMan extends Entity{
     public void speak(){
         super.speak();
         onPath = true;
+        
     }
 
 
@@ -60,30 +61,36 @@ public class NPC_OldMan extends Entity{
 
     public void setAction(){//sets character behavior with AI
     if(onPath == true){
-        int goalCol = 36;
-        int goalRow = 66;
+        //int goalCol = 22;
+        //int goalRow = 31;
+
+        int goalCol = (gp.player.worldX+ gp.player.solidArea.x) / gp.tileSize;
+        int goalRow = (gp.player.worldY+ gp.player.solidArea.y) / gp.tileSize;
         searchPath(goalCol, goalRow);
     }
-    if(actionLockCounter == 120){
-        Random random = new Random();
-        int i = random.nextInt(100)+1;//random number from 1 to 100
-    if(i <= 25){
-        direction = "up";
+    else{
+            if(actionLockCounter == 120){
+            Random random = new Random();
+            int i = random.nextInt(100)+1;//random number from 1 to 100
+            if(i <= 25){
+                direction = "up";
+            }
+            if(i > 25 && i <= 50 ){
+                direction = "down";
+            }
+            if(i > 50 && i <=75){
+                direction = "left";
+            }
+            if(i > 75 && i <= 100){
+                direction = "right";
+            }
+            actionLockCounter = 0;
+        }
+        else{
+            actionLockCounter++;
+        }
     }
-    if(i > 25 && i <= 50 ){
-        direction = "down";
-    }
-    if(i > 50 && i <=75){
-        direction = "left";
-    }
-    if(i > 75 && i <= 100){
-        direction = "right";
-    }
-    actionLockCounter = 0;
-}
-else{
-    actionLockCounter++;
-}
+    
 
     }
     

@@ -2,6 +2,7 @@ package tile;
 import main.GamePanel;
 import main.UtilityTool;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 
 import java.io.BufferedReader;
@@ -20,6 +21,7 @@ public class TileManager {
     GamePanel gp;
     public Tile[] tile;
     public int mapTileNum[][][];//2d array to store the map information from the text file
+    public boolean drawPath = true;
     public TileManager(GamePanel gp){
         this.gp = gp;
         tile = new Tile[50];//array of tiles, we can have 10 different tiles like grass,water,brick
@@ -27,29 +29,15 @@ public class TileManager {
 
         getTileImage();
 
-
-        loadMap("/res/maps/map.txt",0);
-        loadMap("/res/maps/interior.txt",1);
-        //THIS NEEDS TO BE CHANGED WITH A SLASH AT HOME AND BETWEEN SCHOOL
+        
+            loadMap("/res/maps/map.txt",0);
+            loadMap("/res/maps/interior.txt",1);
+        
         
         
     }
 
     public void getTileImage(){
-    
-        
-        //default tile is no collsion so you dont need to set it to false
-        
-        //Scaling images to fit tile size, saves drawing time during the game loop
-        /* 
-        BufferedImage scaledImage = new BufferedImage(gp.tileSize, gp.tileSize, tile[0].image.getType());//starts as a blank canvas and you pass width and height with an image type
-        Graphics2D g2d = scaledImage.createGraphics();//creates a graphics2D object to draw the image
-        g2d.drawImage(tile[0].image, 0, 0, gp.tileSize, gp.tileSize, null);
-        tile[0].image = scaledImage;*/
-        
-        
-        
-        
         setup(0, "grass v0", false);
         setup(1, "grass v1", false);
         setup(2, "grass v2", false);
@@ -93,8 +81,6 @@ public class TileManager {
         setup(40,"table",true);
         setup(41,"floorboard",false);
         setup(42,"hut",false);
-       
-
     }
 public void setup(int index, String imagePath, boolean collision){
 UtilityTool uTool = new UtilityTool();
@@ -105,8 +91,8 @@ try{
 
     
     tile[index] = new Tile();
-    tile[index].image = ImageIO.read(getClass().getResourceAsStream("/res/tiles/" + imagePath + ".png")); //school pc
     //tile[index].image = ImageIO.read(new File("res/tiles/" + imagePath + ".png")); //home pc
+    tile[index].image = ImageIO.read(getClass().getResourceAsStream("/res/tiles/" + imagePath + ".png")); //school pc
     tile[index].image = uTool.scaleImage(tile[index].image, gp.tileSize, gp.tileSize);
     tile[index].collision = collision;
 
@@ -120,8 +106,9 @@ catch(IOException e){
     public void loadMap(String filePath, int mapNum){
         //we will load the map from a text file
         try{
-            InputStream is = getClass().getResourceAsStream(filePath); //school
-            //InputStream is = new FileInputStream(new File(filePath)); //home pc
+            InputStream is;
+            is = getClass().getResourceAsStream(filePath); //school
+            //is = new FileInputStream(new File(filePath)); //home pc
             BufferedReader br = new BufferedReader(new InputStreamReader(is));//we gonna use this bufferedreader
             int col = 0;
             int row = 0;
@@ -180,6 +167,19 @@ catch(IOException e){
                 worldRow++;
             }
 
+        }
+
+        if(drawPath == true){
+            g2.setColor(new Color(255,0,0,70));
+
+            for(int i =0; i < gp.pFinder.pathList.size(); i++){
+                int worldX = gp.pFinder.pathList.get(i).col * gp.tileSize;
+                int worldY = gp.pFinder.pathList.get(i).row * gp.tileSize;
+                int screenX = worldX - gp.player.worldX + gp.player.screenX;
+                int screenY = worldY - gp.player.worldY + gp.player.screenY;
+
+                g2.fillRoundRect(screenX+10, screenY+10, gp.tileSize-10, gp.tileSize-10,8,8);
+            }
         }
 
         

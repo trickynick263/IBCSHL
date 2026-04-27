@@ -40,6 +40,9 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
     public final int maxWorldRow = 100;
     public final int maxMap = 10;
     public int currentMap = 0;
+
+    public boolean atHome = false;
+
     //FOR FULL SCREEN
     int screenWidth2 = screenWidth;
     int screenHeight2 = screenHeight;
@@ -87,8 +90,8 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
     
     
     //SOUND
-    public Sound music = new Sound();
-    public Sound se = new Sound();
+    public Sound music = new Sound(this);
+    public Sound se = new Sound(this);
     
 
     public GamePanel(){//constructor for game panel
