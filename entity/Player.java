@@ -267,7 +267,12 @@ public class Player extends Entity {
             && shotAvailableCounter == 30 && projectile.hasSufficientMana(this) == true){
             projectile.set(worldX,worldY,true,direction,this);
             projectile.subtractMana(this);
-            gp.projectileList.add(projectile);
+            for(int i = 0; i < gp.projectile[1].length;i++){
+                if(gp.projectile[gp.currentMap][i] == null){
+                    gp.projectile[gp.currentMap][i] = projectile;
+                    break;
+                }
+            }
             shotAvailableCounter = 0;
             gp.playSE(9);
         }
@@ -342,6 +347,9 @@ public class Player extends Entity {
             int iTileIndex = gp.cChecker.checkEntity(this, gp.iTile);
             damageInteractiveTile(iTileIndex);
 
+            int projectileIndex = gp.cChecker.checkEntity(this, gp.projectile);
+            damageProjectile(projectileIndex);
+
             //After checking collision, restore original worldX/Y and solidArea
             worldX = currentWorldX;
             worldY = currentWorldY;
@@ -353,6 +361,14 @@ public class Player extends Entity {
             spriteNum = 1;
             spriteCounter = 0;
             attacking = false;
+        }
+    }
+
+    public void damageProjectile(int i ){
+        if(i != 999){
+            Entity projectile = gp.projectile[gp.currentMap][i];
+            projectile.alive = false;
+            generateParticle(projectile, projectile);
         }
     }
 

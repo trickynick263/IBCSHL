@@ -71,9 +71,14 @@ public class MON_Slime extends Entity{
         searchPath(goalCol, goalRow);
 
         int i = new Random().nextInt(100)+1;
-        if(i > 197 && projectile.alive == false && shotAvailableCounter == 30){
+        if(i > 99 && projectile.alive == false && shotAvailableCounter == 30){
         projectile.set(worldX, worldY, true, direction, this);
-        gp.projectileList.add(projectile);
+        for(int ii  = 0;ii < gp.projectile[1].length;i++){
+            if(gp.projectile[gp.currentMap][ii] == null){
+                gp.projectile[gp.currentMap][ii] = projectile;
+                break;
+            }
+        }
         shotAvailableCounter = 0;
 }
     }
