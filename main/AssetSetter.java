@@ -82,14 +82,6 @@ public class AssetSetter {
         gp.monster[mapNum][0].worldX = 60*gp.tileSize;
         gp.monster[mapNum][0].worldY = 60*gp.tileSize;
 
-        gp.monster[mapNum][1] = new MON_Slime(gp);
-        gp.monster[mapNum][1].worldX = 61*gp.tileSize;
-        gp.monster[mapNum][1].worldY = 61*gp.tileSize;
-        
-        gp.monster[mapNum][2] = new MON_Slime(gp);
-        gp.monster[mapNum][2].worldX = 63*gp.tileSize;
-        gp.monster[mapNum][2].worldY = 63*gp.tileSize;
-
         gp.monster[mapNum][3] = new MON_Slime(gp);
         gp.monster[mapNum][3].worldX = 65*gp.tileSize;
         gp.monster[mapNum][3].worldY = 65*gp.tileSize;

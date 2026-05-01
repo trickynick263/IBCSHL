@@ -19,6 +19,7 @@ public class OBJ_Axe extends Entity {
         attackArea.width = 30;
         attackArea.height = 30;
         attackValue = 1;
+        knockBackPower = 3;
         type = type_axe;
         price = 75;
     }

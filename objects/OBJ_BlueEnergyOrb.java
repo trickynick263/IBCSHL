@@ -20,6 +20,7 @@ public class OBJ_BlueEnergyOrb extends Projectile{
         attack = 2;
         useCost = 1;
         alive = false;
+        knockBackPower = 3;
         getImage();
     }
 

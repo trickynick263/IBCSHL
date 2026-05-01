@@ -35,7 +35,10 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
     boolean hpBarOn = false;//flag to check if hp bar should be drawn
     int hpBarCounter = 0;//counter to track how long hp bar has been on
     public boolean onPath = false;//flag to check if entity is on path to follow the player
+    public boolean knockBack = false;//flag to check if entity is being knocked back
     
+    public int defaultSpeed;
+    public int knockBackCounter = 0;
     public int maxMana;
     public int mana;
     public Projectile projectile;
@@ -52,6 +55,7 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
     public int coin;
     public String description = "";
     public int ammo;
+    public int knockBackPower = 0;
     public int manaRegenCounter = 0;
     public int shotAvailableCounter = 0;//counter to track how long until the player can shoot again
     //ITEM ATTRIBUTES
@@ -120,42 +124,58 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
     
 
     public void update(){
+        if(knockBack == true){
+            checkCollision();
+            if(collisionOn == true){
+                knockBackCounter = 0;
+                knockBack = false;
+                speed = defaultSpeed;
+            }
+            else if(collisionOn == false){
+                switch(gp.player.direction){
+                    case "up": worldY -= speed; break;
+                    case "down": worldY += speed; break;
+                    case "left": worldX -= speed; break;
+                    case "right": worldX += speed; break;
+                }
+            }
+            knockBackCounter++;
+            if(knockBackCounter == 35){
+                knockBackCounter = 0;
+                knockBack = false;
+                speed = defaultSpeed;
+            }
+            if(knockBackCounter == 30){
+                speed = speed/2;
+            }
+            if(knockBackCounter == 24){
+                speed = speed/2;
+            }
+            if(knockBackCounter == 15){
+                speed = speed/2;
+            }
+        }else{
             setAction();
-
-
-        checkCollision();
-        //copied from player class
-           if(collisionOn == false){
-            switch(direction){
-                case "up":
-                    worldY -= speed;//upper left corner is 0,0 so to go up we decrease y value
-                    break;
-                case "down":
-                    worldY += speed;
-                    break;
-                case "left":
-                    worldX -= speed;
-                    break;
-                case "right":
-                    worldX += speed;
-                    break;
+            checkCollision();
+            if(collisionOn == false){
+                switch(direction){
+                    case "up":worldY -= speed;break;
+                    case "down":worldY += speed;break;
+                    case "left":worldX -= speed;break;
+                    case "right":worldX += speed;break;
+                }
             }
         }
+
         
 
         //SPRITE ANIMATION
         
         spriteCounter++;
-        if(spriteCounter > 30){//changes sprite every 12 frames
-            if(spriteNum == 1){
-                spriteNum = 2;//changes sprite images to swap between them
-            }//remember this gets called 60 times per second and the counter is increased
-            //a total of 60 times per second and which switch between images very often
-            else if(spriteNum == 2){
-                spriteNum = 1;
-            }
-            spriteCounter = 0;//this line right here resets the counter
-            //  so we can count to 12 again
+        if(spriteCounter > 30){
+            if(spriteNum == 1){spriteNum = 2;}
+            else if(spriteNum == 2){spriteNum = 1;}
+            spriteCounter = 0;
         }
         
         if(invincible == true){
@@ -166,26 +186,18 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
             }
         }
         if(shotAvailableCounter < 30){
-            shotAvailableCounter++;//this is the counter to track how long until the player can shoot again, it gets reset to 0 when the player shoots and then counts up to 30
+            shotAvailableCounter++;
         }
         if(this.mana < this.maxMana){
             manaRegenCounter++;
         }
         if(manaRegenCounter > 300){
-            if(mana < maxMana){
-                mana++;
-            }
+            if(mana < maxMana){mana++;}
             manaRegenCounter = 0;
         }
-        if(life > maxLife){
-            life = maxLife;
-        }
-        if(life < 0){
-            life = 0;
-        }
-        if(mana > maxMana){
-            mana = maxMana;
-        }
+        if(life > maxLife){life = maxLife;}
+        if(life < 0){life = 0;}
+        if(mana > maxMana){mana = maxMana;}
     }
 
     public void checkDrop(){

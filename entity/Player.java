@@ -27,6 +27,7 @@ public class Player extends Entity {
     public final int screenX;
     public final int screenY;
     public boolean attackCanceled = false;
+    Entity previousAttacker;
     
     //those are 
     //2 variables to fix the player in the center of the screen
@@ -79,19 +80,20 @@ public class Player extends Entity {
       
     }
     public void setDefaultValues(){
-        worldX = gp.tileSize * 40;
-        worldY = gp.tileSize * 40;
+        worldX = gp.tileSize * 60;
+        worldY = gp.tileSize * 50;
         gp.currentMap = 0;
-
-        speed = 4;
+        defaultSpeed = 4;
+        speed = defaultSpeed;
         direction = "down";
         
         //PLAYER STATUS
+        
         maxLife = 6;
         life = maxLife;
         level = 1;
         strength = 1;
-        dexterity = 1;
+        dexterity = 10000;/////////////////////////////////////////////////
         nextLevelExp = 5;
         maxMana = 4;
         mana = maxMana;
@@ -175,24 +177,45 @@ public class Player extends Entity {
     }
     
     public void update() {
+        if(knockBack == true){
+            collisionOn = false;
+            gp.cChecker.checkTile(this);
 
-        if(attacking == true){attacking();return;}
+        if(collisionOn == false){
+            switch(previousAttacker.direction){
+                case "up": worldY -= speed; break;
+                case "down": worldY += speed; break;
+                case "left": worldX -= speed; break;
+                case "right": worldX += speed; break;
+        }
+    }
 
-        if(keyH.upPressed == true || keyH.downPressed == true || 
-            keyH.leftPressed == true || keyH.rightPressed == true || keyH.enterPressed == true){
-        
-        if(keyH.upPressed == true){
-            direction = "up";
+    knockBackCounter++;
+
+    if(knockBackCounter > 15){
+        knockBack = false;
+        knockBackCounter = 0;
+    }
+        }else{
+
         }
-        else if(keyH.downPressed == true){
-            direction = "down";
-        }
-        else if(keyH.leftPressed == true){
-            direction = "left";
-        }
-        else if(keyH.rightPressed == true){
-            direction = "right";
-        }
+         if(attacking == true){attacking();return;}
+
+            if(keyH.upPressed == true || keyH.downPressed == true || 
+                keyH.leftPressed == true || keyH.rightPressed == true || keyH.enterPressed == true){
+            
+            if(keyH.upPressed == true){
+                direction = "up";
+            }
+            else if(keyH.downPressed == true){
+                direction = "down";
+            }
+            else if(keyH.leftPressed == true){
+                direction = "left";
+            }
+            else if(keyH.rightPressed == true){
+                direction = "right";
+            }
         
         //CHECK TILE COLLISION
         collisionOn = false;
@@ -311,6 +334,14 @@ public class Player extends Entity {
 
 
     }
+    
+    public void knockBack(Entity entity, int knockBackPower){
+
+        entity.direction = this.direction;
+        entity.speed += knockBackPower;
+        entity.knockBack = true;
+
+    }
 
     public void attacking(){
         spriteNum = 1;
@@ -342,7 +373,7 @@ public class Player extends Entity {
             solidArea.width = attackArea.width;
             solidArea.height = attackArea.height;
             int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
-            damageMonster(monsterIndex,attack);
+            damageMonster(monsterIndex,attack, currentWeapon.knockBackPower);
 
             int iTileIndex = gp.cChecker.checkEntity(this, gp.iTile);
             damageInteractiveTile(iTileIndex);
@@ -428,6 +459,8 @@ public class Player extends Entity {
     public void contactMonster(int i){
         if(i!=999){
             if(invincible == false && gp.monster[gp.currentMap][i].dying == false){
+                knockBack(gp.monster[gp.currentMap][i], gp.monster[gp.currentMap][i].knockBackPower);
+                previousAttacker = gp.monster[gp.currentMap][i];
                 int damage = gp.monster[gp.currentMap][i].attack - defense;
                 if(damage < 0){
                     damage = 0;//in case monsters defense is higher than player's attack, we don't want to heal the monster by doing negative damage, so we set it to 0 instead
@@ -439,10 +472,13 @@ public class Player extends Entity {
         }
     }
 
-    public void damageMonster(int i,int attack){
+    public void damageMonster(int i,int attack,int knockBackPower){
         if(i!=999){
             if(gp.monster[gp.currentMap][i].invincible == false){
                 gp.playSE(5);
+                if(knockBackPower > 0){
+                    knockBack(gp.monster[gp.currentMap][i],knockBackPower);
+                }
                 int damage = attack - gp.monster[gp.currentMap][i].defense;
                 if(damage < 0){
                     damage = 0;//in case monsters defense is higher than player's attack, we don't want to heal the monster by doing negative damage, so we set it to 0 instead

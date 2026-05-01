@@ -16,9 +16,11 @@ public class MON_Slime extends Entity{
         super(gp);
         this.gp = gp;
         name = "Slime";
-        speed = 1;
+        defaultSpeed = 1;
+        speed = defaultSpeed;
         maxLife = 4;
         life = maxLife;
+        knockBackPower = 6;
         type = type_monster;
         solidArea.x = 3;
         solidArea.y = 18;
@@ -60,6 +62,7 @@ public class MON_Slime extends Entity{
         if(onPath == true && tileDistance > 15){
             onPath = false;
         }
+        
     }
     public void setAction(){
     if(onPath == true){
@@ -69,11 +72,12 @@ public class MON_Slime extends Entity{
         int goalCol = (gp.player.worldX+ gp.player.solidArea.x) / gp.tileSize;
         int goalRow = (gp.player.worldY+ gp.player.solidArea.y) / gp.tileSize;
         searchPath(goalCol, goalRow);
+       
 
         int i = new Random().nextInt(100)+1;
         if(i > 99 && projectile.alive == false && shotAvailableCounter == 30){
         projectile.set(worldX, worldY, true, direction, this);
-        for(int ii  = 0;ii < gp.projectile[1].length;i++){
+        for(int ii  = 0;ii < gp.projectile[1].length;ii++){
             if(gp.projectile[gp.currentMap][ii] == null){
                 gp.projectile[gp.currentMap][ii] = projectile;
                 break;
