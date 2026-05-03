@@ -18,9 +18,9 @@ public class MON_Slime extends Entity{
         name = "Slime";
         defaultSpeed = 1;
         speed = defaultSpeed;
-        maxLife = 4;
+        maxLife = 6;
         life = maxLife;
-        knockBackPower = 6;
+        knockBackPower = 4;
         type = type_monster;
         solidArea.x = 3;
         solidArea.y = 18;

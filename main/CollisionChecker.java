@@ -26,16 +26,10 @@ public class CollisionChecker {
         int entityTopRow = entityTopWorldY / gp.tileSize;//to get columns to correctly round down to the nearest whole and
         int entityBottomRow = entityBottomWorldY / gp.tileSize;//get the correct row/column above,down,left, or right of the entity
 
-        int tileNum1, tileNum2;//we will check 2 tiles at a time for collision
-        //we will check 2 tiles at a time and it is based on direction, we can start by having a player with
-        //colliding on nothing, if the player moves up, we know they are not colliding with anything in all other
-        //directions except up because they are heading up, so we only need to check the tile of the player and the tile
-        //above them to the left and right
+        int tileNum1, tileNum2;
         switch(entity.direction){
             case "up":
-                entityTopRow = (entityTopWorldY - entity.speed) / gp.tileSize;//this line basically predicts
-                //where the entity will be after moving up by its speed, so we check it little by little and
-                //when one of the little predicted positions collides, we stop the entity from moving
+                entityTopRow = (entityTopWorldY - entity.speed) / gp.tileSize;
                 tileNum1 = gp.tileM.mapTileNum[gp.currentMap][entityLeftCol][entityTopRow];
                 tileNum2 = gp.tileM.mapTileNum[gp.currentMap][entityRightCol][entityTopRow];
                 if(gp.tileM.tile[tileNum1].collision == true || gp.tileM.tile[tileNum2].collision == true){
@@ -76,30 +70,17 @@ public class CollisionChecker {
         int index = 999;
 
         for(int i = 0;i < gp.obj[1].length;i++){
-            if(gp.obj[gp.currentMap][i] != null)//we need to get entity's solid area position and
-            // get the objects solid area position
+            if(gp.obj[gp.currentMap][i] != null)
             {
                 entity.solidArea.x = entity.worldX + entity.solidArea.x;
                 entity.solidArea.y = entity.worldY +  entity.solidArea.y;
-                //these lines have set code in case we wanted to change the solid area of the 
-                //objects later on and have more specific collsion detection and the whole tile isnt
-                //used for collision detection
                 gp.obj[gp.currentMap][i].solidArea.x = gp.obj[gp.currentMap][i].worldX + gp.obj[gp.currentMap][i].solidArea.x;
                 gp.obj[gp.currentMap][i].solidArea.y = gp.obj[gp.currentMap][i].worldY + gp.obj[gp.currentMap][i].solidArea.y;
-                //we will now check collision based on direction
                 switch(entity.direction){
-                case "up":
-                    entity.solidArea.y -= entity.speed;//predicts where entity will be next
-                    break;
-                case "down":
-                    entity.solidArea.y += entity.speed;
-                    break;
-                case "left":
-                    entity.solidArea.x -= entity.speed;
-                    break;
-                case "right":
-                    entity.solidArea.x += entity.speed;
-                    break;
+                case "up":entity.solidArea.y -= entity.speed;break;
+                case "down":entity.solidArea.y += entity.speed;break;
+                case "left":entity.solidArea.x -= entity.speed;break;
+                case "right":entity.solidArea.x += entity.speed;break;
                 }
                 if(entity.solidArea.intersects(gp.obj[gp.currentMap][i].solidArea)){
                        if(gp.obj[gp.currentMap][i].collision == true){//if intersects and object has collision true

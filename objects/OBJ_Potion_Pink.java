@@ -14,11 +14,12 @@ public class OBJ_Potion_Pink extends Entity{
         type = type_consumable;
         value = 5;
         price = 15;
+        stackable = true;
     }
-    public void use(Entity entity){
+    public boolean use(Entity entity){
         gp.gameState = gp.dialogueState;
         gp.ui.currentDialogue = "Your Life Has Been Refreshed \nBy The " + name + "!";
         entity.life+=value;
-        
+        return true;
     }
 }

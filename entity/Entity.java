@@ -16,26 +16,23 @@ import main.GamePanel;
 import main.UtilityTool;
 
 public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE GAME LIKE PLAYER, NPCS, MONSTERS, ETC
-    //this means it basically will be a superclass and other classes
-    //will inherit and take attributes and methods from this class
-    public int worldX, worldY;//we will use 2 different types of x and y, screen and world, they both indicate position but
-                                //world x and y indicate position in the whole game world while screen x and y indicate position on the screen
-    public int speed;//speed of entity
+    public int worldX, worldY;
+    public int speed;
 
     public GamePanel gp;
     public int actionLockCounter = 0;
     public BufferedImage up1, up2, down1, down2, left1, left2, right1, right2;//images for different directions of entity
-    public String direction = "down";//direction entity is facing
+    public String direction = "down";
     public BufferedImage attackUp1, attackUp2, attackDown1, attackDown2,
-    attackLeft1, attackLeft2, attackRight1, attackRight2;//attack images for different directions
-    public boolean attacking = false;//flag to check if entity is attacking
-    public boolean alive = true;//flag to check if entity is alive
-    public boolean dying = false;//flag to check if entity is dying
-    public int dyingCounter = 0;//counter to track dying animation
-    boolean hpBarOn = false;//flag to check if hp bar should be drawn
-    int hpBarCounter = 0;//counter to track how long hp bar has been on
-    public boolean onPath = false;//flag to check if entity is on path to follow the player
-    public boolean knockBack = false;//flag to check if entity is being knocked back
+    attackLeft1, attackLeft2, attackRight1, attackRight2;
+    public boolean attacking = false;
+    public boolean alive = true;
+    public boolean dying = false;
+    public int dyingCounter = 0;
+    boolean hpBarOn = false;
+    int hpBarCounter = 0;
+    public boolean onPath = false;
+    public boolean knockBack = false;
     
     public int defaultSpeed;
     public int knockBackCounter = 0;
@@ -57,11 +54,13 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
     public int ammo;
     public int knockBackPower = 0;
     public int manaRegenCounter = 0;
-    public int shotAvailableCounter = 0;//counter to track how long until the player can shoot again
+    public int shotAvailableCounter = 0;
     //ITEM ATTRIBUTES
     public int attackValue;//this will be used for the price of the item in shops and also for how much exp a monster gives when defeated
     public int defenseValue;
     public int price;
+    public boolean stackable = false;
+    public int amount = 1;
 
     public ArrayList<Entity> inventory = new ArrayList<>();
     public final int maxInventorySize = 20;
@@ -96,7 +95,7 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
     public int life;
     public boolean invincible = false;
     public int invincibleCounter = 0;
-    public int type; //0 is player, 1 is npc, 2 is monster //3 is weapon etc
+    public int type;
     public final int type_player = 0;
     public final int type_npc = 1;
     public final int type_monster = 2;
@@ -104,8 +103,8 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
     public final int type_axe = 4;
     public final int type_shield = 5;
     public final int type_consumable = 6;
-    public final int type_pickupOnly = 7;//this is for items that can only be picked up and not equipped like coins and potions
-
+    public final int type_pickupOnly = 7;
+    public final int type_obstacle = 8;
 
 
     
@@ -119,6 +118,65 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
 
     public void damageReaction(){
         
+    }
+
+    public void interact(){
+
+    }
+
+    public int getLeftX(){
+        return worldX + solidArea.x;
+    }
+
+    public int getRightX(){
+        return worldX + solidArea.x + solidArea.width;
+    }
+
+    public int getTopY(){
+        return worldY + solidArea.y;
+    }
+
+    public int getBottomY(){
+        return worldY + solidArea.y + solidArea.height;
+    }
+
+    public int getCol(){
+        return (worldX + solidArea.x) / gp.tileSize;
+    }
+
+    public int getRow(){
+        return (worldY + solidArea.y) / gp.tileSize;
+    }
+
+    public int getDetected(Entity user, Entity[][] target, String targetName){
+        int index = 999;
+        //check surrounding tiles for objects
+        int nextWorldX = user.getLeftX();
+        int nextWorldY = user.getTopY();
+
+        switch(user.direction){
+            case "up" : nextWorldY = user.getTopY() - 1; break;
+            case "down" : nextWorldY = user.getBottomY() + 1; break;
+            case "left" : nextWorldX = user.getLeftX() - 1; break;
+            case "right" : nextWorldX = user.getRightX() + 1; break;
+        }
+        int col = nextWorldX / gp.tileSize;
+        int row = nextWorldY / gp.tileSize;
+        
+        for(int i = 0; i < target[1].length;i++){
+            if(target[gp.currentMap][i] != null){
+                if(target[gp.currentMap][i].getCol() == col 
+                  && target[gp.currentMap][i].getRow() == row){
+                    if(target[gp.currentMap][i].name.equals(targetName)){
+                        index = i;
+                        break;
+                    }
+                }
+            }   
+        }
+
+        return index;
+
     }
 
     
@@ -151,7 +209,7 @@ public class Entity {//THIS CLASS WILL BE THE BASE CLASS FOR ALL ENTITIES IN THE
             if(knockBackCounter == 24){
                 speed = speed/2;
             }
-            if(knockBackCounter == 15){
+            if(knockBackCounter == 18){
                 speed = speed/2;
             }
         }else{
@@ -459,8 +517,8 @@ the requirements of an entity */
         return image;
     }
 
-    public void use(Entity entity) {
-        
+    public boolean use(Entity entity) {
+        return false;
     }
     //METHODS FOR PARTICLE EFFECTS and inside Interactive Tiles class
      public Color getParticleColor(){

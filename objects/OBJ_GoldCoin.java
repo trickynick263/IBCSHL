@@ -15,10 +15,11 @@ public class OBJ_GoldCoin extends Entity{
         type = type_pickupOnly;
     }
 
-    public void use(Entity entity){
+    public boolean use(Entity entity){
         gp.playSE(1);
         gp.ui.addMessage("You got " + value + " coins!");
         gp.player.coin += value;
+        return true;
     }
     
 }

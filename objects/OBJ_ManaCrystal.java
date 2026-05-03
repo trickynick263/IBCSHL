@@ -17,10 +17,11 @@ public class OBJ_ManaCrystal extends Entity{
         type = type_pickupOnly;
     }
 
-    public void use(Entity entity){
+    public boolean use(Entity entity){
         gp.playSE(2);
         gp.ui.addMessage("You healed " + value + " Mana!");
         entity.mana += value;
+        return true;
     }
 
     

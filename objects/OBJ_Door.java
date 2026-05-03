@@ -13,10 +13,13 @@ public class OBJ_Door extends Entity {
 
     public OBJ_Door(GamePanel gp) {
         super(gp);
+        this.gp = gp;
+
+        type = type_obstacle;
         name = "Door";
         down1 = setup("/objects/door", gp.tileSize, gp.tileSize);
         collision = true;
-        //changes solid area for door
+        
         solidArea.x = 0;
         solidArea.y = 16;
         solidArea.width = 48;
@@ -24,9 +27,14 @@ public class OBJ_Door extends Entity {
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
         description = "";
-
+        
 
        
+    }
+
+    public void interact(){
+        gp.gameState = gp.dialogueState;
+        gp.ui.currentDialogue = "The door is locked, you need a key to open it.";
     }
 }
 

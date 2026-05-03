@@ -15,6 +15,7 @@ import main.KeyHandler;
 import main.UtilityTool;
 import objects.OBJ_Axe;
 import objects.OBJ_BlueEnergyOrb;
+import objects.OBJ_Key;
 import objects.OBJ_Shield_Wood;
 import objects.OBJ_Sword_Normal;
 
@@ -27,7 +28,7 @@ public class Player extends Entity {
     public final int screenX;
     public final int screenY;
     public boolean attackCanceled = false;
-    Entity previousAttacker;
+    String previousAttackerDirection;
     
     //those are 
     //2 variables to fix the player in the center of the screen
@@ -77,6 +78,10 @@ public class Player extends Entity {
         inventory.add(currentShield);
         inventory.add(currentWeapon);
         inventory.add(new OBJ_Axe(gp));
+        inventory.add(new OBJ_Key(gp));
+        inventory.add(new OBJ_Key(gp));
+        inventory.add(new OBJ_Key(gp));
+      
       
     }
     public void setDefaultValues(){
@@ -93,7 +98,7 @@ public class Player extends Entity {
         life = maxLife;
         level = 1;
         strength = 1;
-        dexterity = 10000;/////////////////////////////////////////////////
+        dexterity = 1;
         nextLevelExp = 5;
         maxMana = 4;
         mana = maxMana;
@@ -103,7 +108,7 @@ public class Player extends Entity {
         currentWeapon = new OBJ_Sword_Normal(gp);
         currentShield = new OBJ_Shield_Wood(gp);
         attack = getAttack();
-        defense = getDefense();
+        defense = getDefense()+1000000;
         projectile = new OBJ_BlueEnergyOrb(gp);
 
         
@@ -177,45 +182,30 @@ public class Player extends Entity {
     }
     
     public void update() {
-        if(knockBack == true){
-            collisionOn = false;
-            gp.cChecker.checkTile(this);
 
-        if(collisionOn == false){
-            switch(previousAttacker.direction){
-                case "up": worldY -= speed; break;
-                case "down": worldY += speed; break;
-                case "left": worldX -= speed; break;
-                case "right": worldX += speed; break;
-        }
-    }
-
-    knockBackCounter++;
-
-    if(knockBackCounter > 15){
-        knockBack = false;
-        knockBackCounter = 0;
-    }
-        }else{
-
-        }
+        
          if(attacking == true){attacking();return;}
 
-            if(keyH.upPressed == true || keyH.downPressed == true || 
-                keyH.leftPressed == true || keyH.rightPressed == true || keyH.enterPressed == true){
+        if(keyH.upPressed == true || keyH.downPressed == true || 
+            keyH.leftPressed == true || keyH.rightPressed == true || keyH.enterPressed == true){
+        
+        if(keyH.upPressed == true){
+            direction = "up";
+        }
+        else if(keyH.downPressed == true){
+            direction = "down";
+        }
+        else if(keyH.leftPressed == true){
+            direction = "left";
+        }
+        else if(keyH.rightPressed == true){
+            direction = "right";
+        }
+    
+        
+
+
             
-            if(keyH.upPressed == true){
-                direction = "up";
-            }
-            else if(keyH.downPressed == true){
-                direction = "down";
-            }
-            else if(keyH.leftPressed == true){
-                direction = "left";
-            }
-            else if(keyH.rightPressed == true){
-                direction = "right";
-            }
         
         //CHECK TILE COLLISION
         collisionOn = false;
@@ -252,40 +242,26 @@ public class Player extends Entity {
         //IF COLLISION IS FALSE, PLAYER CAN MOVE
         if(collisionOn == false && keyH.enterPressed == false){
             switch(direction){
-                case "up":
-                    worldY -= speed;
-                    break;
-                case "down":
-                    worldY += speed;
-                    break;
-                case "left":
-                    worldX -= speed;
-                    break;
-                case "right":
-                    worldX += speed;
-                    break;
+                case "up":worldY -= speed;break;
+                case "down":worldY += speed;break;
+                case "left":worldX -= speed;break;
+                case "right":worldX += speed;break;
             }
         }
+        
         //SPRITE ANIMATION
-        spriteCounter++;
-        if(attacking == false){
-            spriteChecker = 12;
-        }
-        else{
-            spriteChecker = 24;
-        }
-            if(spriteCounter > spriteChecker){//changes sprite every 12 frames
-                if(spriteNum == 1){
-                    spriteNum = 2;//changes sprite images to swap between them
-                }//remember this gets called 60 times per second and the counter is increased
-                //a total of 60 times per second and which switch between images very often
-                else if(spriteNum == 2){
-                    spriteNum = 1;
-                }
-                spriteCounter = 0;//this line right here resets the counter
-                //  so we can count to 12 again
+        
+            spriteCounter++;
+            if(attacking == false){spriteChecker = 12;}
+            else{spriteChecker = 24;}
+            if(spriteCounter > spriteChecker){
+                if(spriteNum == 1){spriteNum = 2;}
+                else if(spriteNum == 2){spriteNum = 1;}
+                spriteCounter = 0;
             }
         }
+        
+        
         if(gp.keyH.shotKeyPressed == true && projectile.alive == false 
             && shotAvailableCounter == 30 && projectile.hasSufficientMana(this) == true){
             projectile.set(worldX,worldY,true,direction,this);
@@ -335,9 +311,9 @@ public class Player extends Entity {
 
     }
     
-    public void knockBack(Entity entity, int knockBackPower){
+    public void knockBack( Entity entity, int knockBackPower){
 
-        entity.direction = this.direction;
+        entity.direction = direction;
         entity.speed += knockBackPower;
         entity.knockBack = true;
 
@@ -438,7 +414,13 @@ public class Player extends Entity {
                 gp.obj[gp.currentMap][index] = null;
             }
 
-        }    //INVENTORY ITEMS
+        }
+        else if(index != 999 && gp.obj[gp.currentMap][index].type == type_obstacle){
+            if(keyH.enterPressed == true){
+                attackCanceled = true;
+                gp.obj[gp.currentMap][index].interact();
+            }
+        }
         else{
             if(index != 999){
                     String text;
@@ -459,8 +441,10 @@ public class Player extends Entity {
     public void contactMonster(int i){
         if(i!=999){
             if(invincible == false && gp.monster[gp.currentMap][i].dying == false){
-                knockBack(gp.monster[gp.currentMap][i], gp.monster[gp.currentMap][i].knockBackPower);
-                previousAttacker = gp.monster[gp.currentMap][i];
+                previousAttackerDirection = gp.monster[gp.currentMap][i].direction;
+                if(gp.monster[gp.currentMap][i].knockBackPower > 0){
+                    //knockBack(gp.monster[gp.currentMap][i],gp.monster[gp.currentMap][i].knockBackPower);                
+                }
                 int damage = gp.monster[gp.currentMap][i].attack - defense;
                 if(damage < 0){
                     damage = 0;//in case monsters defense is higher than player's attack, we don't want to heal the monster by doing negative damage, so we set it to 0 instead
@@ -486,7 +470,7 @@ public class Player extends Entity {
                 gp.monster[gp.currentMap][i].life -= damage;
                 gp.ui.addMessage("You Hit the Monster for " + damage + " Damage!");
                 gp.monster[gp.currentMap][i].invincible = true;
-                gp.monster[gp.currentMap][i].damageReaction();//sets the direction of the monster to move away from the player
+                gp.monster[gp.currentMap][i].damageReaction();
             }
             if(gp.monster[gp.currentMap][i].life <= 0 && gp.monster[gp.currentMap][i].alive == true){
                 gp.monster[gp.currentMap][i].dying = true;
@@ -527,12 +511,12 @@ public class Player extends Entity {
                 defense = getDefense();
             }
             if(selectedItem.type == type_consumable){
-                selectedItem.use(this);
-                inventory.remove(itemIndex);
+                if(selectedItem.use(this)== true){
+                    inventory.remove(itemIndex);
+                }
             }
         }
     }
-
 
     public void interactNPC(int i){
         if(gp.keyH.enterPressed == true){
