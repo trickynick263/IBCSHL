@@ -78,9 +78,6 @@ public class Player extends Entity {
         inventory.add(currentShield);
         inventory.add(currentWeapon);
         inventory.add(new OBJ_Axe(gp));
-        inventory.add(new OBJ_Key(gp));
-        inventory.add(new OBJ_Key(gp));
-        inventory.add(new OBJ_Key(gp));
       
       
     }
@@ -408,32 +405,31 @@ public class Player extends Entity {
 
     public void pickUpObject(int index){
         //PICK ONLY OBJECTS
-        if(index != 999 && gp.obj[gp.currentMap][index].type == type_pickupOnly){
+        if(index != 999){
             if(gp.obj[gp.currentMap][index].type == type_pickupOnly){
                 gp.obj[gp.currentMap][index].use(this);
                 gp.obj[gp.currentMap][index] = null;
             }
-
-        }
-        else if(index != 999 && gp.obj[gp.currentMap][index].type == type_obstacle){
-            if(keyH.enterPressed == true){
-                attackCanceled = true;
-                gp.obj[gp.currentMap][index].interact();
+            //OBSTACLES
+            else if( gp.obj[gp.currentMap][index].type == type_obstacle){
+                if(keyH.enterPressed == true){
+                    attackCanceled = true;
+                    gp.obj[gp.currentMap][index].interact();
+                }
             }
-        }
-        else{
-            if(index != 999){
+            //INVENTORY ITEMS
+            else{
                     String text;
-                    if(inventory.size() < maxInventorySize){
-                        inventory.add(gp.obj[gp.currentMap][index]);
+                    if(canObtainItem(gp.obj[gp.currentMap][index]) == true){
                         gp.playSE(1);
                         text = "Got a " + gp.obj[gp.currentMap][index].name + "!";
-                }
-                else{
-                    text = "You cannot carry anymore items!";
-                }
-                gp.ui.addMessage(text);
-                gp.obj[gp.currentMap][index] = null;
+                        gp.obj[gp.currentMap][index] = null;
+                    }
+                    else{
+                        text = "You cannot carry anymore items!";
+                    }
+                    gp.ui.addMessage(text);
+                
             }
         }
     }
@@ -512,10 +508,49 @@ public class Player extends Entity {
             }
             if(selectedItem.type == type_consumable){
                 if(selectedItem.use(this)== true){
-                    inventory.remove(itemIndex);
+                    if(selectedItem.amount > 1){
+                        selectedItem.amount--;
+                    }else{
+                    inventory.remove(itemIndex); 
+                    }
                 }
             }
         }
+    }
+    
+    public int searchItemInInventory(String itemName){
+        int itemIndex = 999;
+        for(int i = 0; i < inventory.size();i++){
+            if(inventory.get(i).name.equals(itemName)){
+                itemIndex = i;
+                break;
+            }
+        }
+        return itemIndex;
+    }
+
+    public boolean canObtainItem(Entity item){
+        boolean canObtain = false;
+        //Check if item is stackable
+        if(item.stackable == true){
+            int index = searchItemInInventory(item.name);
+            if(index != 999){
+                inventory.get(index).amount++;
+                canObtain = true;
+            }else{//new item so check vacancy
+                if(inventory.size() != maxInventorySize){
+                    inventory.add(item);
+                    canObtain = true;
+                }
+            }
+        }
+        else{//not stackable so check vacancy
+            if(inventory.size() != maxInventorySize){
+                inventory.add(item);
+                canObtain = true;
+            }
+        }
+        return canObtain;
     }
 
     public void interactNPC(int i){

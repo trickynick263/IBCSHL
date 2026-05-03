@@ -90,16 +90,12 @@ public class UI {
         }
         return image;
     }
-
-
-
     public void addMessage(String text){
 
         message.add(text);
         messageCounter.add(0);
 
     }
-
     public void draw(Graphics2D g2){
         //we will draw on the screen how many keys the player has
         //g2.setFont(new Font("Arial", Font.PLAIN, 40));// bad example because we create a new
@@ -251,15 +247,16 @@ public class UI {
                     currentDialogue = "You need more coins to buy this!";
                     drawDialogueScreen();
                 }
-                else if(gp.player.inventory.size() == gp.player.maxInventorySize){
-                    subState = 0;
-                    gp.gameState = gp.dialogueState;
-                    currentDialogue = "Your inventory is full!";
-                }
                 else{
-                    gp.player.coin -= npc.inventory.get(itemIndex).price;
-                    gp.player.inventory.add(npc.inventory.get(itemIndex));
+                    if(gp.player.canObtainItem(npc.inventory.get(itemIndex)) == true){
+                        gp.player.coin -= npc.inventory.get(itemIndex).price;
+                    }else{
+                        subState = 0;
+                        gp.gameState = gp.dialogueState;
+                        currentDialogue = "Your inventory is full!";
+                    }
                 }
+
             }
         }
     }
@@ -314,7 +311,11 @@ public class UI {
                     currentDialogue = "You can't sell an equipped item!";
                 }
                 else{
-                    gp.player.inventory.remove(itemIndex);
+                    if(gp.player.inventory.get(itemIndex).amount > 1){
+                        gp.player.inventory.get(itemIndex).amount -= 1;
+                    }else{
+                        gp.player.inventory.remove(itemIndex);
+                    }
                     gp.player.coin += price;
                 }
             }
@@ -679,6 +680,22 @@ public class UI {
                 
             }
             g2.drawImage(entity.inventory.get(i).down1,slotX,slotY,null);
+
+            if(entity == gp.player && entity.inventory.get(i).amount > 1){
+                g2.setFont(g2.getFont().deriveFont(26F));
+                int amountX;
+                int amountY;
+
+                String s = ""+entity.inventory.get(i).amount;
+                amountX = getXforAlignToRightText(s, slotX + gp.tileSize - 4);
+                amountY = slotY + gp.tileSize;
+                //SHADOW
+                g2.setColor(new Color(60,60,60));
+                g2.drawString(s, amountX, amountY);
+                //NUMBER
+                g2.setColor(Color.white);
+                g2.drawString(s, amountX-3, amountY);
+            }
             slotX += slotSize;
             if(i == 4 || i == 9 || i == 14){
                 slotY += slotSize;

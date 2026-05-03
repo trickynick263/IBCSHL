@@ -16,7 +16,7 @@ public class Sound {
     int volumeScale = 3;
     float volume;
     GamePanel gp;
-    public Sound(GamePanel gp){//we initialize every sound in the array here
+    public Sound(GamePanel gp){
         this.gp = gp;
         if(gp.atHome == false){
         getClass().getResourceAsStream("/res/sound/adventure.wav");
@@ -54,16 +54,7 @@ public class Sound {
         }catch(Exception e){
             e.printStackTrace();
         }
-        }
-
-         
-         
-
-        
-       
-            
-            
-        
+    }
     }
 
     public void setFile(int i){
