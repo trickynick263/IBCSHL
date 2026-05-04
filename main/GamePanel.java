@@ -2,6 +2,7 @@ package main;
 
 import entity.Entity;
 import entity.Player;
+import environment.EnvironmentManager;
 import tile.TileManager;
 import tiles_interactive.InteractiveTile;
 
@@ -53,8 +54,7 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
 
 
 
-    int FPS = 60;//frames per second, limits our game fps so the rectangle doesnt update too fast
-    // and basically just dissapear
+    int FPS = 60;
 
  //GAME STATE
     public int gameState;
@@ -87,6 +87,7 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
     public ArrayList<Entity> particleList = new ArrayList<>();
     public AssetSetter aSetter = new AssetSetter(this);
     public PathFinder pFinder = new PathFinder(this);
+    public EnvironmentManager eManager = new EnvironmentManager(this);
     
     
     //SOUND
@@ -94,12 +95,12 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
     public Sound se = new Sound(this);
     
 
-    public GamePanel(){//constructor for game panel
-        this.setPreferredSize(new Dimension(screenWidth, screenHeight));//commands to set the size of the panel 
-        this.setBackground(Color.black);//background color
-        this.setDoubleBuffered(true);//if set to true, drawing from this component will be done in an offscreen painting buffer
-        this.addKeyListener(keyH);//adds keyhandler to gampepanel so we can listen to keys
-        this.setFocusable(true);//makes the gamepanel focusable so it can receive key inputs
+    public GamePanel(){
+        this.setPreferredSize(new Dimension(screenWidth, screenHeight));
+        this.setBackground(Color.black);
+        this.setDoubleBuffered(true);
+        this.addKeyListener(keyH);
+        this.setFocusable(true);
         setupGame();
     }
 
@@ -108,6 +109,8 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
         aSetter.setNPC();
         aSetter.setMonster();
         aSetter.setInteractiveTile();
+        eManager.setup();
+
         gameState = titleState;//initializes what state the game is in
         this.music.volumeScale = 2;
 
@@ -123,16 +126,14 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
         gameThread.start();
     }
      
-    @Override// gamepanel has an error when first implemented runnable, a overriding run method is needed as
-    public void run() {//when thread is called, run is also called and if run does not exist, an error is thrown
-        //      >GAME LOOP<
+    @Override
+    public void run() {
         
         
         
-        double drawInterval = 1000000000/FPS;//1 second divided by fps we want gives us the time we need to wait between frames
-        //we will draw the screen every 0.01666667 seconds if fps is 60
+        double drawInterval = 1000000000/FPS;
         double delta = 0;
-        long lastTime = System.nanoTime();//gets the current time in nanoseconds
+        long lastTime = System.nanoTime();
         long currentTime;
         long timer = 0;
         int drawCount = 0;
@@ -143,59 +144,25 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
             timer += (currentTime - lastTime);
             lastTime = currentTime;
             if(delta >= 1){
-            
-            update();
-            drawToTempScreen();//draw everything to the temp screen first and then scale it up to the full screen in
-            drawToScreen();//draw the buffered image to the screen, this is used for full screen mode to draw the game on a smaller screen and then scale it up to fit the full screen
-            delta--;
-            drawCount++;
-        }
-
-        if(timer >= 1000000000){
-        
-            System.out.println("FPS: " + drawCount);
-            drawCount = 0;
-            timer = 0;  
-        }
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            //SLEEP METHOD TO CONTROL FPS
-                /*
-                try{
-                double remainingTime = nextDrawTime - System.nanoTime();
-                remainingTime = remainingTime / 1000000;//converts remaining time to milliseconds
-                if(remainingTime < 0){
-                    remainingTime = 0;//if remaining time is less than 0, set it to 0 so we dont have negative sleep time
-                }
-                Thread.sleep((long) remainingTime);//sets the thread to sleep for the remaining time, ALSO only accepts milliseconds so we have to convert above
-                // in the interval that is left before drawing again in the sixty fps interval
-                nextDrawTime += drawInterval;//sets the next draw time to the current next draw time plus the draw interval
+                update();
+                drawToTempScreen();
+                drawToScreen();
+                delta--;
                 drawCount++;
-                } 
-                catch(InterruptedException e){
-                    e.printStackTrace();
-                }*/
+            }
 
-            
-        }
-        
+            if(timer >= 1000000000){
+                System.out.println("FPS: " + drawCount);
+                drawCount = 0;
+                timer = 0;  
+            }
+        }  
     }
     public void update(){
         
         if(gameState == playState){
-                                            //we will change player position in this method on key preses for KeyHandler
-        player.update();                    //calls the update method from the player class
+                                            
+        player.update();
         for(int i = 0;i < npc[1].length;i++){
             if(npc[currentMap][i] != null){
                 npc[currentMap][i].update();
@@ -333,6 +300,10 @@ public class GamePanel extends JPanel implements Runnable{ //subclass of jpanel
         //EMPTY THE ENTITY LIST
         entityList.clear();
 
+        //ENVIRONMENT
+        eManager.draw(g2);
+
+        //UI
         ui.draw(g2);
 
         }
